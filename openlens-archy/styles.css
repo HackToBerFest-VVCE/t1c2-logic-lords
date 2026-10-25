@@ -1,0 +1,995 @@
+/* OpenLens Archy - Modern Architecture Workspace Styles
+   Palette:
+   - #0A3323 (Dark green)
+   - #839958 (Moss green)
+   - #F7F4D5 (Beige)
+   - #D3968C (Rosy brown)
+   - #105666 (Midnight green)
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Core Palette Tokens */
+  --c-dark-green: #0A3323;
+  --c-moss-green: #839958;
+  --c-beige: #F7F4D5;
+  --c-rosy-brown: #D3968C;
+  --c-midnight-green: #105666;
+
+  /* Layer Identity Colors */
+  --layer-frontend: #38bdf8;
+  --layer-backend: #10b981;
+  --layer-database: #a855f7;
+  --layer-security: #f43f5e;
+  --layer-external: #94a3b8;
+
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.12);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.18);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.25);
+  --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   THEMES
+   ========================================================================== */
+
+/* DARK THEME (Deep Sleek Dark Emerald & Midnight) */
+body[data-theme="dark"] {
+  --bg-app: #05140e;
+  --bg-surface: #0a2117;
+  --bg-surface-elevated: #0f2c20;
+  --bg-node: rgba(10, 33, 23, 0.92);
+  --border-subtle: rgba(131, 153, 88, 0.22);
+  --border-strong: rgba(131, 153, 88, 0.45);
+  --border-node: #164632;
+  --text-main: #F7F4D5;
+  --text-muted: rgba(247, 244, 213, 0.65);
+  --text-subtle: rgba(247, 244, 213, 0.45);
+  --grid-dot: rgba(131, 153, 88, 0.22);
+  --grid-bg: #05140e;
+  --accent: #839958;
+  --accent-secondary: #105666;
+  --accent-highlight: #D3968C;
+  --path-default: #839958;
+  --path-glow: rgba(131, 153, 88, 0.6);
+  --boundary-text: rgba(247, 244, 213, 0.7);
+  --badge-bg: rgba(16, 86, 102, 0.4);
+}
+
+/* LIGHT THEME (Soft Warm Beige Canvas with Forest & Midnight Accents) */
+body[data-theme="light"] {
+  --bg-app: #fbf9ef;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f4efe1;
+  --bg-node: #ffffff;
+  --border-subtle: rgba(10, 51, 35, 0.15);
+  --border-strong: rgba(10, 51, 35, 0.35);
+  --border-node: #d9dbbe;
+  --text-main: #0A3323;
+  --text-muted: #2d5543;
+  --text-subtle: #627b6f;
+  --grid-dot: rgba(10, 51, 35, 0.16);
+  --grid-bg: #fbf9ef;
+  --accent: #0A3323;
+  --accent-secondary: #105666;
+  --accent-highlight: #D3968C;
+  --path-default: #105666;
+  --path-glow: rgba(16, 86, 102, 0.4);
+  --boundary-text: #0A3323;
+  --badge-bg: rgba(131, 153, 88, 0.18);
+}
+
+/* FUNK THEME (Vibrant Retro-Techno Neo-Brutalist Fusion) */
+body[data-theme="funk"] {
+  --bg-app: #0b1a1c;
+  --bg-surface: #102d33;
+  --bg-surface-elevated: #163d45;
+  --bg-node: rgba(16, 45, 51, 0.95);
+  --border-subtle: rgba(211, 150, 140, 0.35);
+  --border-strong: #D3968C;
+  --border-node: #D3968C;
+  --text-main: #F7F4D5;
+  --text-muted: #e7cfcb;
+  --text-subtle: #bba29e;
+  --grid-dot: #839958;
+  --grid-bg: #081517;
+  --accent: #D3968C;
+  --accent-secondary: #839958;
+  --accent-highlight: #ff6b8b;
+  --path-default: #D3968C;
+  --path-glow: rgba(211, 150, 140, 0.85);
+  --boundary-text: #F7F4D5;
+  --badge-bg: rgba(211, 150, 140, 0.25);
+}
+
+/* ==========================================================================
+   BASE & RESET
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+/* ==========================================================================
+   APP CONTAINER LAYOUT
+   ========================================================================== */
+
+#app-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  background-color: var(--bg-app);
+}
+
+/* Top Navigation Bar */
+.top-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: blur(12px);
+  z-index: 50;
+  height: 56px;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+}
+
+.brand-logo .logo-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--c-moss-green), var(--c-midnight-green));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.brand-logo span.highlight {
+  color: var(--c-moss-green);
+}
+
+body[data-theme="funk"] .brand-logo span.highlight {
+  color: var(--c-rosy-brown);
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--badge-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulse-dot 2s infinite ease-in-out;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+/* Center Preset Selector */
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.preset-dropdown {
+  appearance: none;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 6px 32px 6px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.preset-dropdown:hover {
+  border-color: var(--accent);
+}
+
+.select-arrow {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+/* Action Controls */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Theme Switcher Toggle */
+.theme-selector-group {
+  display: flex;
+  align-items: center;
+  background: var(--bg-surface-elevated);
+  padding: 3px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  gap: 2px;
+}
+
+.theme-btn {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.theme-btn.active {
+  background: var(--accent);
+  color: var(--bg-app);
+}
+
+body[data-theme="dark"] .theme-btn.active {
+  color: #0A3323;
+  background: var(--c-moss-green);
+  font-weight: 700;
+}
+
+body[data-theme="light"] .theme-btn.active {
+  color: #F7F4D5;
+  background: var(--c-dark-green);
+}
+
+body[data-theme="funk"] .theme-btn.active {
+  color: #0b1a1c;
+  background: var(--c-rosy-brown);
+  font-weight: 800;
+}
+
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  transition: var(--transition);
+}
+
+.btn-secondary:hover {
+  background: var(--border-subtle);
+  border-color: var(--border-strong);
+}
+
+/* Export Dropdown */
+.dropdown-container {
+  position: relative;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  background: var(--c-moss-green);
+  color: #0A3323;
+  transition: var(--transition);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+body[data-theme="funk"] .btn-primary {
+  background: var(--c-rosy-brown);
+  color: #081517;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 200px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 100;
+  backdrop-filter: blur(16px);
+}
+
+.dropdown-menu.show {
+  display: flex;
+  animation: dropdown-fade-in 0.15s ease-out;
+}
+
+@keyframes dropdown-fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-main);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background: var(--border-subtle);
+  color: var(--accent);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 4px 6px;
+}
+
+/* ==========================================================================
+   CANVAS VIEWPORT & SVG WORKSPACE
+   ========================================================================== */
+
+#workspace-viewport {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: calc(100vh - 56px);
+  overflow: hidden;
+  cursor: grab;
+  /* Dot Matrix Grid */
+  background-color: var(--grid-bg);
+  background-image: radial-gradient(var(--grid-dot) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+
+#workspace-viewport.panning {
+  cursor: grabbing;
+}
+
+#workspace-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3200px;
+  height: 2400px;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+/* SVG Flow Canvas Layer */
+#connections-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Interactive SVG Connection Paths */
+.flow-path {
+  fill: none;
+  stroke: var(--path-default);
+  stroke-width: 1.8;
+  pointer-events: stroke;
+  cursor: pointer;
+  transition: stroke 0.2s, stroke-width 0.2s, opacity 0.2s;
+}
+
+.flow-path.dashed {
+  stroke-dasharray: 5, 5;
+}
+
+/* Flow Directional Animation */
+.flow-path.animated {
+  stroke-dasharray: 6, 6;
+  animation: flow-dash 1.2s linear infinite;
+}
+
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+/* Hover and Active State for Paths */
+.flow-path:hover,
+.flow-path.highlighted {
+  stroke-width: 3.5;
+  filter: drop-shadow(0 0 6px var(--path-glow));
+  stroke-dasharray: 6, 4;
+  animation: flow-dash 0.8s linear infinite;
+  opacity: 1 !important;
+}
+
+.flow-label-bg {
+  fill: var(--bg-surface);
+  rx: 4;
+  ry: 4;
+  stroke: var(--border-subtle);
+  stroke-width: 0.8;
+}
+
+.flow-label-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  fill: var(--text-muted);
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+/* Subsystem Bounding Boxes Layer */
+#boundaries-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.boundary-box {
+  position: absolute;
+  border-radius: var(--radius-md);
+  pointer-events: none;
+  transition: var(--transition);
+}
+
+.boundary-label {
+  position: absolute;
+  top: -10px;
+  left: 14px;
+  padding: 2px 10px;
+  background: var(--bg-surface);
+  border: 1px solid currentColor;
+  border-radius: 12px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--boundary-text);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* ==========================================================================
+   NODE CARDS (HTML DOM Elements inside canvas)
+   ========================================================================== */
+
+#nodes-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.node-card {
+  position: absolute;
+  pointer-events: auto;
+  background: var(--bg-node);
+  border: 1.2px solid var(--border-node);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, opacity 0.2s;
+  backdrop-filter: blur(8px);
+}
+
+.node-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent);
+}
+
+.node-card.highlighted {
+  border-color: var(--accent);
+  box-shadow: 0 0 16px var(--path-glow);
+  transform: scale(1.03);
+  z-index: 30;
+}
+
+.node-card.dimmed {
+  opacity: 0.25;
+  filter: grayscale(40%);
+}
+
+.node-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.node-icon {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.node-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.node-meta {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Layer Badge Borders */
+.node-card[data-layer="frontend"] {
+  border-left: 3.5px solid var(--layer-frontend);
+}
+.node-card[data-layer="backend"] {
+  border-left: 3.5px solid var(--layer-backend);
+}
+.node-card[data-layer="database"] {
+  border-left: 3.5px solid var(--layer-database);
+}
+.node-card[data-layer="security"] {
+  border-left: 3.5px solid var(--layer-security);
+}
+.node-card[data-layer="external"] {
+  border-left: 3.5px solid var(--layer-external);
+}
+
+/* ==========================================================================
+   BOTTOM BAR: LEGEND & CONTROLS (Exact recreation from user image)
+   ========================================================================== */
+
+.bottom-bar {
+  position: absolute;
+  bottom: 20px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 40;
+}
+
+/* Bottom Left Legend */
+.legend-panel {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 8px 16px;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(12px);
+}
+
+.legend-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-main);
+  margin-right: 4px;
+}
+
+.legend-items {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.legend-pill:hover,
+.legend-pill.active {
+  background: var(--border-subtle);
+  color: var(--text-main);
+  border-color: var(--accent);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+.legend-count {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  opacity: 0.75;
+}
+
+/* Bottom Right Controls (PATH, LENS, Zoom) */
+.controls-panel {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 4px 8px;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(12px);
+}
+
+.ctrl-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.ctrl-btn:hover {
+  background: var(--bg-surface-elevated);
+  color: var(--text-main);
+}
+
+.ctrl-btn.active {
+  background: var(--accent);
+  color: var(--bg-app);
+}
+
+body[data-theme="funk"] .ctrl-btn.active {
+  background: var(--c-rosy-brown);
+  color: #081517;
+}
+
+.ctrl-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--border-subtle);
+  margin: 0 4px;
+}
+
+.zoom-display {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-main);
+  padding: 0 4px;
+  min-width: 44px;
+  text-align: center;
+}
+
+/* ==========================================================================
+   TOOLTIPS, MODALS & SLIDE-OUT LENS DRAWER
+   ========================================================================== */
+
+/* Floating Path Flow Tooltip */
+#flow-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  box-shadow: var(--shadow-lg);
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  max-width: 280px;
+}
+
+#flow-tooltip .tooltip-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#flow-tooltip .tooltip-meta {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--accent);
+}
+
+#flow-tooltip .tooltip-desc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 20, 14, 0.75);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.modal-overlay.show {
+  display: flex;
+  animation: modal-fade-in 0.2s ease-out;
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-card {
+  width: 90%;
+  max-width: 720px;
+  max-height: 85vh;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.modal-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.modal-close-btn {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.modal-close-btn:hover {
+  background: var(--bg-surface-elevated);
+  color: var(--text-main);
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.adr-card {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.adr-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.adr-meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+}
+
+.adr-text {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.code-block {
+  background: #020b07;
+  color: #38bdf8;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  border: 1px solid var(--border-subtle);
+}
+
+/* Slide-Out Lens Drawer */
+#lens-drawer {
+  position: fixed;
+  top: 56px;
+  right: -380px;
+  width: 360px;
+  height: calc(100vh - 56px);
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lg);
+  z-index: 80;
+  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+#lens-drawer.open {
+  right: 0;
+}
+
+.drawer-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.drawer-content {
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Toast Notifications */
+#toast-notification {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--c-midnight-green);
+  color: var(--c-beige);
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 300;
+}
+
+#toast-notification.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

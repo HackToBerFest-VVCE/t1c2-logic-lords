@@ -1,0 +1,19 @@
+{
+  "name": "openlens-archy",
+  "version": "1.0.0",
+  "description": "OpenLens Archy - Interactive Architecture & System Flow Visualizer",
+  "main": "openlens-archy/index.html",
+  "scripts": {
+    "start": "npx serve openlens-archy -l 3000",
+    "dev": "npx serve openlens-archy -l 3000"
+  },
+  "keywords": [
+    "openlens",
+    "architecture",
+    "visualization",
+    "snowflake",
+    "flow-diagram"
+  ],
+  "author": "t1c2-logic-lords",
+  "license": "MIT"
+}

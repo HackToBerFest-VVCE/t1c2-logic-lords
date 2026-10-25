@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenLens Archy — Interactive Architecture & System Flow Visualizer</title>
+  <meta name="description" content="OpenLens Archy: AI-powered interactive architecture workspace, boundary validator, and system flow visualizer with Snowflake knowledge integration.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2220%22 font-size=%2220%22>🔍</text></svg>">
+</head>
+<body data-theme="dark">
+  <div id="app-container">
+    
+    <!-- Top Navigation Bar -->
+    <header class="top-navbar">
+      <div class="brand-section">
+        <div class="brand-logo">
+          <div class="logo-icon">🔍</div>
+          <div>OpenLens <span class="highlight">Archy</span></div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span>Snowflake Knowledge Synced</span>
+        </div>
+      </div>
+
+      <!-- Center: Architecture Preset Switcher -->
+      <div class="nav-center">
+        <div class="select-wrapper">
+          <select id="preset-select" class="preset-dropdown" title="Select Architecture Preset">
+            <option value="auv_defense" selected>AUV Autonomous Defense — Dual-Stage AI Pipeline</option>
+            <option value="openlens_core">OpenLens Core System — VS Code & Snowflake Integration</option>
+          </select>
+          <span class="select-arrow">▼</span>
+        </div>
+      </div>
+
+      <!-- Right: Themes, ADRs & Export Dropdown -->
+      <div class="nav-actions">
+        <!-- 3 Themes: Dark, Light, Funk -->
+        <div class="theme-selector-group" title="Select UI Color Theme">
+          <button class="theme-btn active" data-theme="dark" title="Dark Theme (Sleek Dark Emerald & Midnight)">Dark</button>
+          <button class="theme-btn" data-theme="light" title="Light Theme (Warm Beige & Forest)">Light</button>
+          <button class="theme-btn" data-theme="funk" title="Funk Theme (Retro-Techno Cyberpunk)">Funk</button>
+        </div>
+
+        <!-- ADRs & Rules Inspector -->
+        <button id="view-adrs-btn" class="btn-secondary" title="View Architecture Decisions and Rules">
+          <span>📋</span> Rules &amp; ADRs
+        </button>
+
+        <!-- Export Dropdown -->
+        <div class="dropdown-container">
+          <button id="export-btn" class="btn-primary" title="Export Diagram Options">
+            <span>Export</span>
+            <span style="font-size: 0.65rem;">▼</span>
+          </button>
+          <div id="export-menu" class="dropdown-menu">
+            <button id="export-copy-btn" class="dropdown-item">
+              <span>📋</span> Copy Diagram
+            </button>
+            <div class="dropdown-divider"></div>
+            <button id="export-png-btn" class="dropdown-item">
+              <span>🖼️</span> Save as PNG
+            </button>
+            <button id="export-jpeg-btn" class="dropdown-item">
+              <span>🖼️</span> Save as JPEG
+            </button>
+            <button id="export-svg-btn" class="dropdown-item">
+              <span>📐</span> Save as SVG
+            </button>
+            <div class="dropdown-divider"></div>
+            <button id="export-rules-btn" class="dropdown-item">
+              <span>📦</span> Export Rules (JSON)
+            </button>
+            <button id="export-adrs-btn" class="dropdown-item">
+              <span>📝</span> Export ADRs (Markdown)
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Viewport -->
+    <main id="workspace-viewport">
+      <div id="workspace-content">
+        <!-- Subsystems & Boundaries Layer -->
+        <div id="boundaries-layer"></div>
+
+        <!-- SVG Connections & Animated Flow Paths Layer -->
+        <svg id="connections-layer" xmlns="http://www.w3.org/2000/svg"></svg>
+
+        <!-- Interactive Node Cards Layer -->
+        <div id="nodes-layer"></div>
+      </div>
+
+      <!-- Bottom Bar: Legend on Left, Controls on Right -->
+      <footer class="bottom-bar">
+        <!-- Bottom Left: Interactive Layer Legend -->
+        <div class="legend-panel">
+          <span class="legend-title">Legend</span>
+          <div id="legend-items-container" class="legend-items">
+            <!-- Dynamically populated: Frontend (2), Backend (19), Database (3), Security (1), External (2) -->
+          </div>
+        </div>
+
+        <!-- Bottom Right: PATH, LENS, Zoom Controls -->
+        <div class="controls-panel">
+          <button id="path-mode-btn" class="ctrl-btn" title="Toggle Path Flow Tracer Mode">
+            <span>⚡</span> PATH
+          </button>
+          <button id="lens-mode-btn" class="ctrl-btn" title="Toggle Lens Node Inspector Drawer">
+            <span>◎</span> LENS
+          </button>
+          <div class="ctrl-divider"></div>
+          <button id="zoom-out-btn" class="ctrl-btn" title="Zoom Out">−</button>
+          <span id="zoom-display" class="zoom-display">100%</span>
+          <button id="zoom-in-btn" class="ctrl-btn" title="Zoom In">+</button>
+          <div class="ctrl-divider"></div>
+          <button id="fit-screen-btn" class="ctrl-btn" title="Fit to Screen">⛶ Fit</button>
+          <button id="zoom-reset-btn" class="ctrl-btn" title="Reset to Default">↺</button>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Floating Interactive Flow Path Tooltip -->
+    <div id="flow-tooltip"></div>
+
+    <!-- Slide-Out LENS Inspection Drawer -->
+    <aside id="lens-drawer">
+      <div class="drawer-header">
+        <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main);">Architecture Lens</h3>
+        <button id="close-drawer-btn" class="modal-close-btn">&times;</button>
+      </div>
+      <div id="drawer-content" class="drawer-content">
+        <!-- Injected dynamically on node inspection -->
+      </div>
+    </aside>
+
+    <!-- ADR & Rules Modal Dialog -->
+    <div id="adr-modal" class="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title">Architecture Decision Records (ADRs) &amp; OpenLens Rules</h2>
+          <button id="close-modal-btn" class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">
+            These architecture rules and decisions are synchronized with the Snowflake knowledge base and exported to the OpenLens Dev VS Code extension for real-time boundary verification during active development.
+          </p>
+          <h3 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main); margin-top: 6px;">
+            Recorded ADRs
+          </h3>
+          <div id="adr-list-container"></div>
+
+          <h3 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main); margin-top: 10px;">
+            Exportable JSON AST Rules for OpenLens Dev
+          </h3>
+          <pre id="rules-json-block" class="code-block"></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Popup -->
+    <div id="toast-notification">Notification</div>
+
+  </div>
+
+  <!-- Main ES Module Script -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
