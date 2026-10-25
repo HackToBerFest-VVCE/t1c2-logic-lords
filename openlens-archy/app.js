@@ -1,6 +1,6 @@
 // OpenLens Archy - Main Application Logic
 // Handles rendering, panning, zooming, path highlighting, flow animations, themes, and interactions
-// Compact Centered Floating Island with Classic, Funk, and Signal Flow Themes
+// Compact Centered Floating Island with Light/Dark Slide Switch and Classic, Funk, Signal Flow Themes
 
 import { ARCHITECTURE_PRESETS } from './data.js';
 import { DiagramExporter } from './export.js';
@@ -10,6 +10,7 @@ class OpenLensArchyApp {
     this.currentPresetKey = 'auv_defense';
     this.currentPreset = ARCHITECTURE_PRESETS[this.currentPresetKey];
     this.activeTheme = 'classic';
+    this.activeMode = 'dark';
     this.activeLayerFilter = null;
     this.pathModeActive = false;
     this.pathStartNode = null;
@@ -30,10 +31,11 @@ class OpenLensArchyApp {
     this.cacheDomElements();
     this.bindEvents();
     this.applyTheme(this.activeTheme);
+    this.applyMode(this.activeMode);
     this.renderAllSections();
     this.updateLegend();
     this.updateZoomDisplay();
-    this.showToast('OpenLens Archy active. Compact island & centered canvas loaded.');
+    this.showToast('OpenLens Archy active. Light/Dark mode & theme switcher ready.');
   }
 
   cacheDomElements() {
@@ -51,9 +53,21 @@ class OpenLensArchyApp {
     this.exportDropdown = document.getElementById('export-dropdown');
     this.exportMenu = document.getElementById('export-menu');
     this.adrModal = document.getElementById('adr-modal');
+
+    // Theme & Mode Switchers
+    this.themeSlideToggle = document.getElementById('theme-slide-toggle');
   }
 
   bindEvents() {
+    // Light / Dark Slide Switch Toggle
+    if (this.themeSlideToggle) {
+      this.themeSlideToggle.checked = this.activeMode === 'dark';
+      this.themeSlideToggle.addEventListener('change', e => {
+        const mode = e.target.checked ? 'dark' : 'light';
+        this.applyMode(mode);
+      });
+    }
+
     // Theme Switcher Buttons (Classic · Funk · Signal Flow)
     document.querySelectorAll('.theme-pill-btn').forEach(btn => {
       btn.addEventListener('click', e => {
@@ -137,6 +151,16 @@ class OpenLensArchyApp {
     this.renderUserFiles();
   }
 
+  // LIGHT / DARK MODE SWITCH
+  applyMode(modeName) {
+    this.activeMode = modeName;
+    document.body.setAttribute('data-mode', modeName);
+    if (this.themeSlideToggle) {
+      this.themeSlideToggle.checked = modeName === 'dark';
+    }
+    this.showToast(`Display Mode: ${modeName.toUpperCase()}`);
+  }
+
   // THEME SWITCHER: CLASSIC · FUNK · SIGNAL FLOW
   applyTheme(themeName) {
     this.activeTheme = themeName;
@@ -146,7 +170,7 @@ class OpenLensArchyApp {
       btn.classList.toggle('active', btn.getAttribute('data-theme') === themeName);
     });
 
-    this.showToast(`Active Theme: ${themeName.replace('_', ' ').toUpperCase()}`);
+    this.showToast(`Theme: ${themeName.replace('_', ' ').toUpperCase()}`);
   }
 
   // RENDER TECH STACK

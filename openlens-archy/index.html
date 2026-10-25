@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2220%22 font-size=%2220%22>🔍</text></svg>">
 </head>
-<body data-theme="classic">
+<body data-theme="classic" data-mode="dark">
 
   <!-- COMPACT CENTERED FLOATING ISLAND HEADER -->
   <header class="floating-island-header">
@@ -17,6 +17,18 @@
       <div class="brand-badge">🔍</div>
       <div>OpenLens <span class="highlight">Archy</span></div>
     </a>
+
+    <div class="island-divider"></div>
+
+    <!-- Light / Dark Slide Switch -->
+    <div class="theme-switch-container" title="Slide between Light and Dark mode">
+      <span class="switch-icon">☀️</span>
+      <label class="slide-switch">
+        <input type="checkbox" id="theme-slide-toggle" checked>
+        <span class="slide-slider"></span>
+      </label>
+      <span class="switch-icon">🌙</span>
+    </div>
 
     <div class="island-divider"></div>
 

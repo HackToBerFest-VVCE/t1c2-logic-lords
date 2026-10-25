@@ -10,6 +10,7 @@
    - Classic
    - Funk
    - Signal Flow
+   + Light / Dark Slide Mode
 */
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -43,7 +44,7 @@
 }
 
 /* ==========================================================================
-   THEMES: CLASSIC, FUNK, SIGNAL FLOW
+   THEMES: CLASSIC, FUNK, SIGNAL FLOW (DARK DEFAULT)
    ========================================================================== */
 
 /* 1. CLASSIC THEME (Harmonious Palette: Dark Green, Moss Green, Beige & Midnight) */
@@ -120,6 +121,54 @@ body[data-theme="signal_flow"] {
 }
 
 /* ==========================================================================
+   LIGHT MODE OVERRIDES (When Slide Switch is set to Light ☀️)
+   ========================================================================== */
+body[data-mode="light"] {
+  --bg-app: #fbf9ef;
+  --bg-surface: rgba(255, 255, 255, 0.94);
+  --bg-surface-elevated: #f4efe1;
+  --bg-node: #ffffff;
+  --border-subtle: rgba(10, 51, 35, 0.16);
+  --border-strong: rgba(10, 51, 35, 0.38);
+  --border-node: #d9dbbe;
+  --text-main: #0A3323;
+  --text-muted: #2d5543;
+  --text-subtle: #627b6f;
+  --grid-dot: rgba(10, 51, 35, 0.18);
+  --grid-bg: #fbf9ef;
+  --accent: #0A3323;
+  --accent-secondary: #105666;
+  --accent-highlight: #D3968C;
+  --path-default: #105666;
+  --path-glow: rgba(16, 86, 102, 0.4);
+  --boundary-text: #0A3323;
+  --badge-bg: rgba(131, 153, 88, 0.2);
+  --card-bg: #ffffff;
+}
+
+body[data-mode="light"][data-theme="funk"] {
+  --bg-app: #fdf5f4;
+  --bg-surface: rgba(255, 255, 255, 0.94);
+  --bg-surface-elevated: #fae8e6;
+  --border-strong: #D3968C;
+  --border-node: #D3968C;
+  --text-main: #331513;
+  --accent: #D3968C;
+  --path-default: #D3968C;
+}
+
+body[data-mode="light"][data-theme="signal_flow"] {
+  --bg-app: #f2fbf6;
+  --bg-surface: rgba(255, 255, 255, 0.94);
+  --bg-surface-elevated: #e2f7ed;
+  --border-strong: #10b981;
+  --border-node: #10b981;
+  --text-main: #042918;
+  --accent: #10b981;
+  --path-default: #10b981;
+}
+
+/* ==========================================================================
    BASE & RESET
    ========================================================================== */
 
@@ -141,6 +190,7 @@ body {
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 button {
@@ -152,7 +202,7 @@ button {
 }
 
 /* ==========================================================================
-   COMPACT CENTERED FLOATING ISLAND (Smaller, Uncluttered, Center Aligned)
+   COMPACT CENTERED FLOATING ISLAND HEADER
    ========================================================================== */
 
 .floating-island-header {
@@ -208,6 +258,71 @@ button {
   width: 1px;
   height: 20px;
   background: var(--border-subtle);
+}
+
+/* LIGHT / DARK SLIDE SWITCH */
+.theme-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+}
+
+.switch-icon {
+  font-size: 0.72rem;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.slide-switch {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 18px;
+}
+
+.slide-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slide-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--c-dark-green);
+  border: 1px solid var(--border-strong);
+  transition: .25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 20px;
+}
+
+.slide-slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 2px;
+  bottom: 2px;
+  background-color: var(--c-beige);
+  transition: .25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+input:checked + .slide-slider {
+  background-color: var(--c-moss-green);
+}
+
+input:checked + .slide-slider:before {
+  transform: translateX(14px);
+  background-color: #0A3323;
 }
 
 /* COMPACT THEME SEGMENTED SLIDER (Classic · Funk · Signal Flow) */
