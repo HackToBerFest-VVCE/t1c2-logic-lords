@@ -59,9 +59,9 @@ flowchart LR
 
 ---
 
-## 🏛️ OpenLens Archy — Web Workspace
+## 🏛️ OpenLens Archy — Architecture & System Design Plugin
 
-The browser-based visual studio for architecture design, system flow validation, and ADR management.
+The browser-based visual studio and plugin for user file architecture visualization, tech stack profiling, system design specification, and design pattern auditing.
 
 ### 🎨 Color Palette & Themes
 Engineered with the tailored design system:
@@ -76,19 +76,43 @@ Supports **3 dynamic themes**:
 2. **Light**: Crisp warm beige canvas with architectural blueprint grid and rich forest accents.
 3. **Funk**: Neo-brutalist retro-techno theme featuring vibrant rosy brown, glowing cyber cyan, and neon moss highlights.
 
-### ⚡ Key Features
-- **Interactive System Flow Paths**: Hovering any connection path animates directional data flow particles and displays protocol metadata, source/destination telemetry, and boundary status.
-- **Dynamic Layer Legend**: Clickable filters for project layers with real-time component counts (`Frontend (2)`, `Backend (19)`, `Database (3)`, `Security (1)`, `External (2)`).
-- **Subsystem Boundaries**: Dashed visual domains (e.g. *Multi-Agent Advisory System*, *Air-Gapped Defense — SECRET//NOFORN*, *Dual-Stage AI Inference Pipeline*, *Advanced Sensing & Navigation*, *Data & Analytics Layer*).
-- **PATH Mode**: Interactive point-to-point pipeline route tracing across boundaries.
-- **LENS Drawer**: Deep component inspection with incoming/outgoing feeds and AST compliance status.
-- **Multi-Format Export Dropdown**:
-  - 📋 `Copy Diagram` (Direct clipboard copy)
-  - 🖼️ `Save as PNG` (High-DPI retina raster export)
-  - 🖼️ `Save as JPEG` (Compact image export)
-  - 📐 `Save as SVG` (Infinite-resolution vector graphic)
-  - 📦 `Export Rules (JSON)` (Machine-checkable AST rules for OpenLens Dev in VS Code)
-  - 📝 `Export ADRs (Markdown)` (Formal Architecture Decision Records)
+### ⚡ 5 Core Architectural Views
+1. **📐 Architecture View**:
+   - Interactive dot-grid canvas with pan and zoom (`- 100% +`, drag to pan, wheel to zoom).
+   - Subsystem boundaries (*Multi-Agent Advisory System*, *Air-Gapped Defense — SECRET//NOFORN*, *Dual-Stage AI Inference Pipeline*, *Advanced Sensing & Navigation*, *Data & Analytics Layer*).
+   - **Interactive Flow Paths**: Hovering any path animates directional data packets, highlights connected upstream/downstream nodes, and reveals protocol metadata.
+   - **PATH Mode**: Point-to-point flow tracer discovering multi-hop routes across architecture boundaries.
+   - **Layer Legend**: Clickable filters with real-time component counts (`Frontend 2`, `Backend 19`, `Database 3`, `Security 1`, `External 2`).
+2. **🛠️ Tech Stack View**:
+   - Vetted frameworks, libraries, and runtimes detected directly from user project files (`Streamlit` in `dashboard.py`, `FastAPI` in `api.py`, `PyTorch` in `model.py`, `ZeroMQ` in `sonar_bus.py`, `SciPy` in `preprocessing.py`, `PyCryptodome` in `security.py`, `Parquet` in `data_store.py`, `PyDeck` in `heatmap.py`).
+   - Detailed versioning, category tagging, design trade-offs, and pros/cons.
+3. **🏛️ System Design View**:
+   - High-level architecture style specification (*Hybrid Event-Driven Pipeline & Air-Gapped Microservices*).
+   - Real-time SLA performance budgets:
+     - Anomaly Inference Latency: `< 15 ms`
+     - ZeroMQ Bus Dispatch Latency: `< 50 µs`
+     - Ingestion Throughput: `10,000 frames/sec`
+     - Air-Gapped Network Egress: `0 bytes (Strict Enforced)`
+   - Ingestion topology, hierarchical dual-stage inference pipeline, and zero-trust air-gap segregation.
+4. **🧩 Design Patterns View**:
+   - Identifies and explains design patterns implemented across user files:
+     - **Strategy Pattern** (`infer.py`) — Switching between Stage 1 Autoencoder & Stage 2 Deep Features.
+     - **Publisher-Subscriber** (`sonar_bus.py`) — Lock-free zero-copy acoustic bus.
+     - **Pipeline & Filter** (`preprocessing.py`) — Sequential FFT and beamforming stages.
+     - **Factory Method** (`agents.py`) — Dynamic advisory agent instantiation.
+     - **Decorator / Middleware** (`security.py`) — Air-gapped HMAC token verification.
+     - **Repository Pattern** (`data_store.py`) — Decoupled Parquet and model checkpoint storage.
+   - Includes real code snippets from user files and maintainability impact metrics.
+5. **📁 User Files Inventory View**:
+   - Maps each physical source file to its architectural component, layer, lines of code, detected technologies, and software design patterns.
+
+### 📥 Multi-Format Export Dropdown
+- 📋 `Copy Diagram` (Direct high-res clipboard copy)
+- 🖼️ `Save as PNG` (High-DPI retina raster export)
+- 🖼️ `Save as JPEG` (Compact image export)
+- 📐 `Save as SVG` (Infinite-resolution vector graphic)
+- 📦 `Export Rules (JSON)` (Machine-checkable AST rules for OpenLens Dev in VS Code)
+- 📝 `Export ADRs (Markdown)` (Formal Architecture Decision Records)
 
 ### 🚀 Running the Web Workspace
 ```bash
