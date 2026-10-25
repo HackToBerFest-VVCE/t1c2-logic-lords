@@ -3,94 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpenLens Archy — Interactive Architecture & System Flow Studio</title>
+  <title>OpenLens Archy — Interactive Architecture & System Studio</title>
   <meta name="description" content="OpenLens Archy: AI-powered interactive architecture workspace, tech stack, system design, and design patterns visualizer for user project files.">
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2220%22 font-size=%2220%22>🔍</text></svg>">
 </head>
-<body data-theme="dark">
+<body data-theme="classic">
 
-  <!-- SLEEK FLOATING ISLAND HEADER -->
+  <!-- COMPACT CENTERED FLOATING ISLAND HEADER -->
   <header class="floating-island-header">
     <!-- Brand / Logo -->
-    <a href="#section-architecture" class="island-brand" title="OpenLens Archy System Studio">
+    <a href="#" class="island-brand" title="OpenLens Archy System Studio">
       <div class="brand-badge">🔍</div>
       <div>OpenLens <span class="highlight">Archy</span></div>
     </a>
 
-    <!-- Center: Continuous Section Navigation Anchors (One after the other) -->
-    <nav class="island-nav-links" aria-label="Sections">
-      <a href="#section-architecture" class="island-link active" data-target="section-architecture">
-        <span>📐</span> Architecture
-      </a>
-      <a href="#section-techstack" class="island-link" data-target="section-techstack">
-        <span>🛠️</span> Tech Stack
-      </a>
-      <a href="#section-systemdesign" class="island-link" data-target="section-systemdesign">
-        <span>🏛️</span> System Design
-      </a>
-      <a href="#section-designpatterns" class="island-link" data-target="section-designpatterns">
-        <span>🧩</span> Patterns
-      </a>
-      <a href="#section-userfiles" class="island-link" data-target="section-userfiles">
-        <span>📁</span> Files
-      </a>
-    </nav>
+    <div class="island-divider"></div>
 
-    <!-- Right: Slide Switch, Themes, Project & Export -->
-    <div class="island-actions">
-      <!-- Light / Dark Slide Switch -->
-      <div class="theme-switch-container" title="Slide between Light and Dark mode">
-        <span class="switch-icon">☀️</span>
-        <label class="slide-switch">
-          <input type="checkbox" id="theme-slide-toggle">
-          <span class="slide-slider"></span>
-        </label>
-        <span class="switch-icon">🌙</span>
-      </div>
+    <!-- 3 Themes Segmented Slider: Classic · Funk · Signal Flow -->
+    <div class="theme-pill-group" role="radiogroup" aria-label="Theme Selection">
+      <button class="theme-pill-btn active" data-theme="classic" title="Classic Theme">
+        <span>🌿</span> Classic
+      </button>
+      <button class="theme-pill-btn" data-theme="funk" title="Funk Theme">
+        <span>⚡</span> Funk
+      </button>
+      <button class="theme-pill-btn" data-theme="signal_flow" title="Signal Flow Theme">
+        <span>📡</span> Signal Flow
+      </button>
+    </div>
 
-      <!-- Additional Theme Options (Funk, Signal Flow, etc.) -->
-      <select id="theme-select-island" class="theme-select-island" title="Switch Theme Palette">
-        <option value="dark" selected>Theme: Dark</option>
-        <option value="light">Theme: Light</option>
-        <option value="funk">Theme: Funk</option>
-        <option value="signal_flow">Theme: Signal Flow</option>
-      </select>
+    <div class="island-divider"></div>
 
-      <!-- Project / Preset Select -->
-      <select id="preset-select" class="theme-select-island" title="Select Project File Set">
-        <option value="auv_defense" selected>AUV Defense (25 Files)</option>
-        <option value="openlens_core">OpenLens Core (VS Code + Snowflake)</option>
-      </select>
+    <!-- Project File Set Selector -->
+    <select id="preset-select" class="compact-select" title="Select Project File Set">
+      <option value="auv_defense" selected>AUV Defense (25 Files)</option>
+      <option value="openlens_core">OpenLens Core (VS Code + Snowflake)</option>
+    </select>
 
-      <!-- Export Dropdown -->
-      <div class="dropdown-container">
-        <button id="export-btn" class="btn-export-pill" title="Export Diagram & Rules">
-          <span>Export</span>
-          <span style="font-size: 0.65rem;">▼</span>
+    <div class="island-divider"></div>
+
+    <!-- Export Dropdown -->
+    <div class="dropdown-container">
+      <button id="export-btn" class="btn-export-pill" title="Export Diagram & Rules">
+        <span>Export</span>
+        <span style="font-size: 0.65rem;">▼</span>
+      </button>
+      <div id="export-menu" class="dropdown-menu">
+        <button id="export-copy-btn" class="dropdown-item">
+          <span>📋</span> Copy Diagram
         </button>
-        <div id="export-menu" class="dropdown-menu">
-          <button id="export-copy-btn" class="dropdown-item">
-            <span>📋</span> Copy Diagram
-          </button>
-          <div class="dropdown-divider"></div>
-          <button id="export-png-btn" class="dropdown-item">
-            <span>🖼️</span> Save as PNG
-          </button>
-          <button id="export-jpeg-btn" class="dropdown-item">
-            <span>🖼️</span> Save as JPEG
-          </button>
-          <button id="export-svg-btn" class="dropdown-item">
-            <span>📐</span> Save as SVG
-          </button>
-          <div class="dropdown-divider"></div>
-          <button id="export-rules-btn" class="dropdown-item">
-            <span>📦</span> Export Rules (JSON)
-          </button>
-          <button id="export-adrs-btn" class="dropdown-item">
-            <span>📝</span> Export ADRs (Markdown)
-          </button>
-        </div>
+        <div class="dropdown-divider"></div>
+        <button id="export-png-btn" class="dropdown-item">
+          <span>🖼️</span> Save as PNG
+        </button>
+        <button id="export-jpeg-btn" class="dropdown-item">
+          <span>🖼️</span> Save as JPEG
+        </button>
+        <button id="export-svg-btn" class="dropdown-item">
+          <span>📐</span> Save as SVG
+        </button>
+        <div class="dropdown-divider"></div>
+        <button id="export-rules-btn" class="dropdown-item">
+          <span>📦</span> Export Rules (JSON)
+        </button>
+        <button id="export-adrs-btn" class="dropdown-item">
+          <span>📝</span> Export ADRs (Markdown)
+        </button>
       </div>
     </div>
   </header>
@@ -98,7 +77,7 @@
   <!-- CONTINUOUS PAGE CONTAINER (ALL SECTIONS ONE AFTER THE OTHER) -->
   <div id="page-scroll-container">
 
-    <!-- SECTION 1: INTERACTIVE ARCHITECTURE CANVAS -->
+    <!-- SECTION 1: CENTERED & COMPACT ARCHITECTURE CANVAS -->
     <section id="section-architecture">
       <div id="workspace-viewport">
         <div id="workspace-content">
@@ -152,7 +131,7 @@
           <h2 class="section-title"><span>🛠️</span> Tech Stack Profile</h2>
           <p class="section-subtitle">Vetted frameworks, libraries, and runtimes detected from user repository files.</p>
         </div>
-        <button id="scan-files-btn" class="ctrl-btn" style="border: 1px solid var(--border-subtle); padding: 6px 14px;" title="Re-scan User Files">
+        <button id="scan-files-btn" class="ctrl-btn" style="border: 1px solid var(--border-subtle); padding: 5px 12px;" title="Re-scan User Files">
           <span>🔄</span> Rescan Files
         </button>
       </div>
@@ -170,14 +149,14 @@
       <div class="systemdesign-container">
         <!-- SLA Metrics -->
         <div>
-          <h3 style="font-size: 0.82rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">
+          <h3 style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">
             System Performance &amp; SLA Budgets
           </h3>
           <div id="sla-metrics-container" class="sla-metrics-grid"></div>
         </div>
         <!-- Topology Specifications -->
         <div>
-          <h3 style="font-size: 0.82rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">
+          <h3 style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">
             Architectural Topology &amp; Ingestion Protocols
           </h3>
           <div id="system-specs-container" style="display: flex; flex-direction: column; gap: 14px;"></div>
@@ -203,8 +182,8 @@
           <h2 class="section-title"><span>📁</span> User Project Files &amp; Component Mapping</h2>
           <p class="section-subtitle">Evidence-based static mapping connecting physical source files to architecture layers and design patterns.</p>
         </div>
-        <div class="status-badge">
-          <span class="status-dot"></span>
+        <div class="status-badge" style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; background:var(--badge-bg); border:1px solid var(--border-subtle); border-radius:20px; font-size:0.72rem; font-family:var(--font-mono); color:var(--text-muted);">
+          <span class="status-dot" style="width:7px; height:7px; border-radius:50%; background:#10b981;"></span>
           <span id="files-count-badge">25 Files Tracked</span>
         </div>
       </div>

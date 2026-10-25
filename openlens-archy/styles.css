@@ -5,6 +5,11 @@
    - #F7F4D5 (Beige)
    - #D3968C (Rosy brown)
    - #105666 (Midnight green)
+
+   Themes:
+   - Classic
+   - Funk
+   - Signal Flow
 */
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -33,16 +38,17 @@
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.12);
   --shadow-md: 0 8px 24px rgba(0,0,0,0.18);
   --shadow-lg: 0 16px 40px rgba(0,0,0,0.25);
-  --shadow-island: 0 16px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-subtle);
+  --shadow-island: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-subtle);
   --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ==========================================================================
-   THEMES
+   THEMES: CLASSIC, FUNK, SIGNAL FLOW
    ========================================================================== */
 
-/* DARK THEME (Deep Sleek Dark Emerald & Midnight) */
-body[data-theme="dark"] {
+/* 1. CLASSIC THEME (Harmonious Palette: Dark Green, Moss Green, Beige & Midnight) */
+body[data-theme="classic"],
+body:not([data-theme]) {
   --bg-app: #05140e;
   --bg-surface: rgba(10, 33, 23, 0.88);
   --bg-surface-elevated: #0f2c20;
@@ -65,31 +71,7 @@ body[data-theme="dark"] {
   --card-bg: #0b261b;
 }
 
-/* LIGHT THEME (Soft Warm Beige Canvas with Forest & Midnight Accents) */
-body[data-theme="light"] {
-  --bg-app: #fbf9ef;
-  --bg-surface: rgba(255, 255, 255, 0.92);
-  --bg-surface-elevated: #f4efe1;
-  --bg-node: #ffffff;
-  --border-subtle: rgba(10, 51, 35, 0.16);
-  --border-strong: rgba(10, 51, 35, 0.38);
-  --border-node: #d9dbbe;
-  --text-main: #0A3323;
-  --text-muted: #2d5543;
-  --text-subtle: #627b6f;
-  --grid-dot: rgba(10, 51, 35, 0.18);
-  --grid-bg: #fbf9ef;
-  --accent: #0A3323;
-  --accent-secondary: #105666;
-  --accent-highlight: #D3968C;
-  --path-default: #105666;
-  --path-glow: rgba(16, 86, 102, 0.4);
-  --boundary-text: #0A3323;
-  --badge-bg: rgba(131, 153, 88, 0.2);
-  --card-bg: #ffffff;
-}
-
-/* FUNK THEME (Vibrant Retro-Techno Neo-Brutalist Fusion) */
+/* 2. FUNK THEME (Vibrant Retro-Techno Neo-Brutalist Fusion) */
 body[data-theme="funk"] {
   --bg-app: #0b1a1c;
   --bg-surface: rgba(16, 45, 51, 0.92);
@@ -113,7 +95,7 @@ body[data-theme="funk"] {
   --card-bg: #13343c;
 }
 
-/* SIGNAL FLOW THEME (Tactical Sonar Radar Laser Flow) */
+/* 3. SIGNAL FLOW THEME (Tactical Sonar Radar Laser Flow) */
 body[data-theme="signal_flow"] {
   --bg-app: #020907;
   --bg-surface: rgba(5, 25, 18, 0.92);
@@ -170,7 +152,7 @@ button {
 }
 
 /* ==========================================================================
-   FLOATING ISLAND HEADER (Minimalist, Sleek, Uncluttered Pill)
+   COMPACT CENTERED FLOATING ISLAND (Smaller, Uncluttered, Center Aligned)
    ========================================================================== */
 
 .floating-island-header {
@@ -179,13 +161,12 @@ button {
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  width: calc(100% - 40px);
-  max-width: 1260px;
-  height: 52px;
-  padding: 0 16px;
+  justify-content: center;
+  height: 44px;
+  padding: 4px 12px;
+  gap: 12px;
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-pill);
@@ -201,21 +182,21 @@ button {
   gap: 8px;
   text-decoration: none;
   color: var(--text-main);
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   white-space: nowrap;
 }
 
 .island-brand .brand-badge {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--c-moss-green), var(--c-midnight-green));
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: 12px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
@@ -223,137 +204,70 @@ button {
   color: var(--accent);
 }
 
-/* Navigation Links inside Island (Smooth Scroll Anchors) */
-.island-nav-links {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.island-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border-subtle);
 }
 
-.island-link {
+/* COMPACT THEME SEGMENTED SLIDER (Classic · Funk · Signal Flow) */
+.theme-pill-group {
+  display: flex;
+  align-items: center;
+  background: var(--bg-surface-elevated);
+  padding: 2px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-subtle);
+  gap: 2px;
+}
+
+.theme-pill-btn {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 12px;
-  font-size: 0.75rem;
+  padding: 4px 10px;
+  font-size: 0.72rem;
   font-weight: 600;
-  color: var(--text-muted);
-  text-decoration: none;
   border-radius: var(--radius-pill);
+  color: var(--text-muted);
   transition: var(--transition);
   white-space: nowrap;
 }
 
-.island-link:hover {
+.theme-pill-btn:hover {
   color: var(--text-main);
-  background: var(--border-subtle);
 }
 
-.island-link.active {
+.theme-pill-btn.active {
   background: var(--accent);
   color: var(--bg-app);
   font-weight: 700;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-body[data-theme="dark"] .island-link.active {
+body[data-theme="classic"] .theme-pill-btn.active,
+body:not([data-theme]) .theme-pill-btn.active {
   background: var(--c-moss-green);
   color: #0A3323;
 }
 
-body[data-theme="light"] .island-link.active {
-  background: var(--c-dark-green);
-  color: #F7F4D5;
-}
-
-body[data-theme="funk"] .island-link.active {
+body[data-theme="funk"] .theme-pill-btn.active {
   background: var(--c-rosy-brown);
   color: #081517;
 }
 
-body[data-theme="signal_flow"] .island-link.active {
+body[data-theme="signal_flow"] .theme-pill-btn.active {
   background: #10b981;
   color: #020907;
 }
 
-/* Right Actions inside Island */
-.island-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* LIGHT / DARK SLIDE SWITCH */
-.theme-switch-container {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 8px;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-pill);
-}
-
-.switch-icon {
-  font-size: 0.75rem;
-  opacity: 0.8;
-}
-
-.slide-switch {
-  position: relative;
-  display: inline-block;
-  width: 36px;
-  height: 20px;
-}
-
-.slide-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slide-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--c-dark-green);
-  border: 1px solid var(--border-strong);
-  transition: .3s cubic-bezier(0.16, 1, 0.3, 1);
-  border-radius: 20px;
-}
-
-.slide-slider:before {
-  position: absolute;
-  content: "";
-  height: 14px;
-  width: 14px;
-  left: 2px;
-  bottom: 2px;
-  background-color: var(--c-beige);
-  transition: .3s cubic-bezier(0.16, 1, 0.3, 1);
-  border-radius: 50%;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-}
-
-input:checked + .slide-slider {
-  background-color: var(--c-moss-green);
-}
-
-input:checked + .slide-slider:before {
-  transform: translateX(16px);
-  background-color: #0A3323;
-}
-
-/* More Themes Dropdown */
-.theme-select-island {
+/* Compact Select */
+.compact-select {
   appearance: none;
   background: var(--bg-surface-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-pill);
-  padding: 4px 22px 4px 10px;
+  padding: 4px 20px 4px 10px;
   font-size: 0.72rem;
   font-weight: 600;
   color: var(--text-main);
@@ -361,26 +275,28 @@ input:checked + .slide-slider:before {
   transition: var(--transition);
 }
 
-.theme-select-island:hover {
+.compact-select:hover {
   border-color: var(--accent);
 }
 
-/* Compact Export Button */
+/* Export Pill Button */
 .btn-export-pill {
   display: flex;
   align-items: center;
   gap: 5px;
   padding: 5px 12px;
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   font-weight: 700;
   border-radius: var(--radius-pill);
   background: var(--accent);
   color: var(--bg-app);
   transition: var(--transition);
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  white-space: nowrap;
 }
 
-body[data-theme="dark"] .btn-export-pill {
+body[data-theme="classic"] .btn-export-pill,
+body:not([data-theme]) .btn-export-pill {
   background: var(--c-moss-green);
   color: #0A3323;
 }
@@ -400,7 +316,7 @@ body[data-theme="signal_flow"] .btn-export-pill {
   transform: translateY(-1px);
 }
 
-/* Dropdown Menu */
+/* Dropdown Container */
 .dropdown-container {
   position: relative;
 }
@@ -457,21 +373,27 @@ body[data-theme="signal_flow"] .btn-export-pill {
 }
 
 /* ==========================================================================
-   PAGE CONTAINER & CONTINUOUS SCROLLING SECTIONS (One After Another)
+   PAGE CONTAINER & CENTERED ARCHITECTURE FRAME
    ========================================================================== */
 
 #page-scroll-container {
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding-bottom: 60px;
 }
 
-/* SECTION 1: ARCHITECTURE CANVAS */
+/* CENTERED & SMALLER ARCHITECTURE CANVAS */
 #section-architecture {
   position: relative;
-  width: 100vw;
-  height: calc(100vh - 10px);
-  min-height: 640px;
+  width: calc(100% - 48px);
+  max-width: 1180px;
+  height: 600px;
+  margin: 76px auto 36px auto;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   background-color: var(--grid-bg);
   background-image: radial-gradient(var(--grid-dot) 1.2px, transparent 1.2px);
   background-size: 24px 24px;
@@ -674,12 +596,12 @@ body[data-theme="signal_flow"] .btn-export-pill {
 .node-card[data-layer="security"] { border-left: 3.5px solid var(--layer-security); }
 .node-card[data-layer="external"] { border-left: 3.5px solid var(--layer-external); }
 
-/* BOTTOM CONTROLS & LEGEND OVERLAY IN ARCHITECTURE VIEW */
+/* BOTTOM CONTROLS & LEGEND OVERLAY INSIDE ARCHITECTURE CANVAS */
 .bottom-bar {
   position: absolute;
-  bottom: 20px;
-  left: 24px;
-  right: 24px;
+  bottom: 16px;
+  left: 18px;
+  right: 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -691,17 +613,17 @@ body[data-theme="signal_flow"] .btn-export-pill {
   pointer-events: auto;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   background: var(--bg-surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-pill);
-  padding: 6px 16px;
+  padding: 5px 14px;
   box-shadow: var(--shadow-md);
   backdrop-filter: blur(16px);
 }
 
 .legend-title {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   font-family: var(--font-mono);
   color: var(--text-main);
@@ -711,18 +633,18 @@ body[data-theme="signal_flow"] .btn-export-pill {
 .legend-items {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .legend-pill {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   padding: 3px 8px;
   background: var(--bg-surface-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
@@ -737,8 +659,8 @@ body[data-theme="signal_flow"] .btn-export-pill {
 }
 
 .legend-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 2px;
 }
 
@@ -752,11 +674,11 @@ body[data-theme="signal_flow"] .btn-export-pill {
   pointer-events: auto;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   background: var(--bg-surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-pill);
-  padding: 4px 10px;
+  padding: 4px 8px;
   box-shadow: var(--shadow-md);
   backdrop-filter: blur(16px);
 }
@@ -765,8 +687,8 @@ body[data-theme="signal_flow"] .btn-export-pill {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 9px;
-  font-size: 0.72rem;
+  padding: 4px 8px;
+  font-size: 0.7rem;
   font-weight: 700;
   font-family: var(--font-mono);
   color: var(--text-muted);
@@ -796,30 +718,30 @@ body[data-theme="signal_flow"] .ctrl-btn.active {
 
 .ctrl-divider {
   width: 1px;
-  height: 16px;
+  height: 14px;
   background: var(--border-subtle);
-  margin: 0 3px;
+  margin: 0 2px;
 }
 
 .zoom-display {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 600;
   color: var(--text-main);
   padding: 0 4px;
-  min-width: 42px;
+  min-width: 38px;
   text-align: center;
 }
 
 /* ==========================================================================
-   SECTIONS: CONTINUOUS ONE AFTER THE OTHER
+   PAGE SECTIONS (CENTERED ONE AFTER THE OTHER)
    ========================================================================== */
 
 .page-section {
-  width: 100%;
-  max-width: 1260px;
+  width: calc(100% - 48px);
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 60px 24px;
+  padding: 40px 0;
   border-top: 1px solid var(--border-subtle);
 }
 
@@ -827,11 +749,11 @@ body[data-theme="signal_flow"] .ctrl-btn.active {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .section-title {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 800;
   color: var(--text-main);
   letter-spacing: -0.02em;
@@ -841,27 +763,27 @@ body[data-theme="signal_flow"] .ctrl-btn.active {
 }
 
 .section-subtitle {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
-  margin-top: 4px;
+  margin-top: 3px;
 }
 
 /* TECH STACK GRID */
 .techstack-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
 }
 
 .tech-card {
   background: var(--card-bg);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
-  padding: 20px;
+  padding: 18px;
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   transition: var(--transition);
 }
 
@@ -884,11 +806,11 @@ body[data-theme="signal_flow"] .ctrl-btn.active {
 }
 
 .tech-icon {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 .tech-name {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-main);
 }
@@ -902,8 +824,8 @@ body[data-theme="signal_flow"] .ctrl-btn.active {
 
 .tech-file-badge {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  padding: 3px 8px;
+  font-size: 0.7rem;
+  padding: 2px 7px;
   background: var(--badge-bg);
   border: 1px solid var(--border-subtle);
   border-radius: 4px;
@@ -911,21 +833,21 @@ body[data-theme="signal_flow"] .ctrl-btn.active {
 }
 
 .tech-rationale {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
 .tech-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
   margin-top: auto;
 }
 
 .pro-tag {
-  font-size: 0.68rem;
-  padding: 2px 8px;
+  font-size: 0.65rem;
+  padding: 2px 7px;
   border-radius: 12px;
   background: rgba(16, 185, 129, 0.15);
   color: #10b981;
@@ -936,34 +858,34 @@ body[data-theme="signal_flow"] .ctrl-btn.active {
 .systemdesign-container {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 24px;
 }
 
 .sla-metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
 }
 
 .metric-card {
   background: var(--card-bg);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
-  padding: 14px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
 .metric-label {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
   font-family: var(--font-mono);
   text-transform: uppercase;
 }
 
 .metric-value {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: var(--text-main);
   font-family: var(--font-mono);
@@ -979,42 +901,42 @@ body[data-theme="signal_flow"] .ctrl-btn.active {
   background: var(--card-bg);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
-  padding: 20px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .sys-spec-title {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-main);
 }
 
 .sys-spec-details {
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
-  line-height: 1.55;
+  line-height: 1.5;
 }
 
 /* DESIGN PATTERNS SECTION */
 .patterns-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 18px;
 }
 
 .pattern-card {
   background: var(--card-bg);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
-  padding: 20px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   transition: var(--transition);
 }
 
@@ -1032,46 +954,46 @@ body[data-theme="signal_flow"] .ctrl-btn.active {
 .pattern-title-wrap {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .pattern-title {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-main);
 }
 
 .pattern-file {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--accent);
 }
 
 .pattern-desc {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
 .pattern-code {
   background: #020b07;
   color: #38bdf8;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  padding: 12px;
+  font-size: 0.7rem;
+  padding: 10px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-subtle);
   overflow-x: auto;
-  line-height: 1.4;
+  line-height: 1.35;
   white-space: pre;
 }
 
 .pattern-impact {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: #10b981;
   font-family: var(--font-mono);
   background: rgba(16, 185, 129, 0.1);
-  padding: 6px 10px;
+  padding: 5px 8px;
   border-radius: 4px;
   border-left: 3px solid #10b981;
 }
@@ -1091,8 +1013,8 @@ body[data-theme="signal_flow"] .ctrl-btn.active {
 }
 
 .files-table th {
-  padding: 12px 16px;
-  font-size: 0.75rem;
+  padding: 10px 14px;
+  font-size: 0.72rem;
   font-family: var(--font-mono);
   text-transform: uppercase;
   color: var(--text-muted);
@@ -1101,8 +1023,8 @@ body[data-theme="signal_flow"] .ctrl-btn.active {
 }
 
 .files-table td {
-  padding: 12px 16px;
-  font-size: 0.8rem;
+  padding: 10px 14px;
+  font-size: 0.78rem;
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-main);
 }
@@ -1268,7 +1190,7 @@ body[data-theme="signal_flow"] .ctrl-btn.active {
 
 #lens-drawer {
   position: fixed;
-  top: 74px;
+  top: 70px;
   right: -380px;
   width: 360px;
   height: calc(100vh - 90px);

@@ -1,6 +1,6 @@
 // OpenLens Archy - Main Application Logic
 // Handles rendering, panning, zooming, path highlighting, flow animations, themes, and interactions
-// Includes Floating Island Header, Slide Switch, and continuous one-after-the-other sections
+// Compact Centered Floating Island with Classic, Funk, and Signal Flow Themes
 
 import { ARCHITECTURE_PRESETS } from './data.js';
 import { DiagramExporter } from './export.js';
@@ -9,16 +9,16 @@ class OpenLensArchyApp {
   constructor() {
     this.currentPresetKey = 'auv_defense';
     this.currentPreset = ARCHITECTURE_PRESETS[this.currentPresetKey];
-    this.activeTheme = 'dark';
+    this.activeTheme = 'classic';
     this.activeLayerFilter = null;
     this.pathModeActive = false;
     this.pathStartNode = null;
     this.lensDrawerOpen = false;
 
     // Viewport transform state
-    this.scale = 0.95;
-    this.panX = 60;
-    this.panY = 40;
+    this.scale = 0.88;
+    this.panX = 30;
+    this.panY = 20;
     this.isDragging = false;
     this.startX = 0;
     this.startY = 0;
@@ -31,10 +31,9 @@ class OpenLensArchyApp {
     this.bindEvents();
     this.applyTheme(this.activeTheme);
     this.renderAllSections();
-    this.setupScrollSpy();
     this.updateLegend();
     this.updateZoomDisplay();
-    this.showToast('OpenLens Archy plugin loaded. Floating island & system studio active.');
+    this.showToast('OpenLens Archy active. Compact island & centered canvas loaded.');
   }
 
   cacheDomElements() {
@@ -52,31 +51,16 @@ class OpenLensArchyApp {
     this.exportDropdown = document.getElementById('export-dropdown');
     this.exportMenu = document.getElementById('export-menu');
     this.adrModal = document.getElementById('adr-modal');
-
-    // Theme Switchers
-    this.themeSlideToggle = document.getElementById('theme-slide-toggle');
-    this.themeSelectIsland = document.getElementById('theme-select-island');
   }
 
   bindEvents() {
-    // Light / Dark Slide Switch Toggle
-    if (this.themeSlideToggle) {
-      // Checked = Dark, Unchecked = Light
-      this.themeSlideToggle.checked = this.activeTheme === 'dark';
-      this.themeSlideToggle.addEventListener('change', e => {
-        const theme = e.target.checked ? 'dark' : 'light';
+    // Theme Switcher Buttons (Classic · Funk · Signal Flow)
+    document.querySelectorAll('.theme-pill-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const theme = e.currentTarget.getAttribute('data-theme');
         this.applyTheme(theme);
       });
-    }
-
-    // Additional Themes Selector (Funk, Signal Flow, Dark, Light)
-    if (this.themeSelectIsland) {
-      this.themeSelectIsland.value = this.activeTheme;
-      this.themeSelectIsland.addEventListener('change', e => {
-        const theme = e.target.value;
-        this.applyTheme(theme);
-      });
-    }
+    });
 
     // Canvas Pan & Zoom
     this.viewport.addEventListener('mousedown', e => this.onMouseDown(e));
@@ -144,28 +128,6 @@ class OpenLensArchyApp {
     });
   }
 
-  // Active Scroll Spy for Floating Island
-  setupScrollSpy() {
-    const sections = ['section-architecture', 'section-techstack', 'section-systemdesign', 'section-designpatterns', 'section-userfiles'];
-    const links = document.querySelectorAll('.island-link');
-
-    window.addEventListener('scroll', () => {
-      const scrollPos = window.scrollY + 120;
-      let currentSectionId = sections[0];
-
-      for (const sectionId of sections) {
-        const el = document.getElementById(sectionId);
-        if (el && el.offsetTop <= scrollPos) {
-          currentSectionId = sectionId;
-        }
-      }
-
-      links.forEach(link => {
-        link.classList.toggle('active', link.getAttribute('data-target') === currentSectionId);
-      });
-    }, { passive: true });
-  }
-
   // RENDER ALL SECTIONS (ONE AFTER THE OTHER)
   renderAllSections() {
     this.renderCurrentArchitecture();
@@ -175,22 +137,16 @@ class OpenLensArchyApp {
     this.renderUserFiles();
   }
 
-  // THEME SWITCHER
+  // THEME SWITCHER: CLASSIC · FUNK · SIGNAL FLOW
   applyTheme(themeName) {
     this.activeTheme = themeName;
     document.body.setAttribute('data-theme', themeName);
 
-    // Sync slide toggle if light or dark
-    if (this.themeSlideToggle) {
-      this.themeSlideToggle.checked = themeName !== 'light';
-    }
+    document.querySelectorAll('.theme-pill-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-theme') === themeName);
+    });
 
-    // Sync dropdown
-    if (this.themeSelectIsland) {
-      this.themeSelectIsland.value = themeName;
-    }
-
-    this.showToast(`Theme: ${themeName.replace('_', ' ').toUpperCase()}`);
+    this.showToast(`Active Theme: ${themeName.replace('_', ' ').toUpperCase()}`);
   }
 
   // RENDER TECH STACK
@@ -914,18 +870,18 @@ class OpenLensArchyApp {
   }
 
   resetView() {
-    this.scale = 0.95;
-    this.panX = 60;
-    this.panY = 40;
+    this.scale = 0.88;
+    this.panX = 30;
+    this.panY = 20;
     this.applyTransform();
     this.updateZoomDisplay();
-    this.showToast('View reset to 100%');
+    this.showToast('View reset');
   }
 
   fitToScreen() {
     const vpW = this.viewport.clientWidth;
     const vpH = this.viewport.clientHeight;
-    this.scale = Math.min(vpW / 1250, vpH / 950, 1.2);
+    this.scale = Math.min(vpW / 1250, vpH / 950, 1.0);
     this.panX = (vpW - 1200 * this.scale) / 2;
     this.panY = (vpH - 900 * this.scale) / 2;
     this.applyTransform();
