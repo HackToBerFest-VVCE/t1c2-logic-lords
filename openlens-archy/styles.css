@@ -202,21 +202,21 @@ button {
 }
 
 /* ==========================================================================
-   COMPACT CENTERED FLOATING ISLAND HEADER
+   ULTRA-COMPACT CENTERED FLOATING ISLAND HEADER
    ========================================================================== */
 
 .floating-island-header {
   position: fixed;
-  top: 14px;
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 44px;
-  padding: 4px 12px;
-  gap: 12px;
+  height: 36px;
+  padding: 0 10px;
+  gap: 8px;
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-pill);
@@ -229,25 +229,26 @@ button {
 .island-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   text-decoration: none;
   color: var(--text-main);
-  font-size: 0.88rem;
+  font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   white-space: nowrap;
 }
 
 .island-brand .brand-badge {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--c-moss-green), var(--c-midnight-green));
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  font-size: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  flex-shrink: 0;
 }
 
 .island-brand span.highlight {
@@ -256,32 +257,29 @@ button {
 
 .island-divider {
   width: 1px;
-  height: 20px;
+  height: 16px;
   background: var(--border-subtle);
+  flex-shrink: 0;
 }
 
 /* LIGHT / DARK SLIDE SWITCH */
 .theme-switch-container {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 2px 7px;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-pill);
+  gap: 4px;
 }
 
 .switch-icon {
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   line-height: 1;
-  opacity: 0.85;
+  opacity: 0.8;
 }
 
 .slide-switch {
   position: relative;
   display: inline-block;
-  width: 32px;
-  height: 18px;
+  width: 28px;
+  height: 15px;
 }
 
 .slide-switch input {
@@ -306,14 +304,14 @@ button {
 .slide-slider:before {
   position: absolute;
   content: "";
-  height: 12px;
-  width: 12px;
+  height: 9px;
+  width: 9px;
   left: 2px;
   bottom: 2px;
   background-color: var(--c-beige);
   transition: .25s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 50%;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 input:checked + .slide-slider {
@@ -321,93 +319,54 @@ input:checked + .slide-slider {
 }
 
 input:checked + .slide-slider:before {
-  transform: translateX(14px);
+  transform: translateX(13px);
   background-color: #0A3323;
 }
 
-/* COMPACT THEME SEGMENTED SLIDER (Classic · Funk · Signal Flow) */
-.theme-pill-group {
-  display: flex;
-  align-items: center;
-  background: var(--bg-surface-elevated);
-  padding: 2px;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--border-subtle);
-  gap: 2px;
-}
-
-.theme-pill-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  border-radius: var(--radius-pill);
-  color: var(--text-muted);
-  transition: var(--transition);
-  white-space: nowrap;
-}
-
-.theme-pill-btn:hover {
-  color: var(--text-main);
-}
-
-.theme-pill-btn.active {
-  background: var(--accent);
-  color: var(--bg-app);
-  font-weight: 700;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
-
-body[data-theme="classic"] .theme-pill-btn.active,
-body:not([data-theme]) .theme-pill-btn.active {
-  background: var(--c-moss-green);
-  color: #0A3323;
-}
-
-body[data-theme="funk"] .theme-pill-btn.active {
-  background: var(--c-rosy-brown);
-  color: #081517;
-}
-
-body[data-theme="signal_flow"] .theme-pill-btn.active {
-  background: #10b981;
-  color: #020907;
-}
-
-/* Compact Select */
+/* Compact Native Select (theme + preset dropdowns) */
 .compact-select {
   appearance: none;
-  background: var(--bg-surface-elevated);
+  background: transparent;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-pill);
-  padding: 4px 20px 4px 10px;
-  font-size: 0.72rem;
+  padding: 2px 22px 2px 8px;
+  font-size: 0.68rem;
   font-weight: 600;
+  font-family: var(--font-sans);
   color: var(--text-main);
   cursor: pointer;
   transition: var(--transition);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23839958'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 7px center;
+  background-size: 7px;
 }
 
 .compact-select:hover {
   border-color: var(--accent);
+  background-color: var(--bg-surface-elevated);
+}
+
+.compact-select option {
+  background: var(--bg-surface-elevated);
+  color: var(--text-main);
 }
 
 /* Export Pill Button */
 .btn-export-pill {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
-  font-size: 0.74rem;
+  gap: 4px;
+  padding: 3px 10px;
+  font-size: 0.68rem;
   font-weight: 700;
   border-radius: var(--radius-pill);
   background: var(--accent);
   color: var(--bg-app);
   transition: var(--transition);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
   white-space: nowrap;
+  font-family: var(--font-sans);
 }
 
 body[data-theme="classic"] .btn-export-pill,
@@ -418,7 +377,7 @@ body:not([data-theme]) .btn-export-pill {
 
 body[data-theme="funk"] .btn-export-pill {
   background: var(--c-rosy-brown);
-  color: #081517;
+  color: #1a0a09;
 }
 
 body[data-theme="signal_flow"] .btn-export-pill {
@@ -503,15 +462,15 @@ body[data-theme="signal_flow"] .btn-export-pill {
 #section-architecture {
   position: relative;
   width: calc(100% - 48px);
-  max-width: 1180px;
-  height: 600px;
-  margin: 76px auto 36px auto;
+  max-width: 1100px;
+  height: 500px;
+  margin: 56px auto 28px auto;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   background-color: var(--grid-bg);
   background-image: radial-gradient(var(--grid-dot) 1.2px, transparent 1.2px);
-  background-size: 24px 24px;
+  background-size: 22px 22px;
   overflow: hidden;
 }
 

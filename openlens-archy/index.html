@@ -1,27 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OpenLens Archy — Interactive Architecture & System Studio</title>
-  <meta name="description" content="OpenLens Archy: AI-powered interactive architecture workspace, tech stack, system design, and design patterns visualizer for user project files.">
+  <meta name="description"
+    content="OpenLens Archy: AI-powered interactive architecture workspace, tech stack, system design, and design patterns visualizer for user project files.">
   <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2220%22 font-size=%2220%22>🔍</text></svg>">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2220%22 font-size=%2220%22>🔍</text></svg>">
 </head>
+
 <body data-theme="classic" data-mode="dark">
 
-  <!-- COMPACT CENTERED FLOATING ISLAND HEADER -->
+  <!-- ULTRA-COMPACT CENTERED FLOATING ISLAND HEADER -->
   <header class="floating-island-header">
     <!-- Brand / Logo -->
-    <a href="#" class="island-brand" title="OpenLens Archy System Studio">
+    <a href="#" class="island-brand" title="OpenLens Archy">
       <div class="brand-badge">🔍</div>
-      <div>OpenLens <span class="highlight">Archy</span></div>
+      <span>OpenLens <span class="highlight">Archy</span></span>
     </a>
 
     <div class="island-divider"></div>
 
     <!-- Light / Dark Slide Switch -->
-    <div class="theme-switch-container" title="Slide between Light and Dark mode">
+    <div class="theme-switch-container" title="Toggle Light / Dark mode">
       <span class="switch-icon">☀️</span>
       <label class="slide-switch">
         <input type="checkbox" id="theme-slide-toggle" checked>
@@ -32,34 +36,28 @@
 
     <div class="island-divider"></div>
 
-    <!-- 3 Themes Segmented Slider: Classic · Funk · Signal Flow -->
-    <div class="theme-pill-group" role="radiogroup" aria-label="Theme Selection">
-      <button class="theme-pill-btn active" data-theme="classic" title="Classic Theme">
-        <span>🌿</span> Classic
-      </button>
-      <button class="theme-pill-btn" data-theme="funk" title="Funk Theme">
-        <span>⚡</span> Funk
-      </button>
-      <button class="theme-pill-btn" data-theme="signal_flow" title="Signal Flow Theme">
-        <span>📡</span> Signal Flow
-      </button>
-    </div>
+    <!-- Theme Dropdown -->
+    <select id="theme-select" class="compact-select" title="Select Theme">
+      <option value="classic">🌿 Classic</option>
+      <option value="funk">⚡ Funk</option>
+      <option value="signal_flow">📡 Signal Flow</option>
+    </select>
 
     <div class="island-divider"></div>
 
     <!-- Project File Set Selector -->
-    <select id="preset-select" class="compact-select" title="Select Project File Set">
-      <option value="auv_defense" selected>AUV Defense (25 Files)</option>
-      <option value="openlens_core">OpenLens Core (VS Code + Snowflake)</option>
+    <select id="preset-select" class="compact-select" title="Select Project">
+      <option value="auv_defense" selected>AUV Defense</option>
+      <option value="openlens_core">OpenLens Core</option>
     </select>
 
     <div class="island-divider"></div>
 
     <!-- Export Dropdown -->
     <div class="dropdown-container">
-      <button id="export-btn" class="btn-export-pill" title="Export Diagram & Rules">
+      <button id="export-btn" class="btn-export-pill" title="Export">
         <span>Export</span>
-        <span style="font-size: 0.65rem;">▼</span>
+        <span style="font-size: 0.6rem;">▼</span>
       </button>
       <div id="export-menu" class="dropdown-menu">
         <button id="export-copy-btn" class="dropdown-item">
@@ -141,9 +139,11 @@
       <div class="section-header">
         <div>
           <h2 class="section-title"><span>🛠️</span> Tech Stack Profile</h2>
-          <p class="section-subtitle">Vetted frameworks, libraries, and runtimes detected from user repository files.</p>
+          <p class="section-subtitle">Vetted frameworks, libraries, and runtimes detected from user repository files.
+          </p>
         </div>
-        <button id="scan-files-btn" class="ctrl-btn" style="border: 1px solid var(--border-subtle); padding: 5px 12px;" title="Re-scan User Files">
+        <button id="scan-files-btn" class="ctrl-btn" style="border: 1px solid var(--border-subtle); padding: 5px 12px;"
+          title="Re-scan User Files">
           <span>🔄</span> Rescan Files
         </button>
       </div>
@@ -155,20 +155,23 @@
       <div class="section-header">
         <div>
           <h2 class="section-title"><span>🏛️</span> System Design &amp; Ingestion Topology</h2>
-          <p class="section-subtitle">Architectural style, ingestion topologies, air-gapped zero-trust boundaries, and SLA performance budgets.</p>
+          <p class="section-subtitle">Architectural style, ingestion topologies, air-gapped zero-trust boundaries, and
+            SLA performance budgets.</p>
         </div>
       </div>
       <div class="systemdesign-container">
         <!-- SLA Metrics -->
         <div>
-          <h3 style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">
+          <h3
+            style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">
             System Performance &amp; SLA Budgets
           </h3>
           <div id="sla-metrics-container" class="sla-metrics-grid"></div>
         </div>
         <!-- Topology Specifications -->
         <div>
-          <h3 style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">
+          <h3
+            style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">
             Architectural Topology &amp; Ingestion Protocols
           </h3>
           <div id="system-specs-container" style="display: flex; flex-direction: column; gap: 14px;"></div>
@@ -181,7 +184,8 @@
       <div class="section-header">
         <div>
           <h2 class="section-title"><span>🧩</span> Identified Software Design Patterns</h2>
-          <p class="section-subtitle">Architectural, creational, and structural design patterns detected in user files with code implementation snippets.</p>
+          <p class="section-subtitle">Architectural, creational, and structural design patterns detected in user files
+            with code implementation snippets.</p>
         </div>
       </div>
       <div id="patterns-cards-container" class="patterns-grid"></div>
@@ -192,9 +196,11 @@
       <div class="section-header">
         <div>
           <h2 class="section-title"><span>📁</span> User Project Files &amp; Component Mapping</h2>
-          <p class="section-subtitle">Evidence-based static mapping connecting physical source files to architecture layers and design patterns.</p>
+          <p class="section-subtitle">Evidence-based static mapping connecting physical source files to architecture
+            layers and design patterns.</p>
         </div>
-        <div class="status-badge" style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; background:var(--badge-bg); border:1px solid var(--border-subtle); border-radius:20px; font-size:0.72rem; font-family:var(--font-mono); color:var(--text-muted);">
+        <div class="status-badge"
+          style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; background:var(--badge-bg); border:1px solid var(--border-subtle); border-radius:20px; font-size:0.72rem; font-family:var(--font-mono); color:var(--text-muted);">
           <span class="status-dot" style="width:7px; height:7px; border-radius:50%; background:#10b981;"></span>
           <span id="files-count-badge">25 Files Tracked</span>
         </div>
@@ -241,14 +247,17 @@
       </div>
       <div class="modal-body">
         <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">
-          These architecture rules and decisions are synchronized with the Snowflake knowledge base and exported to the OpenLens Dev VS Code extension for real-time boundary verification during active development.
+          These architecture rules and decisions are synchronized with the Snowflake knowledge base and exported to the
+          OpenLens Dev VS Code extension for real-time boundary verification during active development.
         </p>
-        <h3 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main); margin-top: 6px;">
+        <h3
+          style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main); margin-top: 6px;">
           Recorded ADRs
         </h3>
         <div id="adr-list-container"></div>
 
-        <h3 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main); margin-top: 10px;">
+        <h3
+          style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main); margin-top: 10px;">
           Exportable JSON AST Rules for OpenLens Dev
         </h3>
         <pre id="rules-json-block" class="code-block"></pre>
@@ -262,4 +271,5 @@
   <!-- Main ES Module Script -->
   <script type="module" src="app.js"></script>
 </body>
+
 </html>

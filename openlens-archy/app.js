@@ -68,13 +68,14 @@ class OpenLensArchyApp {
       });
     }
 
-    // Theme Switcher Buttons (Classic · Funk · Signal Flow)
-    document.querySelectorAll('.theme-pill-btn').forEach(btn => {
-      btn.addEventListener('click', e => {
-        const theme = e.currentTarget.getAttribute('data-theme');
-        this.applyTheme(theme);
+    // Theme Dropdown (Classic · Funk · Signal Flow)
+    const themeSelect = document.getElementById('theme-select');
+    if (themeSelect) {
+      themeSelect.value = this.activeTheme;
+      themeSelect.addEventListener('change', e => {
+        this.applyTheme(e.target.value);
       });
-    });
+    }
 
     // Canvas Pan & Zoom
     this.viewport.addEventListener('mousedown', e => this.onMouseDown(e));
@@ -166,9 +167,9 @@ class OpenLensArchyApp {
     this.activeTheme = themeName;
     document.body.setAttribute('data-theme', themeName);
 
-    document.querySelectorAll('.theme-pill-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-theme') === themeName);
-    });
+    // Sync the theme dropdown
+    const themeSelect = document.getElementById('theme-select');
+    if (themeSelect) themeSelect.value = themeName;
 
     this.showToast(`Theme: ${themeName.replace('_', ' ').toUpperCase()}`);
   }
