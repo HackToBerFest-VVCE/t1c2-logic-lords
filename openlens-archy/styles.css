@@ -1,34 +1,23 @@
 /* OpenLens Archy - Modern Architecture Workspace Styles
-   Palette:
-   - #0A3323 (Dark green)
-   - #839958 (Moss green)
-   - #F7F4D5 (Beige)
-   - #D3968C (Rosy brown)
-   - #105666 (Midnight green)
+   New Palette — Light-first Blueprint Studio:
 
-   Themes:
-   - Classic
-   - Funk
-   - Signal Flow
-   + Light / Dark Slide Mode
+   CLASSIC:      Slate Blue + Indigo + Pearl White
+   FUNK:         Coral Rose + Saffron + Warm Cream
+   SIGNAL FLOW:  Emerald + Cyan + Deep Navy
+
+   Light mode = PRIMARY default
+   Dark mode  = optional toggle overlay
 */
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* Core Palette Tokens */
-  --c-dark-green: #0A3323;
-  --c-moss-green: #839958;
-  --c-beige: #F7F4D5;
-  --c-rosy-brown: #D3968C;
-  --c-midnight-green: #105666;
-
-  /* Layer Identity Colors */
-  --layer-frontend: #38bdf8;
-  --layer-backend: #10b981;
-  --layer-database: #a855f7;
-  --layer-security: #f43f5e;
-  --layer-external: #94a3b8;
+  /* Shared Layer Identity Colors (remain consistent across themes) */
+  --layer-frontend:  #3B82F6;  /* blue */
+  --layer-backend:   #10B981;  /* emerald */
+  --layer-database:  #8B5CF6;  /* violet */
+  --layer-security:  #F43F5E;  /* rose */
+  --layer-external:  #94A3B8;  /* slate */
 
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -36,136 +25,174 @@
   --radius-md: 14px;
   --radius-lg: 20px;
   --radius-pill: 9999px;
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.12);
-  --shadow-md: 0 8px 24px rgba(0,0,0,0.18);
-  --shadow-lg: 0 16px 40px rgba(0,0,0,0.25);
-  --shadow-island: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-subtle);
-  --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.07);
+  --shadow-md: 0 6px 20px rgba(0,0,0,0.10);
+  --shadow-lg: 0 14px 36px rgba(0,0,0,0.14);
+  --shadow-island: 0 4px 24px rgba(0,0,0,0.12), 0 0 0 1px var(--border-subtle);
+  --transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ==========================================================================
-   THEMES: CLASSIC, FUNK, SIGNAL FLOW (DARK DEFAULT)
+   THEMES — LIGHT MODE IS PRIMARY (default state)
    ========================================================================== */
 
-/* 1. CLASSIC THEME (Harmonious Palette: Dark Green, Moss Green, Beige & Midnight) */
+/* ── 1. CLASSIC  ──────────────────────────────────────────────────────────
+   Blueprint Slate: crisp white canvas, indigo-blue accents, cool grays
+   ──────────────────────────────────────────────────────────────────────── */
 body[data-theme="classic"],
 body:not([data-theme]) {
-  --bg-app: #05140e;
-  --bg-surface: rgba(10, 33, 23, 0.88);
-  --bg-surface-elevated: #0f2c20;
-  --bg-node: rgba(10, 33, 23, 0.94);
-  --border-subtle: rgba(131, 153, 88, 0.25);
-  --border-strong: rgba(131, 153, 88, 0.5);
-  --border-node: #164632;
-  --text-main: #F7F4D5;
-  --text-muted: rgba(247, 244, 213, 0.7);
-  --text-subtle: rgba(247, 244, 213, 0.45);
-  --grid-dot: rgba(131, 153, 88, 0.22);
-  --grid-bg: #05140e;
-  --accent: #839958;
-  --accent-secondary: #105666;
-  --accent-highlight: #D3968C;
-  --path-default: #839958;
-  --path-glow: rgba(131, 153, 88, 0.6);
-  --boundary-text: rgba(247, 244, 213, 0.75);
-  --badge-bg: rgba(16, 86, 102, 0.4);
-  --card-bg: #0b261b;
+  /* Light (DEFAULT) */
+  --bg-app:              #F4F7FB;
+  --bg-surface:          rgba(255, 255, 255, 0.96);
+  --bg-surface-elevated: #EBF0F8;
+  --bg-node:             #FFFFFF;
+  --border-subtle:       rgba(71, 85, 105, 0.14);
+  --border-strong:       rgba(71, 85, 105, 0.32);
+  --border-node:         #CBD5E1;
+  --text-main:           #0F172A;
+  --text-muted:          #475569;
+  --text-subtle:         #94A3B8;
+  --grid-dot:            rgba(99, 102, 241, 0.15);
+  --grid-bg:             #F4F7FB;
+  --accent:              #4F46E5;   /* indigo */
+  --accent-secondary:    #7C3AED;   /* violet */
+  --accent-highlight:    #F97316;   /* orange pop */
+  --path-default:        #4F46E5;
+  --path-glow:           rgba(79, 70, 229, 0.35);
+  --boundary-text:       #334155;
+  --badge-bg:            rgba(99, 102, 241, 0.08);
+  --card-bg:             #FFFFFF;
 }
 
-/* 2. FUNK THEME (Vibrant Retro-Techno Neo-Brutalist Fusion) */
+/* ── 2. FUNK  ─────────────────────────────────────────────────────────────
+   Coral Rose: warm cream canvas, vivid rose-coral + amber accents
+   ──────────────────────────────────────────────────────────────────────── */
 body[data-theme="funk"] {
-  --bg-app: #0b1a1c;
-  --bg-surface: rgba(16, 45, 51, 0.92);
-  --bg-surface-elevated: #163d45;
-  --bg-node: rgba(16, 45, 51, 0.96);
-  --border-subtle: rgba(211, 150, 140, 0.38);
-  --border-strong: #D3968C;
-  --border-node: #D3968C;
-  --text-main: #F7F4D5;
-  --text-muted: #e7cfcb;
-  --text-subtle: #bba29e;
-  --grid-dot: #839958;
-  --grid-bg: #081517;
-  --accent: #D3968C;
-  --accent-secondary: #839958;
-  --accent-highlight: #ff6b8b;
-  --path-default: #D3968C;
-  --path-glow: rgba(211, 150, 140, 0.85);
-  --boundary-text: #F7F4D5;
-  --badge-bg: rgba(211, 150, 140, 0.25);
-  --card-bg: #13343c;
+  /* Light (DEFAULT) */
+  --bg-app:              #FEF8F5;
+  --bg-surface:          rgba(255, 255, 255, 0.96);
+  --bg-surface-elevated: #FDE8DF;
+  --bg-node:             #FFFFFF;
+  --border-subtle:       rgba(220, 80, 60, 0.14);
+  --border-strong:       rgba(220, 80, 60, 0.35);
+  --border-node:         #FBBBA0;
+  --text-main:           #1C0A05;
+  --text-muted:          #7A3A25;
+  --text-subtle:         #B87B65;
+  --grid-dot:            rgba(236, 72, 153, 0.18);
+  --grid-bg:             #FEF8F5;
+  --accent:              #E8440A;   /* vivid coral-red */
+  --accent-secondary:    #F59E0B;   /* amber */
+  --accent-highlight:    #EC4899;   /* pink */
+  --path-default:        #E8440A;
+  --path-glow:           rgba(232, 68, 10, 0.35);
+  --boundary-text:       #7A3A25;
+  --badge-bg:            rgba(232, 68, 10, 0.08);
+  --card-bg:             #FFFFFF;
 }
 
-/* 3. SIGNAL FLOW THEME (Tactical Sonar Radar Laser Flow) */
+/* ── 3. SIGNAL FLOW  ──────────────────────────────────────────────────────
+   Emerald Circuit: mint-white canvas, emerald + cyan on deep navy nodes
+   ──────────────────────────────────────────────────────────────────────── */
 body[data-theme="signal_flow"] {
-  --bg-app: #020907;
-  --bg-surface: rgba(5, 25, 18, 0.92);
-  --bg-surface-elevated: #093325;
-  --bg-node: rgba(4, 20, 14, 0.96);
-  --border-subtle: rgba(16, 185, 129, 0.35);
-  --border-strong: #10b981;
-  --border-node: #10b981;
-  --text-main: #f0fdf4;
-  --text-muted: #86efac;
-  --text-subtle: #4ade80;
-  --grid-dot: rgba(16, 185, 129, 0.35);
-  --grid-bg: #020907;
-  --accent: #10b981;
-  --accent-secondary: #38bdf8;
-  --accent-highlight: #a855f7;
-  --path-default: #10b981;
-  --path-glow: rgba(16, 185, 129, 0.9);
-  --boundary-text: #86efac;
-  --badge-bg: rgba(16, 185, 129, 0.25);
-  --card-bg: #051e15;
+  /* Light (DEFAULT) */
+  --bg-app:              #F0FDF8;
+  --bg-surface:          rgba(255, 255, 255, 0.96);
+  --bg-surface-elevated: #D1FAE5;
+  --bg-node:             #FFFFFF;
+  --border-subtle:       rgba(5, 150, 105, 0.15);
+  --border-strong:       rgba(5, 150, 105, 0.38);
+  --border-node:         #6EE7B7;
+  --text-main:           #022C22;
+  --text-muted:          #065F46;
+  --text-subtle:         #34D399;
+  --grid-dot:            rgba(5, 150, 105, 0.18);
+  --grid-bg:             #F0FDF8;
+  --accent:              #059669;   /* emerald */
+  --accent-secondary:    #0891B2;   /* cyan */
+  --accent-highlight:    #6366F1;   /* indigo */
+  --path-default:        #059669;
+  --path-glow:           rgba(5, 150, 105, 0.4);
+  --boundary-text:       #065F46;
+  --badge-bg:            rgba(5, 150, 105, 0.08);
+  --card-bg:             #FFFFFF;
 }
 
 /* ==========================================================================
-   LIGHT MODE OVERRIDES (When Slide Switch is set to Light ☀️)
+   DARK MODE OVERLAY — flips any theme to dark when [data-mode="dark"]
    ========================================================================== */
-body[data-mode="light"] {
-  --bg-app: #fbf9ef;
-  --bg-surface: rgba(255, 255, 255, 0.94);
-  --bg-surface-elevated: #f4efe1;
-  --bg-node: #ffffff;
-  --border-subtle: rgba(10, 51, 35, 0.16);
-  --border-strong: rgba(10, 51, 35, 0.38);
-  --border-node: #d9dbbe;
-  --text-main: #0A3323;
-  --text-muted: #2d5543;
-  --text-subtle: #627b6f;
-  --grid-dot: rgba(10, 51, 35, 0.18);
-  --grid-bg: #fbf9ef;
-  --accent: #0A3323;
-  --accent-secondary: #105666;
-  --accent-highlight: #D3968C;
-  --path-default: #105666;
-  --path-glow: rgba(16, 86, 102, 0.4);
-  --boundary-text: #0A3323;
-  --badge-bg: rgba(131, 153, 88, 0.2);
-  --card-bg: #ffffff;
+
+/* Classic Dark */
+body[data-mode="dark"][data-theme="classic"],
+body[data-mode="dark"]:not([data-theme]) {
+  --bg-app:              #0D1117;
+  --bg-surface:          rgba(22, 28, 45, 0.92);
+  --bg-surface-elevated: #1A2235;
+  --bg-node:             rgba(22, 28, 45, 0.96);
+  --border-subtle:       rgba(99, 102, 241, 0.18);
+  --border-strong:       rgba(99, 102, 241, 0.38);
+  --border-node:         #2D3555;
+  --text-main:           #E2E8F0;
+  --text-muted:          #94A3B8;
+  --text-subtle:         #475569;
+  --grid-dot:            rgba(99, 102, 241, 0.12);
+  --grid-bg:             #0D1117;
+  --accent:              #818CF8;   /* lighter indigo for dark bg */
+  --accent-secondary:    #A78BFA;   /* lighter violet */
+  --accent-highlight:    #FB923C;   /* orange */
+  --path-default:        #818CF8;
+  --path-glow:           rgba(129, 140, 248, 0.5);
+  --boundary-text:       #94A3B8;
+  --badge-bg:            rgba(99, 102, 241, 0.15);
+  --card-bg:             #111827;
 }
 
-body[data-mode="light"][data-theme="funk"] {
-  --bg-app: #fdf5f4;
-  --bg-surface: rgba(255, 255, 255, 0.94);
-  --bg-surface-elevated: #fae8e6;
-  --border-strong: #D3968C;
-  --border-node: #D3968C;
-  --text-main: #331513;
-  --accent: #D3968C;
-  --path-default: #D3968C;
+/* Funk Dark */
+body[data-mode="dark"][data-theme="funk"] {
+  --bg-app:              #150A05;
+  --bg-surface:          rgba(35, 15, 8, 0.94);
+  --bg-surface-elevated: #2E1209;
+  --bg-node:             rgba(35, 15, 8, 0.96);
+  --border-subtle:       rgba(232, 68, 10, 0.22);
+  --border-strong:       rgba(232, 68, 10, 0.48);
+  --border-node:         #5C2010;
+  --text-main:           #FEF3EE;
+  --text-muted:          #FDBA9A;
+  --text-subtle:         #C2714F;
+  --grid-dot:            rgba(236, 72, 153, 0.15);
+  --grid-bg:             #150A05;
+  --accent:              #FB7340;   /* lighter coral */
+  --accent-secondary:    #FCD34D;   /* yellow */
+  --accent-highlight:    #F472B6;   /* pink */
+  --path-default:        #FB7340;
+  --path-glow:           rgba(251, 115, 64, 0.5);
+  --boundary-text:       #FDBA9A;
+  --badge-bg:            rgba(232, 68, 10, 0.15);
+  --card-bg:             #1E0D06;
 }
 
-body[data-mode="light"][data-theme="signal_flow"] {
-  --bg-app: #f2fbf6;
-  --bg-surface: rgba(255, 255, 255, 0.94);
-  --bg-surface-elevated: #e2f7ed;
-  --border-strong: #10b981;
-  --border-node: #10b981;
-  --text-main: #042918;
-  --accent: #10b981;
-  --path-default: #10b981;
+/* Signal Flow Dark */
+body[data-mode="dark"][data-theme="signal_flow"] {
+  --bg-app:              #020B07;
+  --bg-surface:          rgba(4, 20, 14, 0.94);
+  --bg-surface-elevated: #07251A;
+  --bg-node:             rgba(4, 20, 14, 0.96);
+  --border-subtle:       rgba(5, 150, 105, 0.18);
+  --border-strong:       rgba(5, 150, 105, 0.42);
+  --border-node:         #0A3D28;
+  --text-main:           #ECFDF5;
+  --text-muted:          #6EE7B7;
+  --text-subtle:         #34D399;
+  --grid-dot:            rgba(5, 150, 105, 0.14);
+  --grid-bg:             #020B07;
+  --accent:              #34D399;   /* lighter emerald */
+  --accent-secondary:    #22D3EE;   /* bright cyan */
+  --accent-highlight:    #818CF8;   /* indigo */
+  --path-default:        #34D399;
+  --path-glow:           rgba(52, 211, 153, 0.55);
+  --boundary-text:       #6EE7B7;
+  --badge-bg:            rgba(5, 150, 105, 0.15);
+  --card-bg:             #041410;
 }
 
 /* ==========================================================================
@@ -242,7 +269,7 @@ button {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--c-moss-green), var(--c-midnight-green));
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -295,8 +322,8 @@ button {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--c-dark-green);
-  border: 1px solid var(--border-strong);
+  background-color: var(--border-strong);
+  border: 1px solid var(--border-subtle);
   transition: .25s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 20px;
 }
@@ -308,19 +335,19 @@ button {
   width: 9px;
   left: 2px;
   bottom: 2px;
-  background-color: var(--c-beige);
+  background-color: #FFFFFF;
   transition: .25s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 50%;
   box-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 input:checked + .slide-slider {
-  background-color: var(--c-moss-green);
+  background-color: var(--accent);
 }
 
 input:checked + .slide-slider:before {
   transform: translateX(13px);
-  background-color: #0A3323;
+  background-color: #FFFFFF;
 }
 
 /* Compact Native Select (theme + preset dropdowns) */
@@ -336,7 +363,7 @@ input:checked + .slide-slider:before {
   color: var(--text-main);
   cursor: pointer;
   transition: var(--transition);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23839958'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2364748B'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 7px center;
   background-size: 7px;
@@ -362,27 +389,11 @@ input:checked + .slide-slider:before {
   font-weight: 700;
   border-radius: var(--radius-pill);
   background: var(--accent);
-  color: var(--bg-app);
+  color: #FFFFFF;
   transition: var(--transition);
   box-shadow: 0 1px 4px rgba(0,0,0,0.15);
   white-space: nowrap;
   font-family: var(--font-sans);
-}
-
-body[data-theme="classic"] .btn-export-pill,
-body:not([data-theme]) .btn-export-pill {
-  background: var(--c-moss-green);
-  color: #0A3323;
-}
-
-body[data-theme="funk"] .btn-export-pill {
-  background: var(--c-rosy-brown);
-  color: #1a0a09;
-}
-
-body[data-theme="signal_flow"] .btn-export-pill {
-  background: #10b981;
-  color: #020907;
 }
 
 .btn-export-pill:hover {
@@ -777,17 +788,7 @@ body[data-theme="signal_flow"] .btn-export-pill {
 
 .ctrl-btn.active {
   background: var(--accent);
-  color: var(--bg-app);
-}
-
-body[data-theme="funk"] .ctrl-btn.active {
-  background: var(--c-rosy-brown);
-  color: #081517;
-}
-
-body[data-theme="signal_flow"] .ctrl-btn.active {
-  background: #10b981;
-  color: #020907;
+  color: #FFFFFF;
 }
 
 .ctrl-divider {
@@ -1304,8 +1305,8 @@ body[data-theme="signal_flow"] .ctrl-btn.active {
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%) translateY(20px);
-  background: var(--c-midnight-green);
-  color: var(--c-beige);
+  background: var(--text-main);
+  color: var(--bg-app);
   padding: 10px 18px;
   border-radius: 20px;
   font-size: 0.82rem;

@@ -10,7 +10,7 @@ class OpenLensArchyApp {
     this.currentPresetKey = 'auv_defense';
     this.currentPreset = ARCHITECTURE_PRESETS[this.currentPresetKey];
     this.activeTheme = 'classic';
-    this.activeMode = 'dark';
+    this.activeMode = 'light';
     this.activeLayerFilter = null;
     this.pathModeActive = false;
     this.pathStartNode = null;
