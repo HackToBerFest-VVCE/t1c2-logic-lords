@@ -3,105 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpenLens Archy — Interactive Architecture & System Flow Visualizer</title>
-  <meta name="description" content="OpenLens Archy: AI-powered architecture, tech stack, system design, and design patterns visualizer for user project files.">
+  <title>OpenLens Archy — Interactive Architecture & System Flow Studio</title>
+  <meta name="description" content="OpenLens Archy: AI-powered interactive architecture workspace, tech stack, system design, and design patterns visualizer for user project files.">
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2220%22 font-size=%2220%22>🔍</text></svg>">
 </head>
 <body data-theme="dark">
-  <div id="app-container">
-    
-    <!-- Top Navigation Bar -->
-    <header class="top-navbar">
-      <div class="brand-section">
-        <div class="brand-logo">
-          <div class="logo-icon">🔍</div>
-          <div>OpenLens <span class="highlight">Archy</span></div>
-        </div>
-        <div class="status-badge">
-          <span class="status-dot"></span>
-          <span>Snowflake Synced</span>
-        </div>
+
+  <!-- SLEEK FLOATING ISLAND HEADER -->
+  <header class="floating-island-header">
+    <!-- Brand / Logo -->
+    <a href="#section-architecture" class="island-brand" title="OpenLens Archy System Studio">
+      <div class="brand-badge">🔍</div>
+      <div>OpenLens <span class="highlight">Archy</span></div>
+    </a>
+
+    <!-- Center: Continuous Section Navigation Anchors (One after the other) -->
+    <nav class="island-nav-links" aria-label="Sections">
+      <a href="#section-architecture" class="island-link active" data-target="section-architecture">
+        <span>📐</span> Architecture
+      </a>
+      <a href="#section-techstack" class="island-link" data-target="section-techstack">
+        <span>🛠️</span> Tech Stack
+      </a>
+      <a href="#section-systemdesign" class="island-link" data-target="section-systemdesign">
+        <span>🏛️</span> System Design
+      </a>
+      <a href="#section-designpatterns" class="island-link" data-target="section-designpatterns">
+        <span>🧩</span> Patterns
+      </a>
+      <a href="#section-userfiles" class="island-link" data-target="section-userfiles">
+        <span>📁</span> Files
+      </a>
+    </nav>
+
+    <!-- Right: Slide Switch, Themes, Project & Export -->
+    <div class="island-actions">
+      <!-- Light / Dark Slide Switch -->
+      <div class="theme-switch-container" title="Slide between Light and Dark mode">
+        <span class="switch-icon">☀️</span>
+        <label class="slide-switch">
+          <input type="checkbox" id="theme-slide-toggle">
+          <span class="slide-slider"></span>
+        </label>
+        <span class="switch-icon">🌙</span>
       </div>
 
-      <!-- Center: 4 Core Architectural Views Switcher -->
-      <nav class="view-tabs-container" aria-label="Architecture Views">
-        <button class="view-tab-btn active" data-view="architecture" title="Interactive Architecture Diagram & System Flow">
-          <span>📐</span> Architecture
-        </button>
-        <button class="view-tab-btn" data-view="techstack" title="Detected Tech Stack & Frameworks">
-          <span>🛠️</span> Tech Stack
-        </button>
-        <button class="view-tab-btn" data-view="systemdesign" title="System Design & Ingestion Topology">
-          <span>🏛️</span> System Design
-        </button>
-        <button class="view-tab-btn" data-view="designpatterns" title="Software Design Patterns in User Files">
-          <span>🧩</span> Design Patterns
-        </button>
-        <button class="view-tab-btn" data-view="userfiles" title="User Repository Files Inventory">
-          <span>📁</span> User Files
-        </button>
-      </nav>
+      <!-- Additional Theme Options (Funk, Signal Flow, etc.) -->
+      <select id="theme-select-island" class="theme-select-island" title="Switch Theme Palette">
+        <option value="dark" selected>Theme: Dark</option>
+        <option value="light">Theme: Light</option>
+        <option value="funk">Theme: Funk</option>
+        <option value="signal_flow">Theme: Signal Flow</option>
+      </select>
 
-      <!-- Right: Presets, Themes, ADRs & Export Dropdown -->
-      <div class="nav-actions">
-        <!-- Architecture / Repo Selector -->
-        <div class="select-wrapper">
-          <select id="preset-select" class="preset-dropdown" title="Select Project / User File Set">
-            <option value="auv_defense" selected>Project: AUV Autonomous Defense (25 Files)</option>
-            <option value="openlens_core">Project: OpenLens Core (VS Code + Snowflake)</option>
-          </select>
-          <span class="select-arrow">▼</span>
-        </div>
+      <!-- Project / Preset Select -->
+      <select id="preset-select" class="theme-select-island" title="Select Project File Set">
+        <option value="auv_defense" selected>AUV Defense (25 Files)</option>
+        <option value="openlens_core">OpenLens Core (VS Code + Snowflake)</option>
+      </select>
 
-        <!-- 3 Themes: Dark, Light, Funk -->
-        <div class="theme-selector-group" title="Select UI Color Theme">
-          <button class="theme-btn active" data-theme="dark" title="Dark Theme">Dark</button>
-          <button class="theme-btn" data-theme="light" title="Light Theme">Light</button>
-          <button class="theme-btn" data-theme="funk" title="Funk Theme">Funk</button>
-        </div>
-
-        <!-- ADRs & Rules Inspector -->
-        <button id="view-adrs-btn" class="btn-secondary" title="View Architecture Decisions and Rules">
-          <span>📋</span> Rules &amp; ADRs
+      <!-- Export Dropdown -->
+      <div class="dropdown-container">
+        <button id="export-btn" class="btn-export-pill" title="Export Diagram & Rules">
+          <span>Export</span>
+          <span style="font-size: 0.65rem;">▼</span>
         </button>
-
-        <!-- Export Dropdown -->
-        <div class="dropdown-container">
-          <button id="export-btn" class="btn-primary" title="Export Diagram Options">
-            <span>Export</span>
-            <span style="font-size: 0.65rem;">▼</span>
+        <div id="export-menu" class="dropdown-menu">
+          <button id="export-copy-btn" class="dropdown-item">
+            <span>📋</span> Copy Diagram
           </button>
-          <div id="export-menu" class="dropdown-menu">
-            <button id="export-copy-btn" class="dropdown-item">
-              <span>📋</span> Copy Diagram
-            </button>
-            <div class="dropdown-divider"></div>
-            <button id="export-png-btn" class="dropdown-item">
-              <span>🖼️</span> Save as PNG
-            </button>
-            <button id="export-jpeg-btn" class="dropdown-item">
-              <span>🖼️</span> Save as JPEG
-            </button>
-            <button id="export-svg-btn" class="dropdown-item">
-              <span>📐</span> Save as SVG
-            </button>
-            <div class="dropdown-divider"></div>
-            <button id="export-rules-btn" class="dropdown-item">
-              <span>📦</span> Export Rules (JSON)
-            </button>
-            <button id="export-adrs-btn" class="dropdown-item">
-              <span>📝</span> Export ADRs (Markdown)
-            </button>
-          </div>
+          <div class="dropdown-divider"></div>
+          <button id="export-png-btn" class="dropdown-item">
+            <span>🖼️</span> Save as PNG
+          </button>
+          <button id="export-jpeg-btn" class="dropdown-item">
+            <span>🖼️</span> Save as JPEG
+          </button>
+          <button id="export-svg-btn" class="dropdown-item">
+            <span>📐</span> Save as SVG
+          </button>
+          <div class="dropdown-divider"></div>
+          <button id="export-rules-btn" class="dropdown-item">
+            <span>📦</span> Export Rules (JSON)
+          </button>
+          <button id="export-adrs-btn" class="dropdown-item">
+            <span>📝</span> Export ADRs (Markdown)
+          </button>
         </div>
       </div>
-    </header>
+    </div>
+  </header>
 
-    <!-- Main Content Area -->
-    <main id="main-content-area">
+  <!-- CONTINUOUS PAGE CONTAINER (ALL SECTIONS ONE AFTER THE OTHER) -->
+  <div id="page-scroll-container">
 
-      <!-- VIEW 1: INTERACTIVE ARCHITECTURE CANVAS VIEWPORT -->
+    <!-- SECTION 1: INTERACTIVE ARCHITECTURE CANVAS -->
+    <section id="section-architecture">
       <div id="workspace-viewport">
         <div id="workspace-content">
           <!-- Subsystems & Boundaries Layer -->
@@ -132,6 +130,9 @@
             <button id="lens-mode-btn" class="ctrl-btn" title="Toggle Lens Node Inspector Drawer">
               <span>◎</span> LENS
             </button>
+            <button id="view-adrs-btn" class="ctrl-btn" title="View ADRs & Architecture Rules">
+              <span>📋</span> ADRs
+            </button>
             <div class="ctrl-divider"></div>
             <button id="zoom-out-btn" class="ctrl-btn" title="Zoom Out">−</button>
             <span id="zoom-display" class="zoom-display">100%</span>
@@ -142,131 +143,130 @@
           </div>
         </footer>
       </div>
+    </section>
 
-      <!-- VIEW 2: TECH STACK PANEL -->
-      <section id="panel-techstack" class="content-panel">
-        <div class="panel-header-section">
-          <div>
-            <h1 class="panel-title">🛠️ Project Tech Stack</h1>
-            <p class="panel-subtitle">Vetted frameworks, libraries, and runtimes detected from user repository files.</p>
-          </div>
-          <button id="scan-files-btn" class="btn-secondary" title="Re-scan User Files">
-            <span>🔄</span> Rescan Files
-          </button>
+    <!-- SECTION 2: TECH STACK (DETECTED FROM USER FILES) -->
+    <section id="section-techstack" class="page-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span>🛠️</span> Tech Stack Profile</h2>
+          <p class="section-subtitle">Vetted frameworks, libraries, and runtimes detected from user repository files.</p>
         </div>
-        <div id="techstack-cards-container" class="techstack-grid"></div>
-      </section>
-
-      <!-- VIEW 3: SYSTEM DESIGN SPECIFICATION PANEL -->
-      <section id="panel-systemdesign" class="content-panel">
-        <div class="panel-header-section">
-          <div>
-            <h1 class="panel-title">🏛️ System Design Specification</h1>
-            <p class="panel-subtitle">Architectural style, ingestion topologies, air-gapped zero-trust boundaries, and SLA performance budgets.</p>
-          </div>
-        </div>
-        <div class="systemdesign-container">
-          <!-- SLA Metrics -->
-          <div>
-            <h3 style="font-size: 0.85rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px;">
-              System Performance &amp; SLA Budgets
-            </h3>
-            <div id="sla-metrics-container" class="sla-metrics-grid"></div>
-          </div>
-          <!-- Topology Specifications -->
-          <div>
-            <h3 style="font-size: 0.85rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px;">
-              Architectural Topology &amp; Ingestion Protocols
-            </h3>
-            <div id="system-specs-container" style="display: flex; flex-direction: column; gap: 14px;"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- VIEW 4: DESIGN PATTERNS PANEL -->
-      <section id="panel-designpatterns" class="content-panel">
-        <div class="panel-header-section">
-          <div>
-            <h1 class="panel-title">🧩 Identified Software Design Patterns</h1>
-            <p class="panel-subtitle">Architectural, creational, and structural design patterns detected in user files with code implementation snippets.</p>
-          </div>
-        </div>
-        <div id="patterns-cards-container" class="patterns-grid"></div>
-      </section>
-
-      <!-- VIEW 5: USER FILES REPOSITORY INVENTORY -->
-      <section id="panel-userfiles" class="content-panel">
-        <div class="panel-header-section">
-          <div>
-            <h1 class="panel-title">📁 User Project Files &amp; Component Mapping</h1>
-            <p class="panel-subtitle">Evidence-based static mapping connecting physical source files to architecture layers and design patterns.</p>
-          </div>
-          <div class="status-badge">
-            <span class="status-dot"></span>
-            <span id="files-count-badge">25 Files Tracked</span>
-          </div>
-        </div>
-        <div class="files-table-container">
-          <table class="files-table">
-            <thead>
-              <tr>
-                <th>File Path</th>
-                <th>Architectural Component</th>
-                <th>Layer</th>
-                <th>Lines</th>
-                <th>Detected Tech</th>
-                <th>Design Pattern</th>
-              </tr>
-            </thead>
-            <tbody id="user-files-tbody"></tbody>
-          </table>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Floating Interactive Flow Path Tooltip -->
-    <div id="flow-tooltip"></div>
-
-    <!-- Slide-Out LENS Inspection Drawer -->
-    <aside id="lens-drawer">
-      <div class="drawer-header">
-        <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main);">Architecture Lens</h3>
-        <button id="close-drawer-btn" class="modal-close-btn">&times;</button>
+        <button id="scan-files-btn" class="ctrl-btn" style="border: 1px solid var(--border-subtle); padding: 6px 14px;" title="Re-scan User Files">
+          <span>🔄</span> Rescan Files
+        </button>
       </div>
-      <div id="drawer-content" class="drawer-content">
-        <!-- Injected dynamically on node inspection -->
-      </div>
-    </aside>
+      <div id="techstack-cards-container" class="techstack-grid"></div>
+    </section>
 
-    <!-- ADR & Rules Modal Dialog -->
-    <div id="adr-modal" class="modal-overlay">
-      <div class="modal-card">
-        <div class="modal-header">
-          <h2 class="modal-title">Architecture Decision Records (ADRs) &amp; OpenLens Rules</h2>
-          <button id="close-modal-btn" class="modal-close-btn">&times;</button>
+    <!-- SECTION 3: SYSTEM DESIGN SPECIFICATION -->
+    <section id="section-systemdesign" class="page-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span>🏛️</span> System Design &amp; Ingestion Topology</h2>
+          <p class="section-subtitle">Architectural style, ingestion topologies, air-gapped zero-trust boundaries, and SLA performance budgets.</p>
         </div>
-        <div class="modal-body">
-          <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">
-            These architecture rules and decisions are synchronized with the Snowflake knowledge base and exported to the OpenLens Dev VS Code extension for real-time boundary verification during active development.
-          </p>
-          <h3 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main); margin-top: 6px;">
-            Recorded ADRs
+      </div>
+      <div class="systemdesign-container">
+        <!-- SLA Metrics -->
+        <div>
+          <h3 style="font-size: 0.82rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">
+            System Performance &amp; SLA Budgets
           </h3>
-          <div id="adr-list-container"></div>
-
-          <h3 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main); margin-top: 10px;">
-            Exportable JSON AST Rules for OpenLens Dev
+          <div id="sla-metrics-container" class="sla-metrics-grid"></div>
+        </div>
+        <!-- Topology Specifications -->
+        <div>
+          <h3 style="font-size: 0.82rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em;">
+            Architectural Topology &amp; Ingestion Protocols
           </h3>
-          <pre id="rules-json-block" class="code-block"></pre>
+          <div id="system-specs-container" style="display: flex; flex-direction: column; gap: 14px;"></div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Toast Notification Popup -->
-    <div id="toast-notification">Notification</div>
+    <!-- SECTION 4: SOFTWARE DESIGN PATTERNS -->
+    <section id="section-designpatterns" class="page-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span>🧩</span> Identified Software Design Patterns</h2>
+          <p class="section-subtitle">Architectural, creational, and structural design patterns detected in user files with code implementation snippets.</p>
+        </div>
+      </div>
+      <div id="patterns-cards-container" class="patterns-grid"></div>
+    </section>
+
+    <!-- SECTION 5: USER FILES REPOSITORY INVENTORY -->
+    <section id="section-userfiles" class="page-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><span>📁</span> User Project Files &amp; Component Mapping</h2>
+          <p class="section-subtitle">Evidence-based static mapping connecting physical source files to architecture layers and design patterns.</p>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span id="files-count-badge">25 Files Tracked</span>
+        </div>
+      </div>
+      <div class="files-table-container">
+        <table class="files-table">
+          <thead>
+            <tr>
+              <th>File Path</th>
+              <th>Architectural Component</th>
+              <th>Layer</th>
+              <th>Lines</th>
+              <th>Detected Tech</th>
+              <th>Design Pattern</th>
+            </tr>
+          </thead>
+          <tbody id="user-files-tbody"></tbody>
+        </table>
+      </div>
+    </section>
 
   </div>
+
+  <!-- Floating Interactive Flow Path Tooltip -->
+  <div id="flow-tooltip"></div>
+
+  <!-- Slide-Out LENS Inspection Drawer -->
+  <aside id="lens-drawer">
+    <div class="drawer-header">
+      <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main);">Architecture Lens</h3>
+      <button id="close-drawer-btn" class="modal-close-btn">&times;</button>
+    </div>
+    <div id="drawer-content" class="drawer-content">
+      <!-- Injected dynamically on node inspection -->
+    </div>
+  </aside>
+
+  <!-- ADR & Rules Modal Dialog -->
+  <div id="adr-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">Architecture Decision Records (ADRs) &amp; OpenLens Rules</h2>
+        <button id="close-modal-btn" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">
+          These architecture rules and decisions are synchronized with the Snowflake knowledge base and exported to the OpenLens Dev VS Code extension for real-time boundary verification during active development.
+        </p>
+        <h3 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main); margin-top: 6px;">
+          Recorded ADRs
+        </h3>
+        <div id="adr-list-container"></div>
+
+        <h3 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main); margin-top: 10px;">
+          Exportable JSON AST Rules for OpenLens Dev
+        </h3>
+        <pre id="rules-json-block" class="code-block"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Popup -->
+  <div id="toast-notification">Notification</div>
 
   <!-- Main ES Module Script -->
   <script type="module" src="app.js"></script>

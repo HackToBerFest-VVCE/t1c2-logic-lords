@@ -1,6 +1,6 @@
 // OpenLens Archy - Main Application Logic
 // Handles rendering, panning, zooming, path highlighting, flow animations, themes, and interactions
-// Includes views for Architecture Canvas, Tech Stack, System Design, Design Patterns, and User Files
+// Includes Floating Island Header, Slide Switch, and continuous one-after-the-other sections
 
 import { ARCHITECTURE_PRESETS } from './data.js';
 import { DiagramExporter } from './export.js';
@@ -10,7 +10,6 @@ class OpenLensArchyApp {
     this.currentPresetKey = 'auv_defense';
     this.currentPreset = ARCHITECTURE_PRESETS[this.currentPresetKey];
     this.activeTheme = 'dark';
-    this.activeView = 'architecture';
     this.activeLayerFilter = null;
     this.pathModeActive = false;
     this.pathStartNode = null;
@@ -31,14 +30,11 @@ class OpenLensArchyApp {
     this.cacheDomElements();
     this.bindEvents();
     this.applyTheme(this.activeTheme);
-    this.renderCurrentArchitecture();
-    this.renderTechStack();
-    this.renderSystemDesign();
-    this.renderDesignPatterns();
-    this.renderUserFiles();
+    this.renderAllSections();
+    this.setupScrollSpy();
     this.updateLegend();
     this.updateZoomDisplay();
-    this.showToast('OpenLens Archy plugin loaded. User files & architecture synchronized.');
+    this.showToast('OpenLens Archy plugin loaded. Floating island & system studio active.');
   }
 
   cacheDomElements() {
@@ -57,21 +53,30 @@ class OpenLensArchyApp {
     this.exportMenu = document.getElementById('export-menu');
     this.adrModal = document.getElementById('adr-modal');
 
-    // Panels
-    this.panelTechstack = document.getElementById('panel-techstack');
-    this.panelSystemdesign = document.getElementById('panel-systemdesign');
-    this.panelDesignpatterns = document.getElementById('panel-designpatterns');
-    this.panelUserfiles = document.getElementById('panel-userfiles');
+    // Theme Switchers
+    this.themeSlideToggle = document.getElementById('theme-slide-toggle');
+    this.themeSelectIsland = document.getElementById('theme-select-island');
   }
 
   bindEvents() {
-    // View Switcher Tabs (Architecture, Tech Stack, System Design, Design Patterns, User Files)
-    document.querySelectorAll('.view-tab-btn').forEach(btn => {
-      btn.addEventListener('click', e => {
-        const viewName = e.currentTarget.getAttribute('data-view');
-        this.switchView(viewName);
+    // Light / Dark Slide Switch Toggle
+    if (this.themeSlideToggle) {
+      // Checked = Dark, Unchecked = Light
+      this.themeSlideToggle.checked = this.activeTheme === 'dark';
+      this.themeSlideToggle.addEventListener('change', e => {
+        const theme = e.target.checked ? 'dark' : 'light';
+        this.applyTheme(theme);
       });
-    });
+    }
+
+    // Additional Themes Selector (Funk, Signal Flow, Dark, Light)
+    if (this.themeSelectIsland) {
+      this.themeSelectIsland.value = this.activeTheme;
+      this.themeSelectIsland.addEventListener('change', e => {
+        const theme = e.target.value;
+        this.applyTheme(theme);
+      });
+    }
 
     // Canvas Pan & Zoom
     this.viewport.addEventListener('mousedown', e => this.onMouseDown(e));
@@ -84,11 +89,7 @@ class OpenLensArchyApp {
       this.presetSelect.addEventListener('change', e => {
         this.currentPresetKey = e.target.value;
         this.currentPreset = ARCHITECTURE_PRESETS[this.currentPresetKey];
-        this.renderCurrentArchitecture();
-        this.renderTechStack();
-        this.renderSystemDesign();
-        this.renderDesignPatterns();
-        this.renderUserFiles();
+        this.renderAllSections();
         this.updateLegend();
         this.showToast(`Switched user file project: ${this.currentPreset.name}`);
       });
@@ -103,14 +104,6 @@ class OpenLensArchyApp {
         this.renderUserFiles();
         this.showToast('Scan complete: 25 user files analyzed with 0 boundary drifts.');
       }, 600);
-    });
-
-    // Theme Switchers
-    document.querySelectorAll('.theme-btn').forEach(btn => {
-      btn.addEventListener('click', e => {
-        const theme = e.currentTarget.getAttribute('data-theme');
-        this.applyTheme(theme);
-      });
     });
 
     // Zoom Controls
@@ -151,36 +144,56 @@ class OpenLensArchyApp {
     });
   }
 
-  // VIEW SWITCHER
-  switchView(viewName) {
-    this.activeView = viewName;
-    document.querySelectorAll('.view-tab-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-view') === viewName);
-    });
+  // Active Scroll Spy for Floating Island
+  setupScrollSpy() {
+    const sections = ['section-architecture', 'section-techstack', 'section-systemdesign', 'section-designpatterns', 'section-userfiles'];
+    const links = document.querySelectorAll('.island-link');
 
-    // Toggle main viewport vs content panels
-    this.viewport.style.display = viewName === 'architecture' ? 'block' : 'none';
-    this.panelTechstack.classList.toggle('active', viewName === 'techstack');
-    this.panelSystemdesign.classList.toggle('active', viewName === 'systemdesign');
-    this.panelDesignpatterns.classList.toggle('active', viewName === 'designpatterns');
-    this.panelUserfiles.classList.toggle('active', viewName === 'userfiles');
+    window.addEventListener('scroll', () => {
+      const scrollPos = window.scrollY + 120;
+      let currentSectionId = sections[0];
 
-    if (viewName === 'architecture') {
-      this.applyTransform();
-    } else if (viewName === 'techstack') {
-      this.renderTechStack();
-    } else if (viewName === 'systemdesign') {
-      this.renderSystemDesign();
-    } else if (viewName === 'designpatterns') {
-      this.renderDesignPatterns();
-    } else if (viewName === 'userfiles') {
-      this.renderUserFiles();
-    }
+      for (const sectionId of sections) {
+        const el = document.getElementById(sectionId);
+        if (el && el.offsetTop <= scrollPos) {
+          currentSectionId = sectionId;
+        }
+      }
 
-    this.showToast(`Switched view: ${viewName.toUpperCase()}`);
+      links.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-target') === currentSectionId);
+      });
+    }, { passive: true });
   }
 
-  // RENDER TECH STACK VIEW
+  // RENDER ALL SECTIONS (ONE AFTER THE OTHER)
+  renderAllSections() {
+    this.renderCurrentArchitecture();
+    this.renderTechStack();
+    this.renderSystemDesign();
+    this.renderDesignPatterns();
+    this.renderUserFiles();
+  }
+
+  // THEME SWITCHER
+  applyTheme(themeName) {
+    this.activeTheme = themeName;
+    document.body.setAttribute('data-theme', themeName);
+
+    // Sync slide toggle if light or dark
+    if (this.themeSlideToggle) {
+      this.themeSlideToggle.checked = themeName !== 'light';
+    }
+
+    // Sync dropdown
+    if (this.themeSelectIsland) {
+      this.themeSelectIsland.value = themeName;
+    }
+
+    this.showToast(`Theme: ${themeName.replace('_', ' ').toUpperCase()}`);
+  }
+
+  // RENDER TECH STACK
   renderTechStack() {
     const container = document.getElementById('techstack-cards-container');
     if (!container) return;
@@ -212,12 +225,11 @@ class OpenLensArchyApp {
     });
   }
 
-  // RENDER SYSTEM DESIGN VIEW
+  // RENDER SYSTEM DESIGN
   renderSystemDesign() {
     const sys = this.currentPreset.systemDesign;
     if (!sys) return;
 
-    // Render SLA metrics
     const metricsContainer = document.getElementById('sla-metrics-container');
     if (metricsContainer) {
       metricsContainer.innerHTML = '';
@@ -233,7 +245,6 @@ class OpenLensArchyApp {
       });
     }
 
-    // Render Specifications
     const specsContainer = document.getElementById('system-specs-container');
     if (specsContainer) {
       specsContainer.innerHTML = '';
@@ -253,7 +264,7 @@ class OpenLensArchyApp {
     }
   }
 
-  // RENDER DESIGN PATTERNS VIEW
+  // RENDER DESIGN PATTERNS
   renderDesignPatterns() {
     const container = document.getElementById('patterns-cards-container');
     if (!container) return;
@@ -289,7 +300,7 @@ class OpenLensArchyApp {
     });
   }
 
-  // RENDER USER FILES INVENTORY
+  // RENDER USER FILES
   renderUserFiles() {
     const tbody = document.getElementById('user-files-tbody');
     const badge = document.getElementById('files-count-badge');
@@ -318,15 +329,6 @@ class OpenLensArchyApp {
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
-  }
-
-  applyTheme(themeName) {
-    this.activeTheme = themeName;
-    document.body.setAttribute('data-theme', themeName);
-    document.querySelectorAll('.theme-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-theme') === themeName);
-    });
-    this.showToast(`Active Theme: ${themeName.toUpperCase()}`);
   }
 
   renderCurrentArchitecture() {
@@ -494,7 +496,6 @@ class OpenLensArchyApp {
     }
   }
 
-  // PATH HOVER & FLOW ANIMATION
   onPathHover(conn, source, target, e) {
     const pathEl = document.getElementById(`conn-${conn.id}`);
     if (pathEl) {
@@ -711,8 +712,6 @@ class OpenLensArchyApp {
     this.toggleLensDrawer(true);
     const incomingConns = (this.currentPreset.connections || []).filter(c => c.to === node.id);
     const outgoingConns = (this.currentPreset.connections || []).filter(c => c.from === node.id);
-
-    // Find pattern or tech details for this file
     const matchedFile = (this.currentPreset.userFiles || []).find(f => f.component === node.label || f.path.includes(node.id));
 
     this.drawerContent.innerHTML = `
