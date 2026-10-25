@@ -57,6 +57,48 @@ flowchart LR
 
 ---
 
+---
+
+## 🏛️ OpenLens Archy — Web Workspace
+
+The browser-based visual studio for architecture design, system flow validation, and ADR management.
+
+### 🎨 Color Palette & Themes
+Engineered with the tailored design system:
+- `Dark green`: `#0A3323`
+- `Moss green`: `#839958`
+- `Beige`: `#F7F4D5`
+- `Rosy brown`: `#D3968C`
+- `Midnight green`: `#105666`
+
+Supports **3 dynamic themes**:
+1. **Dark**: Deep sleek emerald & midnight tones with high-contrast glowing flow paths.
+2. **Light**: Crisp warm beige canvas with architectural blueprint grid and rich forest accents.
+3. **Funk**: Neo-brutalist retro-techno theme featuring vibrant rosy brown, glowing cyber cyan, and neon moss highlights.
+
+### ⚡ Key Features
+- **Interactive System Flow Paths**: Hovering any connection path animates directional data flow particles and displays protocol metadata, source/destination telemetry, and boundary status.
+- **Dynamic Layer Legend**: Clickable filters for project layers with real-time component counts (`Frontend (2)`, `Backend (19)`, `Database (3)`, `Security (1)`, `External (2)`).
+- **Subsystem Boundaries**: Dashed visual domains (e.g. *Multi-Agent Advisory System*, *Air-Gapped Defense — SECRET//NOFORN*, *Dual-Stage AI Inference Pipeline*, *Advanced Sensing & Navigation*, *Data & Analytics Layer*).
+- **PATH Mode**: Interactive point-to-point pipeline route tracing across boundaries.
+- **LENS Drawer**: Deep component inspection with incoming/outgoing feeds and AST compliance status.
+- **Multi-Format Export Dropdown**:
+  - 📋 `Copy Diagram` (Direct clipboard copy)
+  - 🖼️ `Save as PNG` (High-DPI retina raster export)
+  - 🖼️ `Save as JPEG` (Compact image export)
+  - 📐 `Save as SVG` (Infinite-resolution vector graphic)
+  - 📦 `Export Rules (JSON)` (Machine-checkable AST rules for OpenLens Dev in VS Code)
+  - 📝 `Export ADRs (Markdown)` (Formal Architecture Decision Records)
+
+### 🚀 Running the Web Workspace
+```bash
+# Start local development server
+npm start
+# or open index.html directly in any modern browser
+```
+
+---
+
 ## 📚 Project Documentation
 
 * 📄 **[PRD.md](PRD.md)** — Product Requirements Document
@@ -67,3 +109,4 @@ flowchart LR
 ---
 
 **Developed with ❤️ by `t1c2-logic-lords` for HackToBerFest-VVCE.**
+
