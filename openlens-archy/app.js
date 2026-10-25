@@ -17,9 +17,9 @@ class OpenLensArchyApp {
     this.lensDrawerOpen = false;
 
     // Viewport transform state
-    this.scale = 0.88;
-    this.panX = 30;
-    this.panY = 20;
+    this.scale = 0.62;
+    this.panX = 20;
+    this.panY = 12;
     this.isDragging = false;
     this.startX = 0;
     this.startY = 0;
@@ -913,9 +913,9 @@ class OpenLensArchyApp {
   }
 
   resetView() {
-    this.scale = 0.88;
-    this.panX = 30;
-    this.panY = 20;
+    this.scale = 0.62;
+    this.panX = 20;
+    this.panY = 12;
     this.applyTransform();
     this.updateZoomDisplay();
     this.showToast('View reset');
@@ -924,9 +924,9 @@ class OpenLensArchyApp {
   fitToScreen() {
     const vpW = this.viewport.clientWidth;
     const vpH = this.viewport.clientHeight;
-    this.scale = Math.min(vpW / 1250, vpH / 950, 1.0);
-    this.panX = (vpW - 1200 * this.scale) / 2;
-    this.panY = (vpH - 900 * this.scale) / 2;
+    this.scale = Math.min(vpW / 1100, (vpH - 36) / 580, 0.85);
+    this.panX = Math.max(10, (vpW - 1000 * this.scale) / 2);
+    this.panY = Math.max(8, (vpH - 560 * this.scale) / 2);
     this.applyTransform();
     this.updateZoomDisplay();
     this.showToast('Fit to screen');
