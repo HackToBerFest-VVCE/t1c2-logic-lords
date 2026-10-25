@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OpenLens Archy — Interactive Architecture & System Flow Visualizer</title>
-  <meta name="description" content="OpenLens Archy: AI-powered interactive architecture workspace, boundary validator, and system flow visualizer with Snowflake knowledge integration.">
+  <meta name="description" content="OpenLens Archy: AI-powered architecture, tech stack, system design, and design patterns visualizer for user project files.">
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2220%22 font-size=%2220%22>🔍</text></svg>">
 </head>
@@ -20,28 +20,45 @@
         </div>
         <div class="status-badge">
           <span class="status-dot"></span>
-          <span>Snowflake Knowledge Synced</span>
+          <span>Snowflake Synced</span>
         </div>
       </div>
 
-      <!-- Center: Architecture Preset Switcher -->
-      <div class="nav-center">
+      <!-- Center: 4 Core Architectural Views Switcher -->
+      <nav class="view-tabs-container" aria-label="Architecture Views">
+        <button class="view-tab-btn active" data-view="architecture" title="Interactive Architecture Diagram & System Flow">
+          <span>📐</span> Architecture
+        </button>
+        <button class="view-tab-btn" data-view="techstack" title="Detected Tech Stack & Frameworks">
+          <span>🛠️</span> Tech Stack
+        </button>
+        <button class="view-tab-btn" data-view="systemdesign" title="System Design & Ingestion Topology">
+          <span>🏛️</span> System Design
+        </button>
+        <button class="view-tab-btn" data-view="designpatterns" title="Software Design Patterns in User Files">
+          <span>🧩</span> Design Patterns
+        </button>
+        <button class="view-tab-btn" data-view="userfiles" title="User Repository Files Inventory">
+          <span>📁</span> User Files
+        </button>
+      </nav>
+
+      <!-- Right: Presets, Themes, ADRs & Export Dropdown -->
+      <div class="nav-actions">
+        <!-- Architecture / Repo Selector -->
         <div class="select-wrapper">
-          <select id="preset-select" class="preset-dropdown" title="Select Architecture Preset">
-            <option value="auv_defense" selected>AUV Autonomous Defense — Dual-Stage AI Pipeline</option>
-            <option value="openlens_core">OpenLens Core System — VS Code & Snowflake Integration</option>
+          <select id="preset-select" class="preset-dropdown" title="Select Project / User File Set">
+            <option value="auv_defense" selected>Project: AUV Autonomous Defense (25 Files)</option>
+            <option value="openlens_core">Project: OpenLens Core (VS Code + Snowflake)</option>
           </select>
           <span class="select-arrow">▼</span>
         </div>
-      </div>
 
-      <!-- Right: Themes, ADRs & Export Dropdown -->
-      <div class="nav-actions">
         <!-- 3 Themes: Dark, Light, Funk -->
         <div class="theme-selector-group" title="Select UI Color Theme">
-          <button class="theme-btn active" data-theme="dark" title="Dark Theme (Sleek Dark Emerald & Midnight)">Dark</button>
-          <button class="theme-btn" data-theme="light" title="Light Theme (Warm Beige & Forest)">Light</button>
-          <button class="theme-btn" data-theme="funk" title="Funk Theme (Retro-Techno Cyberpunk)">Funk</button>
+          <button class="theme-btn active" data-theme="dark" title="Dark Theme">Dark</button>
+          <button class="theme-btn" data-theme="light" title="Light Theme">Light</button>
+          <button class="theme-btn" data-theme="funk" title="Funk Theme">Funk</button>
         </div>
 
         <!-- ADRs & Rules Inspector -->
@@ -81,46 +98,131 @@
       </div>
     </header>
 
-    <!-- Main Workspace Viewport -->
-    <main id="workspace-viewport">
-      <div id="workspace-content">
-        <!-- Subsystems & Boundaries Layer -->
-        <div id="boundaries-layer"></div>
+    <!-- Main Content Area -->
+    <main id="main-content-area">
 
-        <!-- SVG Connections & Animated Flow Paths Layer -->
-        <svg id="connections-layer" xmlns="http://www.w3.org/2000/svg"></svg>
+      <!-- VIEW 1: INTERACTIVE ARCHITECTURE CANVAS VIEWPORT -->
+      <div id="workspace-viewport">
+        <div id="workspace-content">
+          <!-- Subsystems & Boundaries Layer -->
+          <div id="boundaries-layer"></div>
 
-        <!-- Interactive Node Cards Layer -->
-        <div id="nodes-layer"></div>
+          <!-- SVG Connections & Animated Flow Paths Layer -->
+          <svg id="connections-layer" xmlns="http://www.w3.org/2000/svg"></svg>
+
+          <!-- Interactive Node Cards Layer -->
+          <div id="nodes-layer"></div>
+        </div>
+
+        <!-- Bottom Bar: Legend on Left, Controls on Right -->
+        <footer class="bottom-bar">
+          <!-- Bottom Left: Interactive Layer Legend -->
+          <div class="legend-panel">
+            <span class="legend-title">Legend</span>
+            <div id="legend-items-container" class="legend-items">
+              <!-- Dynamically populated: Frontend (2), Backend (19), Database (3), Security (1), External (2) -->
+            </div>
+          </div>
+
+          <!-- Bottom Right: PATH, LENS, Zoom Controls -->
+          <div class="controls-panel">
+            <button id="path-mode-btn" class="ctrl-btn" title="Toggle Path Flow Tracer Mode">
+              <span>⚡</span> PATH
+            </button>
+            <button id="lens-mode-btn" class="ctrl-btn" title="Toggle Lens Node Inspector Drawer">
+              <span>◎</span> LENS
+            </button>
+            <div class="ctrl-divider"></div>
+            <button id="zoom-out-btn" class="ctrl-btn" title="Zoom Out">−</button>
+            <span id="zoom-display" class="zoom-display">100%</span>
+            <button id="zoom-in-btn" class="ctrl-btn" title="Zoom In">+</button>
+            <div class="ctrl-divider"></div>
+            <button id="fit-screen-btn" class="ctrl-btn" title="Fit to Screen">⛶ Fit</button>
+            <button id="zoom-reset-btn" class="ctrl-btn" title="Reset to Default">↺</button>
+          </div>
+        </footer>
       </div>
 
-      <!-- Bottom Bar: Legend on Left, Controls on Right -->
-      <footer class="bottom-bar">
-        <!-- Bottom Left: Interactive Layer Legend -->
-        <div class="legend-panel">
-          <span class="legend-title">Legend</span>
-          <div id="legend-items-container" class="legend-items">
-            <!-- Dynamically populated: Frontend (2), Backend (19), Database (3), Security (1), External (2) -->
+      <!-- VIEW 2: TECH STACK PANEL -->
+      <section id="panel-techstack" class="content-panel">
+        <div class="panel-header-section">
+          <div>
+            <h1 class="panel-title">🛠️ Project Tech Stack</h1>
+            <p class="panel-subtitle">Vetted frameworks, libraries, and runtimes detected from user repository files.</p>
+          </div>
+          <button id="scan-files-btn" class="btn-secondary" title="Re-scan User Files">
+            <span>🔄</span> Rescan Files
+          </button>
+        </div>
+        <div id="techstack-cards-container" class="techstack-grid"></div>
+      </section>
+
+      <!-- VIEW 3: SYSTEM DESIGN SPECIFICATION PANEL -->
+      <section id="panel-systemdesign" class="content-panel">
+        <div class="panel-header-section">
+          <div>
+            <h1 class="panel-title">🏛️ System Design Specification</h1>
+            <p class="panel-subtitle">Architectural style, ingestion topologies, air-gapped zero-trust boundaries, and SLA performance budgets.</p>
           </div>
         </div>
-
-        <!-- Bottom Right: PATH, LENS, Zoom Controls -->
-        <div class="controls-panel">
-          <button id="path-mode-btn" class="ctrl-btn" title="Toggle Path Flow Tracer Mode">
-            <span>⚡</span> PATH
-          </button>
-          <button id="lens-mode-btn" class="ctrl-btn" title="Toggle Lens Node Inspector Drawer">
-            <span>◎</span> LENS
-          </button>
-          <div class="ctrl-divider"></div>
-          <button id="zoom-out-btn" class="ctrl-btn" title="Zoom Out">−</button>
-          <span id="zoom-display" class="zoom-display">100%</span>
-          <button id="zoom-in-btn" class="ctrl-btn" title="Zoom In">+</button>
-          <div class="ctrl-divider"></div>
-          <button id="fit-screen-btn" class="ctrl-btn" title="Fit to Screen">⛶ Fit</button>
-          <button id="zoom-reset-btn" class="ctrl-btn" title="Reset to Default">↺</button>
+        <div class="systemdesign-container">
+          <!-- SLA Metrics -->
+          <div>
+            <h3 style="font-size: 0.85rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px;">
+              System Performance &amp; SLA Budgets
+            </h3>
+            <div id="sla-metrics-container" class="sla-metrics-grid"></div>
+          </div>
+          <!-- Topology Specifications -->
+          <div>
+            <h3 style="font-size: 0.85rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px;">
+              Architectural Topology &amp; Ingestion Protocols
+            </h3>
+            <div id="system-specs-container" style="display: flex; flex-direction: column; gap: 14px;"></div>
+          </div>
         </div>
-      </footer>
+      </section>
+
+      <!-- VIEW 4: DESIGN PATTERNS PANEL -->
+      <section id="panel-designpatterns" class="content-panel">
+        <div class="panel-header-section">
+          <div>
+            <h1 class="panel-title">🧩 Identified Software Design Patterns</h1>
+            <p class="panel-subtitle">Architectural, creational, and structural design patterns detected in user files with code implementation snippets.</p>
+          </div>
+        </div>
+        <div id="patterns-cards-container" class="patterns-grid"></div>
+      </section>
+
+      <!-- VIEW 5: USER FILES REPOSITORY INVENTORY -->
+      <section id="panel-userfiles" class="content-panel">
+        <div class="panel-header-section">
+          <div>
+            <h1 class="panel-title">📁 User Project Files &amp; Component Mapping</h1>
+            <p class="panel-subtitle">Evidence-based static mapping connecting physical source files to architecture layers and design patterns.</p>
+          </div>
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            <span id="files-count-badge">25 Files Tracked</span>
+          </div>
+        </div>
+        <div class="files-table-container">
+          <table class="files-table">
+            <thead>
+              <tr>
+                <th>File Path</th>
+                <th>Architectural Component</th>
+                <th>Layer</th>
+                <th>Lines</th>
+                <th>Detected Tech</th>
+                <th>Design Pattern</th>
+              </tr>
+            </thead>
+            <tbody id="user-files-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
     </main>
 
     <!-- Floating Interactive Flow Path Tooltip -->
