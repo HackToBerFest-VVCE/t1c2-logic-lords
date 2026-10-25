@@ -683,13 +683,31 @@ class OpenLensArchyApp {
     const btn = document.getElementById('lens-mode-btn');
     btn?.classList.toggle('active', this.lensDrawerOpen);
 
-    if (this.lensDrawerOpen && this.currentPreset.nodes.length > 0) {
-      this.inspectNodeInLens(this.currentPreset.nodes[0]);
+    // Only auto-inspect first node if opening (not re-entering from inspectNodeInLens)
+    if (this.lensDrawerOpen && !this._inspecting && this.currentPreset.nodes.length > 0) {
+      this._openDrawer(this.currentPreset.nodes[0]);
     }
   }
 
+  // Internal: open drawer without toggling state (avoids recursion)
+  _openDrawer(node) {
+    this.lensDrawerOpen = true;
+    this.lensDrawer?.classList.add('open');
+    document.getElementById('lens-mode-btn')?.classList.add('active');
+    this._fillDrawerContent(node);
+  }
+
   inspectNodeInLens(node) {
-    this.toggleLensDrawer(true);
+    // Open drawer directly without calling toggleLensDrawer to prevent recursion
+    this._inspecting = true;
+    this.lensDrawerOpen = true;
+    this.lensDrawer?.classList.add('open');
+    document.getElementById('lens-mode-btn')?.classList.add('active');
+    this._fillDrawerContent(node);
+    this._inspecting = false;
+  }
+
+  _fillDrawerContent(node) {
     const incomingConns = (this.currentPreset.connections || []).filter(c => c.to === node.id);
     const outgoingConns = (this.currentPreset.connections || []).filter(c => c.from === node.id);
     const matchedFile = (this.currentPreset.userFiles || []).find(f => f.component === node.label || f.path.includes(node.id));
