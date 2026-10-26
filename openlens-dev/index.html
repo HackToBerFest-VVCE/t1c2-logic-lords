@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenLens Dev — Code Maintainability Studio</title>
+  <meta name="description"
+    content="OpenLens Dev: AI-powered code maintainability scanner. Detect duplicates, unused imports, complexity issues, and architecture boundary violations with evidence-backed findings.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><text y=%2226%22 font-size=%2226%22>🛠️</text></svg>">
+</head>
+
+<body data-theme="dark">
+
+  <!-- ── FLOATING ISLAND HEADER ── -->
+  <header class="floating-island-header" id="main-header">
+    <!-- Brand -->
+    <a href="../index.html" class="island-brand" title="OpenLens Home">
+      <div class="brand-badge">🔍</div>
+      <span>OpenLens <span class="highlight">Dev</span></span>
+    </a>
+
+    <div class="island-divider"></div>
+
+    <!-- Scan Scope Selector -->
+    <select id="scope-select" class="compact-select" title="Scan Scope">
+      <option value="project">📁 Full Project</option>
+      <option value="changed">📝 Changed Files</option>
+      <option value="selected">🎯 Selected Files</option>
+    </select>
+
+    <div class="island-divider"></div>
+
+    <!-- Preset / Project Selector -->
+    <select id="preset-select" class="compact-select" title="Sample Project">
+      <option value="openlens_core">OpenLens Core</option>
+      <option value="auv_defense">AUV Defense</option>
+    </select>
+
+    <div class="island-divider"></div>
+
+    <!-- Scan Button -->
+    <button id="scan-btn" class="btn-scan-pill" title="Run Maintainability Scan">
+      <span id="scan-icon">⚡</span>
+      <span id="scan-label">Scan</span>
+    </button>
+
+    <div class="island-divider"></div>
+
+    <!-- Light/Dark Toggle -->
+    <div class="theme-switch-container" title="Toggle Light / Dark">
+      <span class="switch-icon">☀️</span>
+      <label class="slide-switch">
+        <input type="checkbox" id="theme-slide-toggle" checked>
+        <span class="slide-slider"></span>
+      </label>
+      <span class="switch-icon">🌙</span>
+    </div>
+
+    <div class="island-divider"></div>
+
+    <!-- Archy Link -->
+    <a href="../openlens-archy/index.html" class="btn-archy-pill" title="Open Archy Workspace">
+      <span>🏛️</span> Archy
+    </a>
+  </header>
+
+  <!-- ── MAIN LAYOUT ── -->
+  <div class="dev-layout">
+
+    <!-- ── LEFT: SIDEBAR ── -->
+    <aside class="sidebar" id="sidebar">
+
+      <!-- Scan Status Card -->
+      <div class="sidebar-card" id="scan-status-card">
+        <div class="card-label">Scan Status</div>
+        <div class="status-row" id="status-row">
+          <div class="status-dot idle" id="status-dot"></div>
+          <span id="status-text">Ready to scan</span>
+        </div>
+        <div class="scan-meta" id="scan-meta" style="display:none;">
+          <div class="meta-row"><span class="meta-k">Files</span><span id="meta-files" class="meta-v">—</span></div>
+          <div class="meta-row"><span class="meta-k">Findings</span><span id="meta-findings" class="meta-v">—</span></div>
+          <div class="meta-row"><span class="meta-k">Duration</span><span id="meta-duration" class="meta-v">—</span></div>
+          <div class="meta-row"><span class="meta-k">Engine</span><span class="meta-v tag-local">Local AST</span></div>
+          <div class="meta-row"><span class="meta-k">Snowflake</span><span id="meta-sf" class="meta-v tag-cloud">—</span></div>
+        </div>
+      </div>
+
+      <!-- Severity Filter -->
+      <div class="sidebar-card">
+        <div class="card-label">Filter by Severity</div>
+        <div class="filter-pills" id="severity-filters">
+          <button class="filter-pill active" data-severity="all">All</button>
+          <button class="filter-pill" data-severity="error">Error</button>
+          <button class="filter-pill" data-severity="high">High</button>
+          <button class="filter-pill" data-severity="medium">Medium</button>
+          <button class="filter-pill" data-severity="low">Low</button>
+          <button class="filter-pill" data-severity="info">Info</button>
+        </div>
+      </div>
+
+      <!-- Category Filter -->
+      <div class="sidebar-card">
+        <div class="card-label">Filter by Category</div>
+        <div class="category-list" id="category-filters">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Architecture Rules -->
+      <div class="sidebar-card" id="rules-card">
+        <div class="card-label-row">
+          <div class="card-label">Architecture Rules</div>
+          <span class="rules-badge" id="rules-badge">0</span>
+        </div>
+        <div class="rules-list" id="rules-list">
+          <!-- Populated dynamically -->
+        </div>
+        <a href="../openlens-archy/index.html" class="rules-link">
+          ↗ Open Archy to manage rules
+        </a>
+      </div>
+
+      <!-- Snowflake Knowledge -->
+      <div class="sidebar-card" id="sf-card">
+        <div class="card-label">❄️ Snowflake Knowledge</div>
+        <div class="sf-status" id="sf-status">
+          <div class="sf-status-row">
+            <div class="sf-indicator offline" id="sf-indicator"></div>
+            <span id="sf-status-text">Offline / Not configured</span>
+          </div>
+          <div class="sf-hint">Connect Snowflake to enable pattern retrieval and evaluation benchmarks.</div>
+        </div>
+        <button class="btn-sf-connect" id="sf-connect-btn">Configure Connection</button>
+      </div>
+
+    </aside>
+
+    <!-- ── CENTRE: FINDINGS PANEL ── -->
+    <main class="findings-panel" id="findings-panel">
+
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">🛠️</div>
+        <h2>OpenLens Dev</h2>
+        <p>Select a project preset and click <strong>Scan</strong> to run the maintainability analysis engine. All checks run locally — no network required.</p>
+        <div class="empty-features">
+          <div class="ef"><span class="ef-icon">🔍</span> Exact duplicate detection</div>
+          <div class="ef"><span class="ef-icon">📦</span> Unused import analysis</div>
+          <div class="ef"><span class="ef-icon">📊</span> Cyclomatic complexity</div>
+          <div class="ef"><span class="ef-icon">🏛️</span> Architecture boundary enforcement</div>
+        </div>
+        <button class="btn-start-scan" id="start-scan-btn">⚡ Run Scan</button>
+      </div>
+
+      <!-- Findings List (hidden until scan) -->
+      <div class="findings-list hidden" id="findings-list">
+        <div class="findings-toolbar">
+          <div class="findings-count" id="findings-count">0 findings</div>
+          <div class="findings-search-wrap">
+            <input type="text" id="findings-search" class="findings-search" placeholder="Search findings...">
+          </div>
+          <button class="btn-icon" id="dismiss-all-btn" title="Dismiss all visible findings">Dismiss All</button>
+          <button class="btn-icon accent" id="export-findings-btn" title="Export findings as JSON">Export</button>
+        </div>
+        <div id="findings-items">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Scanning Overlay -->
+      <div class="scan-overlay hidden" id="scan-overlay">
+        <div class="scan-spinner"></div>
+        <div class="scan-overlay-title">Scanning…</div>
+        <div class="scan-overlay-sub" id="scan-overlay-sub">Running deterministic AST analysis</div>
+        <div class="scan-progress-bar"><div class="scan-progress-fill" id="scan-progress-fill"></div></div>
+      </div>
+
+    </main>
+
+    <!-- ── RIGHT: DETAIL DRAWER ── -->
+    <aside class="detail-drawer" id="detail-drawer">
+
+      <div class="drawer-header">
+        <h3 class="drawer-title" id="drawer-title">Finding Details</h3>
+        <button class="drawer-close" id="drawer-close-btn">✕</button>
+      </div>
+
+      <div class="drawer-body" id="drawer-body">
+        <div class="drawer-placeholder">
+          <p>Click a finding to inspect its evidence, rationale, and proposed fix.</p>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- ── DIFF MODAL ── -->
+  <div class="modal-overlay" id="diff-modal">
+    <div class="modal-card diff-modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="diff-modal-title">Proposed Patch — Review Diff</h2>
+        <button class="modal-close-btn" id="close-diff-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="diff-warning">
+          <span>⚠️</span>
+          This patch requires your explicit approval before being applied. Review the diff carefully.
+        </div>
+        <div class="diff-meta-row">
+          <span class="diff-meta-label">File:</span>
+          <code id="diff-file-path"></code>
+        </div>
+        <div class="diff-meta-row">
+          <span class="diff-meta-label">Risk:</span>
+          <span id="diff-risk" class="diff-risk-text"></span>
+        </div>
+        <pre class="diff-block" id="diff-block"></pre>
+        <div class="diff-validation" id="diff-validation">
+          <div class="validation-item"><span class="vi-icon pending">⏳</span> Tests: <span id="v-tests">not run</span></div>
+          <div class="validation-item"><span class="vi-icon pending">⏳</span> Lint: <span id="v-lint">not run</span></div>
+          <div class="validation-item"><span class="vi-icon pending">⏳</span> Type check: <span id="v-type">not run</span></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-secondary" id="run-checks-btn">▶ Run Available Checks</button>
+        <button class="btn-modal-danger" id="reject-patch-btn">✕ Reject</button>
+        <button class="btn-modal-primary" id="approve-patch-btn">✓ Approve & Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SNOWFLAKE CONFIG MODAL ── -->
+  <div class="modal-overlay" id="sf-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">❄️ Snowflake Connection</h2>
+        <button class="modal-close-btn" id="close-sf-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="sf-modal-note">
+          Snowflake is used for curated architectural pattern retrieval and versioned evaluation benchmarks.
+          <strong>No raw source code is ever transmitted.</strong>
+        </p>
+        <div class="sf-form">
+          <label class="sf-label">Account Identifier</label>
+          <input id="sf-account" type="text" class="sf-input" placeholder="myorg-myaccount">
+          <label class="sf-label">Username</label>
+          <input id="sf-user" type="text" class="sf-input" placeholder="OPENLENS_USER">
+          <label class="sf-label">Warehouse</label>
+          <input id="sf-warehouse" type="text" class="sf-input" placeholder="OPENLENS_WH" value="OPENLENS_WH">
+          <label class="sf-label">Authentication</label>
+          <select class="sf-input sf-select" id="sf-auth-type">
+            <option value="key_pair">Key-Pair (recommended)</option>
+            <option value="browser_sso">Browser SSO</option>
+          </select>
+        </div>
+        <div class="sf-note">Credentials are stored locally only. Use environment variables in production.</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-secondary" id="sf-test-btn">Test Connection</button>
+        <button class="btn-modal-primary" id="sf-save-btn">Save & Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+
+</html>

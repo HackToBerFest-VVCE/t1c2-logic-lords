@@ -437,19 +437,22 @@ if __name__ == "__main__":
     import json
     import sys
 
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
     paths = [Path(p) for p in sys.argv[1:]] or list(Path(".").rglob("*.py"))
     scanner = ASTScanner()
     result = scanner.scan(paths)
 
     print(f"\n{'='*60}")
-    print(f"OpenLens Dev — AST Scan Results")
+    print(f"OpenLens Dev -- AST Scan Results")
     print(f"Files scanned : {result.files_scanned}")
     print(f"Duration      : {result.duration_ms} ms")
     print(f"Findings      : {len(result.findings)}")
     print(f"{'='*60}\n")
 
     for f in result.findings:
-        print(f"[{f.severity.upper()}] {f.category} — {f.location}")
+        print(f"[{f.severity.upper()}] {f.category} -- {f.location}")
         print(f"  {f.summary}")
-        print(f"  → {f.suggested_action}")
+        print(f"  -> {f.suggested_action}")
         print()
