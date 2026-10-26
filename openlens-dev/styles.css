@@ -624,6 +624,43 @@ input:checked + .slide-slider::before { transform: translateX(14px); }
 .code-num { color: #bd93f9; }
 .code-type{ color: #8be9fd; }
 
+.ide-highlight-line {
+  background: rgba(239, 68, 68, 0.14);
+  border-left: 3px solid var(--sev-error);
+  padding: 2px 4px;
+  display: block;
+}
+.ide-highlight-line.warning {
+  background: rgba(245, 158, 11, 0.14);
+  border-left: 3px solid var(--sev-medium);
+}
+.ide-line-num {
+  color: var(--text-subtle);
+  user-select: none;
+  display: inline-block;
+  width: 28px;
+  text-align: right;
+  margin-right: 10px;
+}
+.ide-annotation {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 5px 0 8px 38px;
+  padding: 4px 8px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 4px;
+  color: var(--rose);
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+}
+.ide-annotation.warning {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.25);
+  color: var(--amber);
+}
+
 /* ═══════════════════════════════════════════════════════════
    DIFF MODAL
 ═══════════════════════════════════════════════════════════ */

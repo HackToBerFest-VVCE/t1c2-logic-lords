@@ -23,26 +23,50 @@ OpenLens brings two synchronized modes into one VS Code extension:
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Running OpenLens Alongside Your Own Projects (Demo Guide)
 
-### Web Workspace (no installation)
-Open `index.html` directly in any modern browser, or run:
+OpenLens is designed so anyone can download this repo from GitHub and immediately run it alongside their own codebases.
+
+### Option 1: Live In-IDE Squigglies in VS Code (Recommended for Demo)
+OpenLens highlights code issues directly inside your VS Code editor with red, orange, and yellow squiggly lines:
+
+1. **1-Click Install to VS Code:**
+   ```bash
+   python openlens.py install-extension
+   ```
+   *Or:* Open this `OpenLens_Project` in VS Code and press **`F5`** (launches Extension Development Host).
+2. **Open your other project in VS Code:**
+   - In VS Code, open the folder of the project you want to demo.
+   - Open any `.py` file: OpenLens highlights complexity spikes, duplicate functions, unused imports, and architectural boundary drift directly on the code!
+   - Hover over any squiggly line to view the diagnostic, rationale, and Snowflake pattern.
+   - Press `Ctrl+.` (`Cmd+.`) to use **Quick Fix** (e.g. 1-click delete unused imports).
+   - Check the **OpenLens status bar item** (`$(search) OpenLens: X issues`) in the bottom right.
+   - Click the **OpenLens icon** in the left Activity Bar to browse the full findings tree.
+
+---
+
+### Option 2: Run via CLI Watcher / Scanner
+Scan or continuously watch your other project from the terminal:
+```bash
+# Scan any project folder
+python openlens.py scan /path/to/your/other/project
+
+# Live watch mode (re-scans on file save)
+python openlens.py watch /path/to/your/other/project
+
+# Output in JSON or standard IDE SARIF format
+python openlens.py scan /path/to/your/other/project --sarif
+```
+
+---
+
+### Option 3: Web Workspaces (Archy & Dev Studio)
 ```bash
 npm start
+# or: python openlens.py serve
 # → http://localhost:3000 — Landing page
-# → http://localhost:3000/openlens-archy/ — Archy workspace
-```
-
-### Backend API (optional — for Snowflake & AI features)
-```bash
-pip install -r requirements.txt
-uvicorn api.gateway:app --reload --port 8000
-# → http://localhost:8000/docs — Interactive API docs
-```
-
-### AST Scanner (standalone)
-```bash
-python engine/ast_scanner.py path/to/your/python/files/
+# → http://localhost:3000/openlens-archy/ — Archy visual architecture studio
+# → http://localhost:3000/openlens-dev/ — Dev maintainability explorer with In-IDE code highlights
 ```
 
 ---

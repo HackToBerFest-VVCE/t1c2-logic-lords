@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch OpenLens Extension (F5)",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/openlens-vscode"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/openlens-vscode/**/*.js"
+      ]
+    }
+  ]
+}

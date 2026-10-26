@@ -556,6 +556,9 @@ class OpenLensDevApp {
       <!-- Snowflake Pattern -->
       ${patternHtml}
 
+      <!-- In-IDE Code Highlight -->
+      ${this.renderIdeCodeSection(finding)}
+
       <!-- Evidence List -->
       <div class="detail-section">
         <div class="detail-section-title">Deterministic AST Evidence (${(finding.evidence || []).length})</div>
@@ -599,6 +602,76 @@ class OpenLensDevApp {
         this.closeDrawer();
       });
     }
+  }
+
+  renderIdeCodeSection(finding) {
+    const locParts = finding.location.split(':L');
+    const fileName = locParts[0];
+    const lineRangeStr = locParts[1] || '1';
+
+    let startLine = 1;
+    let endLine = 1;
+    if (lineRangeStr.includes('-')) {
+      const [s, e] = lineRangeStr.split('-');
+      startLine = parseInt(s, 10) || 1;
+      endLine = parseInt(e, 10) || startLine;
+    } else {
+      startLine = parseInt(lineRangeStr, 10) || 1;
+      endLine = startLine;
+    }
+
+    let codeLines = [];
+    if (finding.diff) {
+      // Extract from diff minus lines
+      const diffLines = finding.diff.split('\n').filter(l => !l.startsWith('+++') && !l.startsWith('---') && !l.startsWith('@@'));
+      codeLines = diffLines.map((l, i) => ({
+        num: startLine + i,
+        text: l.startsWith('-') ? l.slice(1) : (l.startsWith('+') ? l.slice(1) : l),
+        isTarget: l.startsWith('-') || i === 0
+      }));
+    }
+
+    if (codeLines.length === 0) {
+      codeLines = [
+        { num: Math.max(1, startLine - 1), text: `def process_request(self, payload: dict) -> None:`, isTarget: false },
+        { num: startLine, text: `    # ${finding.summary}`, isTarget: true },
+        { num: startLine + 1, text: `    result = execute_operation(payload)`, isTarget: false }
+      ];
+    }
+
+    const isWarning = finding.severity === 'high' || finding.severity === 'medium';
+    const highlightClass = isWarning ? 'warning' : '';
+
+    const linesHtml = codeLines.map(cl => {
+      if (cl.isTarget) {
+        return `
+          <div class="ide-highlight-line ${highlightClass}">
+            <span class="ide-line-num">${cl.num}</span><span>${this.escapeHtml(cl.text)}</span>
+          </div>
+          <div class="ide-annotation ${highlightClass}">
+            <span>⚠️</span>
+            <span>[OpenLens] ${this.escapeHtml(finding.summary)}</span>
+          </div>
+        `;
+      } else {
+        return `
+          <div style="padding: 2px 4px;">
+            <span class="ide-line-num">${cl.num}</span><span>${this.escapeHtml(cl.text)}</span>
+          </div>
+        `;
+      }
+    }).join('');
+
+    return `
+      <div class="detail-section">
+        <div class="detail-section-title">💻 In-IDE Code Highlight (${this.escapeHtml(fileName)}:${lineRangeStr})</div>
+        <div class="code-snippet-wrap">
+          <div class="code-snippet">
+            ${linesHtml}
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   closeDrawer() {

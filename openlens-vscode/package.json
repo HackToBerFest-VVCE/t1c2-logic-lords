@@ -1,0 +1,124 @@
+{
+  "name": "openlens",
+  "displayName": "OpenLens Dev & Archy",
+  "description": "AI-powered maintainability companion: real-time in-IDE squigglies, AST duplication/complexity/boundary detection, and Snowflake architectural intelligence.",
+  "version": "0.1.0",
+  "publisher": "logic-lords",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HackToBerFest-VVCE/t1c2-logic-lords"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Linters",
+    "Programming Languages",
+    "Formatters"
+  ],
+  "keywords": [
+    "openlens",
+    "maintainability",
+    "ast",
+    "refactoring",
+    "python",
+    "architecture",
+    "snowflake"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:python",
+    "workspaceContains:**/*.py",
+    "onCommand:openlens.scan",
+    "onCommand:openlens.scanFile",
+    "onCommand:openlens.openArchy",
+    "onCommand:openlens.openDevStudio"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "openlens.scan",
+        "title": "OpenLens: Scan Workspace for Maintainability",
+        "category": "OpenLens"
+      },
+      {
+        "command": "openlens.scanFile",
+        "title": "OpenLens: Scan Active File",
+        "category": "OpenLens"
+      },
+      {
+        "command": "openlens.openArchy",
+        "title": "OpenLens: Open Archy Architecture Studio",
+        "category": "OpenLens"
+      },
+      {
+        "command": "openlens.openDevStudio",
+        "title": "OpenLens: Open Dev Studio (Browser)",
+        "category": "OpenLens"
+      },
+      {
+        "command": "openlens.clearDiagnostics",
+        "title": "OpenLens: Clear All Findings",
+        "category": "OpenLens"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "openlens.scanFile",
+          "when": "resourceLangId == python",
+          "group": "openlens@1"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "openlens.scan",
+          "group": "openlens@1"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "openlens-sidebar",
+          "title": "OpenLens",
+          "icon": "$(search)"
+        }
+      ]
+    },
+    "views": {
+      "openlens-sidebar": [
+        {
+          "id": "openlens-findings-view",
+          "name": "Maintainability Findings",
+          "type": "tree"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "OpenLens",
+      "properties": {
+        "openlens.scanOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically scan Python files when saved."
+        },
+        "openlens.scanOnOpen": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically scan Python files when opened in editor."
+        },
+        "openlens.pythonPath": {
+          "type": "string",
+          "default": "",
+          "description": "Custom path to Python executable. Leave blank to auto-detect."
+        },
+        "openlens.enableEditorDecorations": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show subtle background and gutter highlights on high complexity/duplication zones."
+        }
+      }
+    }
+  }
+}

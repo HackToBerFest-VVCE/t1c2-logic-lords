@@ -1,0 +1,147 @@
+{
+  "$schema": "https://openlens.dev/schemas/architecture-rules/v1.json",
+  "product": "OpenLens",
+  "version": "1.0.0",
+  "exportedBy": "OpenLens Archy",
+  "exportedAt": "2026-10-26T00:00:00Z",
+  "project": "openlens_core",
+  "architecture": "OpenLens Core System — VS Code & Snowflake Integration",
+  "description": "Machine-verifiable architecture boundary rules for OpenLens. Load this file into the Dev scanner via the architecture_rules_path scan parameter.",
+  "adrs": [
+    {
+      "id": "ADR-CORE-001",
+      "title": "Two-Mode Architecture: Dev in VS Code, Archy in Web Workspace",
+      "status": "Accepted",
+      "layer": "Frontend / System",
+      "date": "2026-10-18",
+      "decision": "Provide code-level maintainability in the VS Code extension and system-level visual design in the Archy web workspace, connected by shared rules and a common API.",
+      "consequences": "Prevents IDE bloat while giving developers a dedicated visual workspace for complex diagrams and trade-off evaluations."
+    },
+    {
+      "id": "ADR-CORE-002",
+      "title": "Deterministic Local AST Analysis with Fail-Safe Offline Mode",
+      "status": "Accepted",
+      "layer": "Backend",
+      "date": "2026-10-19",
+      "decision": "Perform all core duplication and linter checks locally via Python AST without requiring cloud availability or Snowflake access.",
+      "consequences": "Ensures immediate editor feedback (<50ms) and complete user privacy for proprietary codebases."
+    },
+    {
+      "id": "ADR-CORE-003",
+      "title": "Snowflake for Knowledge and Evaluation — Not for Raw Source Code",
+      "status": "Accepted",
+      "layer": "Database / Cloud",
+      "date": "2026-10-20",
+      "decision": "Use Snowflake only for curated architecture patterns, library metadata, anonymised benchmark cases, and aggregate analytics. No raw source code or secrets transmitted by default.",
+      "consequences": "Enables enterprise-grade retrieval quality while preserving developer privacy and hackathon compliance."
+    },
+    {
+      "id": "ADR-CORE-004",
+      "title": "Provider-Neutral Model Gateway with Local-First Routing",
+      "status": "Accepted",
+      "layer": "Backend",
+      "date": "2026-10-21",
+      "decision": "All inference requests go through a provider-neutral ModelGatewayAdapter interface. Local adapters (Ollama) are preferred. Remote adapters require explicit user consent and ALLOW_REMOTE=true.",
+      "consequences": "Users can run the full AI feature set locally on open-weight models without any cloud dependency."
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "RULE-CORE-01",
+      "name": "No Raw Source Code to External APIs",
+      "description": "OpenLens Dev must never transmit unredacted source code, file paths, or credentials to model gateways or Snowflake without explicit user consent and secret redaction.",
+      "scope": "service",
+      "severity": "error",
+      "rationale": "Protects proprietary code and user privacy as a primary product principle.",
+      "source_layer": "backend",
+      "target_layer": "external",
+      "allowed": false,
+      "verification_method": "payload_inspection",
+      "source_decision_id": "ADR-CORE-003",
+      "version": "1.0.0"
+    },
+    {
+      "rule_id": "RULE-CORE-02",
+      "name": "Frontend Must Not Import Database Models Directly",
+      "description": "Frontend layer components (VS Code Webview, Archy web) must not directly import or query database models. All data access goes through the backend API.",
+      "scope": "import",
+      "severity": "error",
+      "rationale": "Enforces layer separation and prevents tight coupling between presentation and persistence.",
+      "source_layer": "frontend",
+      "target_layer": "database",
+      "allowed": false,
+      "verification_method": "ast_import",
+      "source_decision_id": "ADR-CORE-001",
+      "version": "1.0.0"
+    },
+    {
+      "rule_id": "RULE-CORE-03",
+      "name": "Archy Rules Must Be Versioned Before Export",
+      "description": "Architecture rules exported from Archy to Dev must include a version field and source_decision_id. Versionless rules are rejected by Dev.",
+      "scope": "file",
+      "severity": "warning",
+      "rationale": "Ensures Dev can detect stale rules and trace every constraint to a recorded decision.",
+      "source_layer": "frontend",
+      "target_layer": "security",
+      "allowed": true,
+      "verification_method": "json_schema_validation",
+      "source_decision_id": "ADR-CORE-001",
+      "version": "1.0.0"
+    },
+    {
+      "rule_id": "RULE-CORE-04",
+      "name": "Local Checks Must Run Without Snowflake",
+      "description": "Deterministic AST checks (duplication, unused imports, complexity) must complete successfully when Snowflake is unreachable. Snowflake is supplementary, never a hard dependency.",
+      "scope": "service",
+      "severity": "error",
+      "rationale": "Guarantees developer value and privacy-preserving offline operation.",
+      "source_layer": "backend",
+      "target_layer": "database",
+      "allowed": true,
+      "verification_method": "integration_test",
+      "source_decision_id": "ADR-CORE-002",
+      "version": "1.0.0"
+    },
+    {
+      "rule_id": "RULE-CORE-05",
+      "name": "Model Output Must Not Execute Shell Commands",
+      "description": "Language model output must be treated as a proposal, not an instruction. No model output may directly execute shell commands, apply file edits, or install packages without explicit user approval.",
+      "scope": "service",
+      "severity": "error",
+      "rationale": "Prevents prompt injection and maintains developer control as a core product principle.",
+      "source_layer": "backend",
+      "target_layer": "external",
+      "allowed": false,
+      "verification_method": "code_review",
+      "source_decision_id": "ADR-CORE-004",
+      "version": "1.0.0"
+    },
+    {
+      "rule_id": "RULE-CORE-06",
+      "name": "Secret Redaction Before Remote Calls",
+      "description": "All payloads destined for external services (model gateways, Snowflake) must pass through the secret redaction filter before transmission.",
+      "scope": "service",
+      "severity": "error",
+      "rationale": "Never intentionally transmit detected secrets to language models or cloud services.",
+      "source_layer": "backend",
+      "target_layer": "external",
+      "allowed": false,
+      "verification_method": "payload_inspection",
+      "source_decision_id": "ADR-CORE-003",
+      "version": "1.0.0"
+    }
+  ],
+  "layerMap": {
+    "frontend/": "frontend",
+    "openlens-archy/": "frontend",
+    "src/": "frontend",
+    "engine/": "backend",
+    "api/": "backend",
+    "services/": "backend",
+    "database/": "database",
+    "models/": "database",
+    "snowflake/": "database",
+    "rules/": "security",
+    "security/": "security"
+  }
+}

@@ -434,25 +434,104 @@ class ASTScanner:
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
+    from dataclasses import asdict
     import json
     import sys
 
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-    paths = [Path(p) for p in sys.argv[1:]] or list(Path(".").rglob("*.py"))
-    scanner = ASTScanner()
-    result = scanner.scan(paths)
+    args = sys.argv[1:]
+    is_json = "--json" in args
+    is_sarif = "--sarif" in args
+    rules_file = None
 
-    print(f"\n{'='*60}")
-    print(f"OpenLens Dev -- AST Scan Results")
-    print(f"Files scanned : {result.files_scanned}")
-    print(f"Duration      : {result.duration_ms} ms")
-    print(f"Findings      : {len(result.findings)}")
-    print(f"{'='*60}\n")
+    if "--rules" in args:
+        r_idx = args.index("--rules")
+        if r_idx + 1 < len(args):
+            rules_file = args[r_idx + 1]
+            args.pop(r_idx + 1)
+        args.remove("--rules")
 
-    for f in result.findings:
-        print(f"[{f.severity.upper()}] {f.category} -- {f.location}")
-        print(f"  {f.summary}")
-        print(f"  -> {f.suggested_action}")
-        print()
+    raw_paths = [a for a in args if not a.startswith("--")]
+
+    paths: list[Path] = []
+    if raw_paths:
+        for p_str in raw_paths:
+            p = Path(p_str)
+            if p.is_dir():
+                paths.extend(p.rglob("*.py"))
+            elif p.is_file() and p.suffix == ".py":
+                paths.append(p)
+    else:
+        paths = list(Path(".").rglob("*.py"))
+
+    # Filter out virtualenvs and hidden dirs
+    clean_paths = [
+        p for p in paths
+        if not any(part.startswith(".") or part in ("venv", ".venv", "env", "__pycache__", "node_modules") for part in p.parts)
+    ]
+
+    arch_rules = None
+    if rules_file and Path(rules_file).exists():
+        try:
+            with open(rules_file, "r", encoding="utf-8") as rf:
+                rdata = json.load(rf)
+                arch_rules = rdata.get("rules", []) if isinstance(rdata, dict) else rdata
+        except Exception as e:
+            logger.warning("Could not load rules from %s: %s", rules_file, e)
+
+    scanner = ASTScanner(architecture_rules=arch_rules)
+    result = scanner.scan(clean_paths)
+
+    if is_json:
+        out = {
+            "files_scanned": result.files_scanned,
+            "duration_ms": result.duration_ms,
+            "findings": [asdict(f) for f in result.findings],
+            "errors": result.errors
+        }
+        print(json.dumps(out, indent=2))
+    elif is_sarif:
+        sarif_runs = [{
+            "tool": {
+                "driver": {
+                    "name": "OpenLens Dev",
+                    "version": "0.1.0",
+                    "informationUri": "https://github.com/HackToBerFest-VVCE/t1c2-logic-lords",
+                    "rules": []
+                }
+            },
+            "results": []
+        }]
+        for f in result.findings:
+            loc_parts = f.location.split(":L")
+            file_part = loc_parts[0]
+            line_part = loc_parts[1] if len(loc_parts) > 1 else "1"
+            start_l = int(line_part.split("-")[0]) if "-" in line_part else int(line_part)
+            sarif_runs[0]["results"].append({
+                "ruleId": f.rule_id or f.category,
+                "level": "error" if f.severity in ("critical", "high") else "warning",
+                "message": {"text": f"{f.summary} -> {f.suggested_action}"},
+                "locations": [{
+                    "physicalLocation": {
+                        "artifactLocation": {"uri": Path(file_part).as_uri()},
+                        "region": {"startLine": start_l}
+                    }
+                }]
+            })
+        sarif = {"version": "2.1.0", "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0.json", "runs": sarif_runs}
+        print(json.dumps(sarif, indent=2))
+    else:
+        print(f"\n{'='*60}")
+        print(f"OpenLens Dev -- AST Scan Results")
+        print(f"Files scanned : {result.files_scanned}")
+        print(f"Duration      : {result.duration_ms} ms")
+        print(f"Findings      : {len(result.findings)}")
+        print(f"{'='*60}\n")
+
+        for f in result.findings:
+            print(f"[{f.severity.upper()}] {f.category} -- {f.location}")
+            print(f"  {f.summary}")
+            print(f"  -> {f.suggested_action}")
+            print()
