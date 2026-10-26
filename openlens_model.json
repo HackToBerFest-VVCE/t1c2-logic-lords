@@ -1,0 +1,2348 @@
+{
+  "id": "openlens_project",
+  "name": "OpenLens_Project (Live Scan)",
+  "description": "Dynamic architecture model automatically scanned from C:\\Users\\Hp\\Downloads\\OpenLens_Project",
+  "workspace_root": "C:\\Users\\Hp\\Downloads\\OpenLens_Project",
+  "files_scanned": 13,
+  "duration_ms": 184,
+  "techStack": [
+    {
+      "id": "ts_python",
+      "name": "Python 3",
+      "category": "Core Runtime",
+      "version": "3.10+",
+      "file": "*.py",
+      "icon": "\ud83d\udc0d",
+      "status": "Detected in Repo",
+      "rationale": "Primary implementation language for core services and compute engines.",
+      "pros": [
+        "Rich scientific and AI ecosystem",
+        "Fast prototyping",
+        "Dynamic AST inspection"
+      ],
+      "cons": [
+        "GIL limitations for compute-heavy parallel threads"
+      ]
+    },
+    {
+      "id": "ts_fastapi",
+      "name": "FastAPI",
+      "category": "Backend REST API",
+      "version": "0.110.0",
+      "file": "requirements.txt, api\\gateway.py",
+      "icon": "\u26a1",
+      "status": "Detected in Repo",
+      "rationale": "High-performance async ASGI web framework with automatic OpenAPI docs.",
+      "pros": [
+        "Community standard",
+        "Fast integration",
+        "Well documented"
+      ],
+      "cons": [
+        "Requires dependency maintenance"
+      ]
+    },
+    {
+      "id": "ts_uvicorn[standard]",
+      "name": "Uvicorn[standard]",
+      "category": "External Dependency",
+      "version": "0.29.0",
+      "file": "requirements.txt",
+      "icon": "\ud83d\udce6",
+      "status": "Detected in Repo",
+      "rationale": "Python library used in project (uvicorn[standard]).",
+      "pros": [
+        "Community standard",
+        "Fast integration",
+        "Well documented"
+      ],
+      "cons": [
+        "Requires dependency maintenance"
+      ]
+    },
+    {
+      "id": "ts_pydantic",
+      "name": "Pydantic",
+      "category": "Data Validation",
+      "version": "2.7.0",
+      "file": "requirements.txt, api\\gateway.py",
+      "icon": "\ud83d\udee1\ufe0f",
+      "status": "Detected in Repo",
+      "rationale": "Data parsing and validation using Python type hints.",
+      "pros": [
+        "Community standard",
+        "Fast integration",
+        "Well documented"
+      ],
+      "cons": [
+        "Requires dependency maintenance"
+      ]
+    },
+    {
+      "id": "ts_httpx",
+      "name": "Httpx",
+      "category": "Async HTTP Client",
+      "version": "0.27.0",
+      "file": "requirements.txt, services\\model_adapter.py",
+      "icon": "\u26a1",
+      "status": "Detected in Repo",
+      "rationale": "Next-generation HTTP client with async support.",
+      "pros": [
+        "Community standard",
+        "Fast integration",
+        "Well documented"
+      ],
+      "cons": [
+        "Requires dependency maintenance"
+      ]
+    },
+    {
+      "id": "ts_snowflake_connector_python",
+      "name": "Snowflake-connector-python",
+      "category": "Data Warehouse",
+      "version": "3.8.0",
+      "file": "requirements.txt",
+      "icon": "\u2744\ufe0f",
+      "status": "Detected in Repo",
+      "rationale": "Native Snowflake database connector.",
+      "pros": [
+        "Community standard",
+        "Fast integration",
+        "Well documented"
+      ],
+      "cons": [
+        "Requires dependency maintenance"
+      ]
+    },
+    {
+      "id": "ts_radon",
+      "name": "Radon",
+      "category": "External Dependency",
+      "version": "6.0.1",
+      "file": "requirements.txt",
+      "icon": "\ud83d\udce6",
+      "status": "Detected in Repo",
+      "rationale": "Python library used in project (radon).",
+      "pros": [
+        "Community standard",
+        "Fast integration",
+        "Well documented"
+      ],
+      "cons": [
+        "Requires dependency maintenance"
+      ]
+    },
+    {
+      "id": "ts_libcst",
+      "name": "Libcst",
+      "category": "External Dependency",
+      "version": "1.3.0",
+      "file": "requirements.txt",
+      "icon": "\ud83d\udce6",
+      "status": "Detected in Repo",
+      "rationale": "Python library used in project (libcst).",
+      "pros": [
+        "Community standard",
+        "Fast integration",
+        "Well documented"
+      ],
+      "cons": [
+        "Requires dependency maintenance"
+      ]
+    },
+    {
+      "id": "ts_python_dotenv",
+      "name": "Python-dotenv",
+      "category": "External Dependency",
+      "version": "1.0.1",
+      "file": "requirements.txt",
+      "icon": "\ud83d\udce6",
+      "status": "Detected in Repo",
+      "rationale": "Python library used in project (python-dotenv).",
+      "pros": [
+        "Community standard",
+        "Fast integration",
+        "Well documented"
+      ],
+      "cons": [
+        "Requires dependency maintenance"
+      ]
+    },
+    {
+      "id": "ts_snowflake",
+      "name": "Snowflake",
+      "category": "Cloud Data Warehouse",
+      "version": "inferred",
+      "file": "services\\snowflake_bridge.py",
+      "icon": "\u2744\ufe0f",
+      "status": "Detected in Repo",
+      "rationale": "Snowflake cloud data platform connector & Cortex search.",
+      "pros": [
+        "Community standard",
+        "Fast integration",
+        "Well documented"
+      ],
+      "cons": [
+        "Requires dependency maintenance"
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "id": "subsystem_1",
+      "label": "API & Ingestion Boundary",
+      "name": "API & Ingestion Boundary",
+      "layer": 1,
+      "color": "#6366f1",
+      "borderStyle": "dashed",
+      "fill": "rgba(99, 102, 241, 0.02)",
+      "x": 40,
+      "y": 30,
+      "width": 270,
+      "height": 220,
+      "node_count": 2
+    },
+    {
+      "id": "subsystem_2",
+      "label": "Compute & Analysis Engine",
+      "name": "Compute & Analysis Engine",
+      "layer": 3,
+      "color": "#f59e0b",
+      "borderStyle": "dashed",
+      "fill": "rgba(99, 102, 241, 0.02)",
+      "x": 355,
+      "y": 30,
+      "width": 270,
+      "height": 475,
+      "node_count": 5
+    },
+    {
+      "id": "subsystem_3",
+      "label": "Core Application Entrypoint",
+      "name": "Core Application Entrypoint",
+      "layer": 1,
+      "color": "#6366f1",
+      "borderStyle": "dashed",
+      "fill": "rgba(99, 102, 241, 0.02)",
+      "x": 670,
+      "y": 30,
+      "width": 270,
+      "height": 220,
+      "node_count": 2
+    },
+    {
+      "id": "subsystem_4",
+      "label": "Core Domain & Business Logic",
+      "name": "Core Domain & Business Logic",
+      "layer": 2,
+      "color": "#06b6d4",
+      "borderStyle": "dashed",
+      "fill": "rgba(99, 102, 241, 0.02)",
+      "x": 985,
+      "y": 30,
+      "width": 270,
+      "height": 390,
+      "node_count": 4
+    }
+  ],
+  "nodes": [
+    {
+      "id": "api___init__",
+      "label": "__init__.py",
+      "subsystem": "API & Ingestion Boundary",
+      "layer": 1,
+      "color": "#6366f1",
+      "file": "api/__init__.py",
+      "lines": 1,
+      "functions": [],
+      "classes": [],
+      "summary": "0 function(s), 0 class(es) \u2014 1 LOC",
+      "x": 55,
+      "y": 68,
+      "width": 240,
+      "height": 68
+    },
+    {
+      "id": "api_gateway",
+      "label": "gateway.py",
+      "subsystem": "API & Ingestion Boundary",
+      "layer": 1,
+      "color": "#6366f1",
+      "file": "api/gateway.py",
+      "lines": 372,
+      "functions": [],
+      "classes": [
+        "ScanRequest",
+        "PatternQueryRequest",
+        "FeedbackRequest",
+        "EvaluationRunRequest"
+      ],
+      "summary": "0 function(s), 4 class(es) \u2014 372 LOC",
+      "x": 55,
+      "y": 148,
+      "width": 240,
+      "height": 68
+    },
+    {
+      "id": "engine___init__",
+      "label": "__init__.py",
+      "subsystem": "Compute & Analysis Engine",
+      "layer": 3,
+      "color": "#f59e0b",
+      "file": "engine/__init__.py",
+      "lines": 1,
+      "functions": [],
+      "classes": [],
+      "summary": "0 function(s), 0 class(es) \u2014 1 LOC",
+      "x": 370,
+      "y": 68,
+      "width": 240,
+      "height": 68
+    },
+    {
+      "id": "engine_ast_scanner",
+      "label": "ast_scanner.py",
+      "subsystem": "Compute & Analysis Engine",
+      "layer": 3,
+      "color": "#f59e0b",
+      "file": "engine/ast_scanner.py",
+      "lines": 537,
+      "functions": [],
+      "classes": [
+        "Evidence",
+        "Finding",
+        "DuplicationDetector",
+        "UnusedImportDetector",
+        "ComplexityDetector",
+        "ArchitectureDriftDetector",
+        "ScanResult",
+        "ASTScanner"
+      ],
+      "summary": "0 function(s), 8 class(es) \u2014 537 LOC",
+      "x": 370,
+      "y": 148,
+      "width": 240,
+      "height": 68
+    },
+    {
+      "id": "engine_project_analyzer",
+      "label": "project_analyzer.py",
+      "subsystem": "Compute & Analysis Engine",
+      "layer": 3,
+      "color": "#f59e0b",
+      "file": "engine/project_analyzer.py",
+      "lines": 551,
+      "functions": [],
+      "classes": [
+        "ProjectAnalyzer"
+      ],
+      "summary": "0 function(s), 1 class(es) \u2014 551 LOC",
+      "x": 370,
+      "y": 228,
+      "width": 240,
+      "height": 68
+    },
+    {
+      "id": "openlens-vscode_engine_ast_scanner",
+      "label": "ast_scanner.py",
+      "subsystem": "Compute & Analysis Engine",
+      "layer": 3,
+      "color": "#f59e0b",
+      "file": "openlens-vscode/engine/ast_scanner.py",
+      "lines": 537,
+      "functions": [],
+      "classes": [
+        "Evidence",
+        "Finding",
+        "DuplicationDetector",
+        "UnusedImportDetector",
+        "ComplexityDetector",
+        "ArchitectureDriftDetector",
+        "ScanResult",
+        "ASTScanner"
+      ],
+      "summary": "0 function(s), 8 class(es) \u2014 537 LOC",
+      "x": 370,
+      "y": 308,
+      "width": 240,
+      "height": 68
+    },
+    {
+      "id": "openlens-vscode_engine_project_analyzer",
+      "label": "project_analyzer.py",
+      "subsystem": "Compute & Analysis Engine",
+      "layer": 3,
+      "color": "#f59e0b",
+      "file": "openlens-vscode/engine/project_analyzer.py",
+      "lines": 488,
+      "functions": [],
+      "classes": [
+        "ProjectAnalyzer"
+      ],
+      "summary": "0 function(s), 1 class(es) \u2014 488 LOC",
+      "x": 370,
+      "y": 388,
+      "width": 240,
+      "height": 68
+    },
+    {
+      "id": "openlens-vscode_engine___init__",
+      "label": "__init__.py",
+      "subsystem": "Core Application Entrypoint",
+      "layer": 1,
+      "color": "#6366f1",
+      "file": "openlens-vscode/engine/__init__.py",
+      "lines": 1,
+      "functions": [],
+      "classes": [],
+      "summary": "0 function(s), 0 class(es) \u2014 1 LOC",
+      "x": 685,
+      "y": 68,
+      "width": 240,
+      "height": 68
+    },
+    {
+      "id": "openlens",
+      "label": "openlens.py",
+      "subsystem": "Core Application Entrypoint",
+      "layer": 1,
+      "color": "#6366f1",
+      "file": "openlens.py",
+      "lines": 204,
+      "functions": [
+        "cmd_scan",
+        "cmd_analyze",
+        "cmd_watch",
+        "cmd_install_extension",
+        "cmd_serve",
+        "main"
+      ],
+      "classes": [],
+      "summary": "6 function(s), 0 class(es) \u2014 204 LOC",
+      "x": 685,
+      "y": 148,
+      "width": 240,
+      "height": 68
+    },
+    {
+      "id": "services___init__",
+      "label": "__init__.py",
+      "subsystem": "Core Domain & Business Logic",
+      "layer": 2,
+      "color": "#06b6d4",
+      "file": "services/__init__.py",
+      "lines": 1,
+      "functions": [],
+      "classes": [],
+      "summary": "0 function(s), 0 class(es) \u2014 1 LOC",
+      "x": 1000,
+      "y": 68,
+      "width": 240,
+      "height": 68
+    },
+    {
+      "id": "services_model_adapter",
+      "label": "model_adapter.py",
+      "subsystem": "Core Domain & Business Logic",
+      "layer": 2,
+      "color": "#06b6d4",
+      "file": "services/model_adapter.py",
+      "lines": 264,
+      "functions": [
+        "redact_secrets"
+      ],
+      "classes": [
+        "BoundedPrompt",
+        "ModelProposal",
+        "ModelGatewayConfig",
+        "ModelGatewayAdapter",
+        "OllamaAdapter",
+        "StubAdapter",
+        "ModelGateway"
+      ],
+      "summary": "1 function(s), 7 class(es) \u2014 264 LOC",
+      "x": 1000,
+      "y": 148,
+      "width": 240,
+      "height": 68
+    },
+    {
+      "id": "services_retrieval",
+      "label": "retrieval.py",
+      "subsystem": "Core Domain & Business Logic",
+      "layer": 2,
+      "color": "#06b6d4",
+      "file": "services/retrieval.py",
+      "lines": 106,
+      "functions": [],
+      "classes": [
+        "RetrievalResult",
+        "RetrievalService"
+      ],
+      "summary": "0 function(s), 2 class(es) \u2014 106 LOC",
+      "x": 1000,
+      "y": 228,
+      "width": 240,
+      "height": 68
+    },
+    {
+      "id": "services_snowflake_bridge",
+      "label": "snowflake_bridge.py",
+      "subsystem": "Core Domain & Business Logic",
+      "layer": 2,
+      "color": "#06b6d4",
+      "file": "services/snowflake_bridge.py",
+      "lines": 426,
+      "functions": [
+        "get_bridge"
+      ],
+      "classes": [
+        "SnowflakeConfig",
+        "PatternResult",
+        "ScanMetricPayload",
+        "FindingFeedbackPayload",
+        "EvaluationRunPayload",
+        "SnowflakeBridge"
+      ],
+      "summary": "1 function(s), 6 class(es) \u2014 426 LOC",
+      "x": 1000,
+      "y": 308,
+      "width": 240,
+      "height": 68
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn_api_gateway_engine_ast_scanner",
+      "from": "api_gateway",
+      "to": "engine_ast_scanner",
+      "from_file": "api/gateway.py",
+      "to_file": "engine/ast_scanner.py",
+      "flowType": "sync",
+      "label": "invokes / imports",
+      "animated": true
+    },
+    {
+      "id": "conn_api_gateway_engine_project_analyzer",
+      "from": "api_gateway",
+      "to": "engine_project_analyzer",
+      "from_file": "api/gateway.py",
+      "to_file": "engine/project_analyzer.py",
+      "flowType": "sync",
+      "label": "invokes / imports",
+      "animated": true
+    },
+    {
+      "id": "conn_api_gateway_services_snowflake_bridge",
+      "from": "api_gateway",
+      "to": "services_snowflake_bridge",
+      "from_file": "api/gateway.py",
+      "to_file": "services/snowflake_bridge.py",
+      "flowType": "sync",
+      "label": "invokes / imports",
+      "animated": true
+    },
+    {
+      "id": "conn_api_gateway_services_retrieval",
+      "from": "api_gateway",
+      "to": "services_retrieval",
+      "from_file": "api/gateway.py",
+      "to_file": "services/retrieval.py",
+      "flowType": "sync",
+      "label": "invokes / imports",
+      "animated": true
+    },
+    {
+      "id": "conn_api_gateway_services_model_adapter",
+      "from": "api_gateway",
+      "to": "services_model_adapter",
+      "from_file": "api/gateway.py",
+      "to_file": "services/model_adapter.py",
+      "flowType": "sync",
+      "label": "invokes / imports",
+      "animated": true
+    },
+    {
+      "id": "conn_engine_project_analyzer_engine_ast_scanner",
+      "from": "engine_project_analyzer",
+      "to": "engine_ast_scanner",
+      "from_file": "engine/project_analyzer.py",
+      "to_file": "engine/ast_scanner.py",
+      "flowType": "sync",
+      "label": "invokes / imports",
+      "animated": true
+    },
+    {
+      "id": "conn_openlens-vscode_engine_project_analyzer_engine_ast_scanner",
+      "from": "openlens-vscode_engine_project_analyzer",
+      "to": "engine_ast_scanner",
+      "from_file": "openlens-vscode/engine/project_analyzer.py",
+      "to_file": "engine/ast_scanner.py",
+      "flowType": "sync",
+      "label": "invokes / imports",
+      "animated": true
+    },
+    {
+      "id": "conn_openlens_engine_project_analyzer",
+      "from": "openlens",
+      "to": "engine_project_analyzer",
+      "from_file": "openlens.py",
+      "to_file": "engine/project_analyzer.py",
+      "flowType": "sync",
+      "label": "invokes / imports",
+      "animated": true
+    }
+  ],
+  "patterns": [
+    {
+      "id": "pat_modelgatewayadapter",
+      "name": "Strategy / Interface Pattern (ModelGatewayAdapter)",
+      "category": "Behavioral",
+      "file": "services/model_adapter.py:L101",
+      "description": "Class 'ModelGatewayAdapter' defines an abstract interchangeable strategy interface for decoupled algorithms.",
+      "codeSnippet": "class ModelGatewayAdapter(ABC):\n    # Interchangeable strategy contract\n    pass",
+      "recommendation": "Use this abstraction to inject test stubs and mock external dependencies cleanly.",
+      "icon": "\ud83c\udfdb\ufe0f",
+      "implementationSnippet": "class ModelGatewayAdapter(ABC):\n    # Interchangeable strategy contract\n    pass",
+      "maintainabilityImpact": "Use this abstraction to inject test stubs and mock external dependencies cleanly."
+    },
+    {
+      "id": "pat_ollamaadapter",
+      "name": "Adapter / Bridge Pattern (OllamaAdapter)",
+      "category": "Structural",
+      "file": "services/model_adapter.py:L129",
+      "description": "Class 'OllamaAdapter' wraps external services or remote APIs, isolating the rest of the application from third-party churn.",
+      "codeSnippet": "class OllamaAdapter:\n    # Adapts external interface to internal domain models\n    pass",
+      "recommendation": "Retain this boundary to ensure external service failures degrade gracefully.",
+      "icon": "\ud83c\udfdb\ufe0f",
+      "implementationSnippet": "class OllamaAdapter:\n    # Adapts external interface to internal domain models\n    pass",
+      "maintainabilityImpact": "Retain this boundary to ensure external service failures degrade gracefully."
+    },
+    {
+      "id": "pat_stubadapter",
+      "name": "Adapter / Bridge Pattern (StubAdapter)",
+      "category": "Structural",
+      "file": "services/model_adapter.py:L182",
+      "description": "Class 'StubAdapter' wraps external services or remote APIs, isolating the rest of the application from third-party churn.",
+      "codeSnippet": "class StubAdapter:\n    # Adapts external interface to internal domain models\n    pass",
+      "recommendation": "Retain this boundary to ensure external service failures degrade gracefully.",
+      "icon": "\ud83c\udfdb\ufe0f",
+      "implementationSnippet": "class StubAdapter:\n    # Adapts external interface to internal domain models\n    pass",
+      "maintainabilityImpact": "Retain this boundary to ensure external service failures degrade gracefully."
+    },
+    {
+      "id": "pat_modelgateway",
+      "name": "Adapter / Bridge Pattern (ModelGateway)",
+      "category": "Structural",
+      "file": "services/model_adapter.py:L214",
+      "description": "Class 'ModelGateway' wraps external services or remote APIs, isolating the rest of the application from third-party churn.",
+      "codeSnippet": "class ModelGateway:\n    # Adapts external interface to internal domain models\n    pass",
+      "recommendation": "Retain this boundary to ensure external service failures degrade gracefully.",
+      "icon": "\ud83c\udfdb\ufe0f",
+      "implementationSnippet": "class ModelGateway:\n    # Adapts external interface to internal domain models\n    pass",
+      "maintainabilityImpact": "Retain this boundary to ensure external service failures degrade gracefully."
+    },
+    {
+      "id": "pat_snowflakebridge",
+      "name": "Adapter / Bridge Pattern (SnowflakeBridge)",
+      "category": "Structural",
+      "file": "services/snowflake_bridge.py:L100",
+      "description": "Class 'SnowflakeBridge' wraps external services or remote APIs, isolating the rest of the application from third-party churn.",
+      "codeSnippet": "class SnowflakeBridge:\n    # Adapts external interface to internal domain models\n    pass",
+      "recommendation": "Retain this boundary to ensure external service failures degrade gracefully.",
+      "icon": "\ud83c\udfdb\ufe0f",
+      "implementationSnippet": "class SnowflakeBridge:\n    # Adapts external interface to internal domain models\n    pass",
+      "maintainabilityImpact": "Retain this boundary to ensure external service failures degrade gracefully."
+    }
+  ],
+  "designPatterns": [
+    {
+      "id": "pat_modelgatewayadapter",
+      "name": "Strategy / Interface Pattern (ModelGatewayAdapter)",
+      "category": "Behavioral",
+      "file": "services/model_adapter.py:L101",
+      "description": "Class 'ModelGatewayAdapter' defines an abstract interchangeable strategy interface for decoupled algorithms.",
+      "codeSnippet": "class ModelGatewayAdapter(ABC):\n    # Interchangeable strategy contract\n    pass",
+      "recommendation": "Use this abstraction to inject test stubs and mock external dependencies cleanly.",
+      "icon": "\ud83c\udfdb\ufe0f",
+      "implementationSnippet": "class ModelGatewayAdapter(ABC):\n    # Interchangeable strategy contract\n    pass",
+      "maintainabilityImpact": "Use this abstraction to inject test stubs and mock external dependencies cleanly."
+    },
+    {
+      "id": "pat_ollamaadapter",
+      "name": "Adapter / Bridge Pattern (OllamaAdapter)",
+      "category": "Structural",
+      "file": "services/model_adapter.py:L129",
+      "description": "Class 'OllamaAdapter' wraps external services or remote APIs, isolating the rest of the application from third-party churn.",
+      "codeSnippet": "class OllamaAdapter:\n    # Adapts external interface to internal domain models\n    pass",
+      "recommendation": "Retain this boundary to ensure external service failures degrade gracefully.",
+      "icon": "\ud83c\udfdb\ufe0f",
+      "implementationSnippet": "class OllamaAdapter:\n    # Adapts external interface to internal domain models\n    pass",
+      "maintainabilityImpact": "Retain this boundary to ensure external service failures degrade gracefully."
+    },
+    {
+      "id": "pat_stubadapter",
+      "name": "Adapter / Bridge Pattern (StubAdapter)",
+      "category": "Structural",
+      "file": "services/model_adapter.py:L182",
+      "description": "Class 'StubAdapter' wraps external services or remote APIs, isolating the rest of the application from third-party churn.",
+      "codeSnippet": "class StubAdapter:\n    # Adapts external interface to internal domain models\n    pass",
+      "recommendation": "Retain this boundary to ensure external service failures degrade gracefully.",
+      "icon": "\ud83c\udfdb\ufe0f",
+      "implementationSnippet": "class StubAdapter:\n    # Adapts external interface to internal domain models\n    pass",
+      "maintainabilityImpact": "Retain this boundary to ensure external service failures degrade gracefully."
+    },
+    {
+      "id": "pat_modelgateway",
+      "name": "Adapter / Bridge Pattern (ModelGateway)",
+      "category": "Structural",
+      "file": "services/model_adapter.py:L214",
+      "description": "Class 'ModelGateway' wraps external services or remote APIs, isolating the rest of the application from third-party churn.",
+      "codeSnippet": "class ModelGateway:\n    # Adapts external interface to internal domain models\n    pass",
+      "recommendation": "Retain this boundary to ensure external service failures degrade gracefully.",
+      "icon": "\ud83c\udfdb\ufe0f",
+      "implementationSnippet": "class ModelGateway:\n    # Adapts external interface to internal domain models\n    pass",
+      "maintainabilityImpact": "Retain this boundary to ensure external service failures degrade gracefully."
+    },
+    {
+      "id": "pat_snowflakebridge",
+      "name": "Adapter / Bridge Pattern (SnowflakeBridge)",
+      "category": "Structural",
+      "file": "services/snowflake_bridge.py:L100",
+      "description": "Class 'SnowflakeBridge' wraps external services or remote APIs, isolating the rest of the application from third-party churn.",
+      "codeSnippet": "class SnowflakeBridge:\n    # Adapts external interface to internal domain models\n    pass",
+      "recommendation": "Retain this boundary to ensure external service failures degrade gracefully.",
+      "icon": "\ud83c\udfdb\ufe0f",
+      "implementationSnippet": "class SnowflakeBridge:\n    # Adapts external interface to internal domain models\n    pass",
+      "maintainabilityImpact": "Retain this boundary to ensure external service failures degrade gracefully."
+    }
+  ],
+  "userFiles": [
+    {
+      "path": "api/__init__.py",
+      "component": "__init__.py",
+      "layer": "Layer 1",
+      "lines": 1,
+      "tech": "Python",
+      "pattern": "Modular"
+    },
+    {
+      "path": "api/gateway.py",
+      "component": "gateway.py",
+      "layer": "Layer 1",
+      "lines": 372,
+      "tech": "Python",
+      "pattern": "Modular"
+    },
+    {
+      "path": "engine/__init__.py",
+      "component": "__init__.py",
+      "layer": "Layer 3",
+      "lines": 1,
+      "tech": "Python",
+      "pattern": "Modular"
+    },
+    {
+      "path": "engine/ast_scanner.py",
+      "component": "ast_scanner.py",
+      "layer": "Layer 3",
+      "lines": 537,
+      "tech": "Python",
+      "pattern": "Modular"
+    },
+    {
+      "path": "engine/project_analyzer.py",
+      "component": "project_analyzer.py",
+      "layer": "Layer 3",
+      "lines": 551,
+      "tech": "Python",
+      "pattern": "Modular"
+    },
+    {
+      "path": "openlens-vscode/engine/ast_scanner.py",
+      "component": "ast_scanner.py",
+      "layer": "Layer 3",
+      "lines": 537,
+      "tech": "Python",
+      "pattern": "Modular"
+    },
+    {
+      "path": "openlens-vscode/engine/project_analyzer.py",
+      "component": "project_analyzer.py",
+      "layer": "Layer 3",
+      "lines": 488,
+      "tech": "Python",
+      "pattern": "Modular"
+    },
+    {
+      "path": "openlens-vscode/engine/__init__.py",
+      "component": "__init__.py",
+      "layer": "Layer 1",
+      "lines": 1,
+      "tech": "Python",
+      "pattern": "Modular"
+    },
+    {
+      "path": "openlens.py",
+      "component": "openlens.py",
+      "layer": "Layer 1",
+      "lines": 204,
+      "tech": "Python",
+      "pattern": "Modular"
+    },
+    {
+      "path": "services/__init__.py",
+      "component": "__init__.py",
+      "layer": "Layer 2",
+      "lines": 1,
+      "tech": "Python",
+      "pattern": "Modular"
+    },
+    {
+      "path": "services/model_adapter.py",
+      "component": "model_adapter.py",
+      "layer": "Layer 2",
+      "lines": 264,
+      "tech": "Python",
+      "pattern": "Modular"
+    },
+    {
+      "path": "services/retrieval.py",
+      "component": "retrieval.py",
+      "layer": "Layer 2",
+      "lines": 106,
+      "tech": "Python",
+      "pattern": "Modular"
+    },
+    {
+      "path": "services/snowflake_bridge.py",
+      "component": "snowflake_bridge.py",
+      "layer": "Layer 2",
+      "lines": 426,
+      "tech": "Python",
+      "pattern": "Modular"
+    }
+  ],
+  "systemDesign": {
+    "slaMetrics": [
+      {
+        "name": "Deterministic Scan Latency",
+        "value": "184ms",
+        "target": "< 200ms",
+        "status": "Pass"
+      },
+      {
+        "name": "Total Files Parsed",
+        "value": "13",
+        "target": "100% Coverage",
+        "status": "Pass"
+      },
+      {
+        "name": "Maintainability Findings",
+        "value": "59",
+        "target": "Tracked",
+        "status": "Tracked"
+      },
+      {
+        "name": "Architecture Layers",
+        "value": "4",
+        "target": "Decoupled",
+        "status": "Pass"
+      }
+    ],
+    "specifications": [
+      {
+        "title": "Local First Analysis",
+        "summary": "Zero remote source code transmission.",
+        "details": "AST parsing and boundary checks run entirely locally on client compute."
+      },
+      {
+        "title": "Automated Rule Conformance",
+        "summary": "4 active architecture constraints.",
+        "details": "Derived from directory separation and import graph analysis."
+      }
+    ]
+  },
+  "adrs": [
+    {
+      "id": "ADR-001",
+      "title": "Selection of Modular Layered Architecture for OpenLens_Project",
+      "status": "Accepted",
+      "date": "Automated Inference",
+      "context": "Project structure spans 4 functional boundaries with distinct responsibility separation.",
+      "decision": "Enforce clean layered boundaries between presentation, domain services, compute engine, and storage.",
+      "consequences": "Maintains low coupling and allows individual components to be unit tested in isolation."
+    },
+    {
+      "id": "ADR-002",
+      "title": "Integration of Python 3 + FastAPI for High-Throughput Processing",
+      "status": "Accepted",
+      "date": "Automated Inference",
+      "context": "Codebase leverages Python 3, FastAPI, Uvicorn[standard], Pydantic as primary ecosystem dependencies.",
+      "decision": "Standardize async execution and typed contract models across all internal module interfaces.",
+      "consequences": "Ensures sub-millisecond serialization latency and predictable runtime performance."
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "RULE-ARCH-01",
+      "severity": "error",
+      "description": "Presentation and API layers must not import private database models directly without a service boundary."
+    },
+    {
+      "rule_id": "RULE-ARCH-02",
+      "severity": "error",
+      "description": "Core calculation engine must remain pure and free from direct network or disk side-effects."
+    },
+    {
+      "rule_id": "RULE-ARCH-03",
+      "severity": "warning",
+      "description": "External client calls must route through adapter classes to handle offline degradation."
+    },
+    {
+      "rule_id": "RULE-ARCH-04",
+      "severity": "warning",
+      "description": "No cyclic dependencies permitted across functional subsystems."
+    }
+  ],
+  "findings": [
+    {
+      "id": "dup_46ae20da",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L64-L119",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L64-L119",
+          "excerpt_or_summary": "Identical AST hash: 46ae20da79a8",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L64-L119",
+          "excerpt_or_summary": "Identical AST hash: 46ae20da79a8",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_0aa9baed",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L122-L125",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L122-L125",
+          "excerpt_or_summary": "Identical AST hash: 0aa9baed9f36",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L122-L125",
+          "excerpt_or_summary": "Identical AST hash: 0aa9baed9f36",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_34e1473d",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L138-L147",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L138-L147",
+          "excerpt_or_summary": "Identical AST hash: 34e1473d79af",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L138-L147",
+          "excerpt_or_summary": "Identical AST hash: 34e1473d79af",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_e235b5e6",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L149-L195",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L149-L195",
+          "excerpt_or_summary": "Identical AST hash: e235b5e67c33",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L149-L195",
+          "excerpt_or_summary": "Identical AST hash: e235b5e67c33",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_a58bac9f",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L217-L221",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L217-L221",
+          "excerpt_or_summary": "Identical AST hash: a58bac9f81d5",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L217-L221",
+          "excerpt_or_summary": "Identical AST hash: a58bac9f81d5",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_1d160461",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L223-L238",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L223-L238",
+          "excerpt_or_summary": "Identical AST hash: 1d16046166ef",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L223-L238",
+          "excerpt_or_summary": "Identical AST hash: 1d16046166ef",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_af98e354",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L240-L256",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L240-L256",
+          "excerpt_or_summary": "Identical AST hash: af98e35495bb",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L240-L256",
+          "excerpt_or_summary": "Identical AST hash: af98e35495bb",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_cf8ea4e3",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L258-L280",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L258-L280",
+          "excerpt_or_summary": "Identical AST hash: cf8ea4e3e241",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L258-L280",
+          "excerpt_or_summary": "Identical AST hash: cf8ea4e3e241",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_1ede09c8",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L293-L294",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L293-L294",
+          "excerpt_or_summary": "Identical AST hash: 1ede09c8edae",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L293-L294",
+          "excerpt_or_summary": "Identical AST hash: 1ede09c8edae",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_72781b63",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L296-L349",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L296-L349",
+          "excerpt_or_summary": "Identical AST hash: 72781b63d322",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L296-L349",
+          "excerpt_or_summary": "Identical AST hash: 72781b63d322",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_788d9fb1",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L352-L356",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L352-L356",
+          "excerpt_or_summary": "Identical AST hash: 788d9fb126eb",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L352-L356",
+          "excerpt_or_summary": "Identical AST hash: 788d9fb126eb",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_434712e1",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L377-L396",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L377-L396",
+          "excerpt_or_summary": "Identical AST hash: 434712e1c671",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L377-L396",
+          "excerpt_or_summary": "Identical AST hash: 434712e1c671",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_18e8b6a9",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L398-L429",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L398-L429",
+          "excerpt_or_summary": "Identical AST hash: 18e8b6a997b1",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L398-L429",
+          "excerpt_or_summary": "Identical AST hash: 18e8b6a997b1",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_0d13bdea",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L104-L107",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L104-L107",
+          "excerpt_or_summary": "Identical AST hash: 0d13bdea9760",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L104-L107",
+          "excerpt_or_summary": "Identical AST hash: 0d13bdea9760",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_b0f06041",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L182-L192",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L182-L192",
+          "excerpt_or_summary": "Identical AST hash: b0f060415ea2",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L143-L153",
+          "excerpt_or_summary": "Identical AST hash: b0f060415ea2",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_a03f5623",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L194-L287",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L194-L287",
+          "excerpt_or_summary": "Identical AST hash: a03f5623815c",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L155-L248",
+          "excerpt_or_summary": "Identical AST hash: a03f5623815c",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_8bab329a",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L386-L428",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L386-L428",
+          "excerpt_or_summary": "Identical AST hash: 8bab329a8f52",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L323-L365",
+          "excerpt_or_summary": "Identical AST hash: 8bab329a8f52",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_c8eb9d64",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L430-L494",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L430-L494",
+          "excerpt_or_summary": "Identical AST hash: c8eb9d64350e",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L367-L431",
+          "excerpt_or_summary": "Identical AST hash: c8eb9d64350e",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_fa6a4491",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L496-L519",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L496-L519",
+          "excerpt_or_summary": "Identical AST hash: fa6a449109c8",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L433-L456",
+          "excerpt_or_summary": "Identical AST hash: fa6a449109c8",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "dup_7c844090",
+      "category": "duplication",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L521-L543",
+      "summary": "Exact function body duplicate detected across 2 locations.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L521-L543",
+          "excerpt_or_summary": "Identical AST hash: 7c8440904ad2",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        },
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L458-L480",
+          "excerpt_or_summary": "Identical AST hash: 7c8440904ad2",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Duplicated logic increases maintenance burden: a bug fix or behavioural change must be replicated in every copy.",
+      "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_a7c175c8",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py:L12",
+      "summary": "Unused import: 'annotations'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py",
+          "excerpt_or_summary": "import 'annotations' at line 12 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import annotations' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_4c0a1c94",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py:L31",
+      "summary": "Unused import: 'SnowflakeBridge'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py",
+          "excerpt_or_summary": "import 'SnowflakeBridge' at line 31 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import SnowflakeBridge' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_e7ebf473",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py:L31",
+      "summary": "Unused import: 'SnowflakeConfig'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py",
+          "excerpt_or_summary": "import 'SnowflakeConfig' at line 31 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import SnowflakeConfig' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_1a842d3d",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py:L36",
+      "summary": "Unused import: 'RetrievalService'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py",
+          "excerpt_or_summary": "import 'RetrievalService' at line 36 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import RetrievalService' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_6ec90df9",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py:L37",
+      "summary": "Unused import: 'ModelGateway'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py",
+          "excerpt_or_summary": "import 'ModelGateway' at line 37 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import ModelGateway' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_d1e8f5f6",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py:L37",
+      "summary": "Unused import: 'ModelGatewayConfig'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py",
+          "excerpt_or_summary": "import 'ModelGatewayConfig' at line 37 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import ModelGatewayConfig' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_8a63d5a2",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L12",
+      "summary": "Unused import: 'annotations'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "import 'annotations' at line 12 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import annotations' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_b07cf53c",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L224",
+      "summary": "Unused import: 'ComplexityVisitor'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "import 'ComplexityVisitor' at line 224 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import ComplexityVisitor' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_1e363e86",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L10",
+      "summary": "Unused import: 'annotations'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "import 'annotations' at line 10 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import annotations' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_d5f73957",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L22",
+      "summary": "Unused import: 'Optional'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "import 'Optional' at line 22 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import Optional' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_4dc8b947",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L12",
+      "summary": "Unused import: 'annotations'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "import 'annotations' at line 12 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import annotations' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_0fa5d6eb",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L224",
+      "summary": "Unused import: 'ComplexityVisitor'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "import 'ComplexityVisitor' at line 224 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import ComplexityVisitor' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_d4076087",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L10",
+      "summary": "Unused import: 'annotations'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "import 'annotations' at line 10 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import annotations' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_3c2f889f",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L22",
+      "summary": "Unused import: 'Optional'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "import 'Optional' at line 22 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import Optional' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_dd54bae2",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py:L14",
+      "summary": "Unused import: 'annotations'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py",
+          "excerpt_or_summary": "import 'annotations' at line 14 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import annotations' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_ddff9223",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py:L17",
+      "summary": "Unused import: 'os'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py",
+          "excerpt_or_summary": "import 'os' at line 17 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import os' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_4cdafba7",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\model_adapter.py:L13",
+      "summary": "Unused import: 'annotations'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\model_adapter.py",
+          "excerpt_or_summary": "import 'annotations' at line 13 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import annotations' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_b285e942",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\retrieval.py:L6",
+      "summary": "Unused import: 'annotations'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\retrieval.py",
+          "excerpt_or_summary": "import 'annotations' at line 6 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import annotations' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_e0006799",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\retrieval.py:L10",
+      "summary": "Unused import: 'Optional'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\retrieval.py",
+          "excerpt_or_summary": "import 'Optional' at line 10 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import Optional' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_724528f1",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\snowflake_bridge.py:L9",
+      "summary": "Unused import: 'annotations'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\snowflake_bridge.py",
+          "excerpt_or_summary": "import 'annotations' at line 9 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import annotations' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "unused_5be4e0df",
+      "category": "unused_code",
+      "severity": "low",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\snowflake_bridge.py:L17",
+      "summary": "Unused import: 'datetime'.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\snowflake_bridge.py",
+          "excerpt_or_summary": "import 'datetime' at line 17 is never referenced.",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
+      "suggested_action": "Remove the 'import datetime' statement.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "cc_e0f9a1cc",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py:L190",
+      "summary": "Function 'scan_files' has cyclomatic complexity 9.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 9 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "cc_12c9e8ef",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L64",
+      "summary": "Function 'detect' has cyclomatic complexity 8.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 8 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "cc_2ba549fa",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L149",
+      "summary": "Function '_check_file' has cyclomatic complexity 13.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 13 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "cc_93460938",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L240",
+      "summary": "Function '_detect_with_ast' has cyclomatic complexity 7.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 7 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "cc_12c9e8ef",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L296",
+      "summary": "Function 'detect' has cyclomatic complexity 10.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 10 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "cc_f6c1b9b7",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L194",
+      "summary": "Function '_detect_tech_stack' has cyclomatic complexity 25.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 25 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "cc_145c857c",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L289",
+      "summary": "Function '_extract_nodes_and_boundaries' has cyclomatic complexity 12.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 12 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "cc_bc56803d",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L386",
+      "summary": "Function '_extract_connections' has cyclomatic complexity 11.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "cc_575721d5",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L430",
+      "summary": "Function '_detect_design_patterns' has cyclomatic complexity 11.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:03Z"
+    },
+    {
+      "id": "cc_460a27ee",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L64",
+      "summary": "Function 'detect' has cyclomatic complexity 8.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 8 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:04Z"
+    },
+    {
+      "id": "cc_3e2fb2ff",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L149",
+      "summary": "Function '_check_file' has cyclomatic complexity 13.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 13 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:04Z"
+    },
+    {
+      "id": "cc_aa7f399a",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L240",
+      "summary": "Function '_detect_with_ast' has cyclomatic complexity 7.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 7 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:04Z"
+    },
+    {
+      "id": "cc_460a27ee",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L296",
+      "summary": "Function 'detect' has cyclomatic complexity 10.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 10 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:04Z"
+    },
+    {
+      "id": "cc_296e57f9",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L155",
+      "summary": "Function '_detect_tech_stack' has cyclomatic complexity 25.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 25 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:04Z"
+    },
+    {
+      "id": "cc_aca8c3eb",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L250",
+      "summary": "Function '_extract_nodes_and_boundaries' has cyclomatic complexity 11.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:04Z"
+    },
+    {
+      "id": "cc_5e481c01",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L323",
+      "summary": "Function '_extract_connections' has cyclomatic complexity 11.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:04Z"
+    },
+    {
+      "id": "cc_4beeb9ec",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L367",
+      "summary": "Function '_detect_design_patterns' has cyclomatic complexity 11.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:04Z"
+    },
+    {
+      "id": "cc_8bf512f2",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py:L82",
+      "summary": "Function 'cmd_watch' has cyclomatic complexity 13.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 13 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-26T18:21:04Z"
+    }
+  ]
+}

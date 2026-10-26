@@ -27,6 +27,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from engine.ast_scanner import ASTScanner, ScanResult
+from engine.project_analyzer import ProjectAnalyzer
 from services.snowflake_bridge import (
     SnowflakeBridge, SnowflakeConfig,
     ScanMetricPayload, FindingFeedbackPayload, EvaluationRunPayload,
@@ -158,6 +159,27 @@ async def status():
             "Remote features degrade gracefully when services are offline."
         ),
     }
+
+
+
+# ---------------------------------------------------------------------------
+# Dynamic Autonomous Project Analysis (Archy + Dev Model Generator)
+# ---------------------------------------------------------------------------
+
+@app.get("/api/project/analyze", tags=["project"])
+@app.post("/api/project/analyze", tags=["project"])
+async def analyze_project(path: str = "."):
+    """
+    Autonomously scans ANY user repository, inspects files, imports, classes, and dependencies,
+    and dynamically generates the complete model representation for both Archy and Dev.
+    """
+    try:
+        resolved_path = Path(path).resolve()
+        analyzer = ProjectAnalyzer(resolved_path)
+        return analyzer.analyze()
+    except Exception as e:
+        logger.error("Project analysis failed: %s", e)
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 # ---------------------------------------------------------------------------

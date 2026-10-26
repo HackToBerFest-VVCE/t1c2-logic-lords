@@ -27,15 +27,58 @@ class OpenLensArchyApp {
     this.exporter = new DiagramExporter(this);
   }
 
-  init() {
+  async init() {
     this.cacheDomElements();
     this.bindEvents();
     this.applyTheme(this.activeTheme);
     this.applyMode(this.activeMode);
+
+    // Autonomously load live scanned project model from local scan or backend API
+    await this.loadLiveProjectModel();
+
     this.renderAllSections();
     this.updateLegend();
     this.updateZoomDisplay();
-    this.showToast('OpenLens Archy active. Light/Dark mode & theme switcher ready.');
+    this.showToast('OpenLens Archy active. Dynamic architecture model loaded.');
+  }
+
+  async loadLiveProjectModel(projectPath = '.') {
+    try {
+      const res = await fetch('../openlens_model.json');
+      if (res.ok) {
+        const liveModel = await res.json();
+        if (liveModel && liveModel.nodes && liveModel.nodes.length > 0) {
+          this.applyLiveModel(liveModel);
+          return true;
+        }
+      }
+    } catch (_) {}
+
+    try {
+      const apiRes = await fetch(`http://127.0.0.1:8000/api/project/analyze?path=${encodeURIComponent(projectPath)}`);
+      if (apiRes.ok) {
+        const liveModel = await apiRes.json();
+        if (liveModel && liveModel.nodes && liveModel.nodes.length > 0) {
+          this.applyLiveModel(liveModel);
+          return true;
+        }
+      }
+    } catch (_) {}
+    return false;
+  }
+
+  applyLiveModel(liveModel) {
+    this.currentPreset = liveModel;
+    if (this.presetSelect) {
+      let liveOpt = this.presetSelect.querySelector('option[value="live_project"]');
+      if (!liveOpt) {
+        liveOpt = document.createElement('option');
+        liveOpt.value = 'live_project';
+        this.presetSelect.insertBefore(liveOpt, this.presetSelect.firstChild);
+      }
+      liveOpt.textContent = `⚡ ${liveModel.name || 'Live Scanned Project'}`;
+      this.presetSelect.value = 'live_project';
+    }
   }
 
   cacheDomElements() {
@@ -95,14 +138,16 @@ class OpenLensArchyApp {
     }
 
     // Rescan Files Button
-    document.getElementById('scan-files-btn')?.addEventListener('click', () => {
-      this.showToast('Scanning user files in workspace... Extracting AST & dependencies.');
-      setTimeout(() => {
-        this.renderTechStack();
-        this.renderDesignPatterns();
-        this.renderUserFiles();
-        this.showToast('Scan complete: 25 user files analyzed with 0 boundary drifts.');
-      }, 600);
+    document.getElementById('scan-files-btn')?.addEventListener('click', async () => {
+      this.showToast('⚡ Autonomously scanning workspace... Extracting AST, imports & layers.');
+      const success = await this.loadLiveProjectModel();
+      this.renderAllSections();
+      this.updateLegend();
+      if (success) {
+        this.showToast(`✓ Scan complete: ${this.currentPreset.files_scanned || 0} user files dynamically analyzed!`);
+      } else {
+        this.showToast('Re-rendered architecture model.');
+      }
     });
 
     // Zoom Controls

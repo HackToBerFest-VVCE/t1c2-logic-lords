@@ -51,6 +51,34 @@ def cmd_scan(args: argparse.Namespace) -> int:
     return subprocess.run(cmd).returncode
 
 
+def cmd_analyze(args: argparse.Namespace) -> int:
+    """Autonomously scan the target project, extract Archy architecture and Dev maintainability model, and export openlens_model.json."""
+    from engine.project_analyzer import ProjectAnalyzer
+    target_path = Path(args.target).resolve()
+    if not target_path.exists():
+        print(f"Error: Target path '{target_path}' does not exist.", file=sys.stderr)
+        return 1
+
+    print(f"\n🔍 OpenLens Autonomous Project Analyzer: {target_path}")
+    print("  • Inspecting source files, imports, modules, and classes...")
+    analyzer = ProjectAnalyzer(target_path)
+    result = analyzer.analyze()
+
+    out_file = Path(args.out) if args.out else ROOT_DIR / "openlens_model.json"
+    with open(out_file, "w", encoding="utf-8") as f:
+        json.dump(result, f, indent=2)
+
+    print(f"✓ Analysis complete in {result.get('duration_ms', 0)}ms!")
+    print(f"  • Files scanned:   {result.get('files_scanned', 0)}")
+    print(f"  • Subsystems:      {len(result.get('boundaries', []))}")
+    print(f"  • Nodes:           {len(result.get('nodes', []))}")
+    print(f"  • Tech Stack:      {len(result.get('techStack', []))} detected")
+    print(f"  • Design Patterns: {len(result.get('patterns', []))} detected")
+    print(f"  • Dev Findings:    {len(result.get('findings', []))} issues")
+    print(f"✓ Saved live project model to: {out_file}")
+    return 0
+
+
 def cmd_watch(args: argparse.Namespace) -> int:
     """Continuously watch a project directory and scan whenever a .py file changes."""
     target_path = Path(args.target).resolve()
@@ -143,6 +171,11 @@ def main() -> int:
     watch_p.add_argument("--json", action="store_true", help="Output results as JSON")
     watch_p.add_argument("--sarif", action="store_true", help="Output results in SARIF format")
 
+    # analyze
+    analyze_p = subparsers.add_parser("analyze", help="Autonomously scan project and generate live Archy + Dev model")
+    analyze_p.add_argument("target", nargs="?", default=".", help="Path to project directory (default: current directory)")
+    analyze_p.add_argument("--out", help="Output path for openlens_model.json")
+
     # install-extension
     subparsers.add_parser("install-extension", help="1-Click install of OpenLens VS Code extension into your IDE")
 
@@ -154,6 +187,8 @@ def main() -> int:
 
     if args.command == "scan":
         return cmd_scan(args)
+    elif args.command == "analyze":
+        return cmd_analyze(args)
     elif args.command == "watch":
         return cmd_watch(args)
     elif args.command == "install-extension":

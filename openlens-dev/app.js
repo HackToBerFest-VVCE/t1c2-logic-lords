@@ -28,18 +28,78 @@ class OpenLensDevApp {
     this.scanned = false;
   }
 
-  init() {
+  async init() {
     this.cacheDom();
     this.bindEvents();
-    this.loadPreset(this.currentPresetKey, false);
+
+    // Autonomously load live project model if available
+    const hasLive = await this.loadLiveModel();
+    if (!hasLive) {
+      this.loadPreset(this.currentPresetKey, false);
+    }
+
     this.renderRules();
     this.renderCategoryFilters();
 
-    // Check for auto-scan or start with prompt
-    // Auto-run initial scan for an immediate impressive first load
+    // Run initial scan
     setTimeout(() => {
       this.runScan();
     }, 450);
+  }
+
+  async loadLiveModel(projectPath = '.') {
+    try {
+      const res = await fetch('../openlens_model.json');
+      if (res.ok) {
+        const liveModel = await res.json();
+        if (liveModel && liveModel.findings) {
+          this.applyLiveModel(liveModel);
+          return true;
+        }
+      }
+    } catch (_) {}
+
+    try {
+      const apiRes = await fetch(`http://127.0.0.1:8000/api/project/analyze?path=${encodeURIComponent(projectPath)}`);
+      if (apiRes.ok) {
+        const liveModel = await apiRes.json();
+        if (liveModel && liveModel.findings) {
+          this.applyLiveModel(liveModel);
+          return true;
+        }
+      }
+    } catch (_) {}
+    return false;
+  }
+
+  applyLiveModel(liveModel) {
+    this.currentPresetKey = 'live_project';
+    this.currentPreset = {
+      id: 'live_project',
+      name: liveModel.name || 'Live Scanned Project',
+      filesScanned: liveModel.files_scanned || (liveModel.nodes ? liveModel.nodes.length : 0),
+      durationMs: liveModel.duration_ms || 85,
+      snowflakeConnected: false,
+      rules: liveModel.rules || [],
+      findings: liveModel.findings || []
+    };
+    this.findings = JSON.parse(JSON.stringify(this.currentPreset.findings)).map(f => ({
+      ...f,
+      dismissed: false
+    }));
+
+    if (this.presetSelect) {
+      let liveOpt = this.presetSelect.querySelector('option[value="live_project"]');
+      if (!liveOpt) {
+        liveOpt = document.createElement('option');
+        liveOpt.value = 'live_project';
+        this.presetSelect.insertBefore(liveOpt, this.presetSelect.firstChild);
+      }
+      liveOpt.textContent = `⚡ ${this.currentPreset.name}`;
+      this.presetSelect.value = 'live_project';
+    }
+    this.renderRules();
+    this.renderCategoryFilters();
   }
 
   cacheDom() {

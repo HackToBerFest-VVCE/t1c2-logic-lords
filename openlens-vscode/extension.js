@@ -209,6 +209,10 @@ async function scanWorkspace(context) {
   try {
     const result = await executeScanner(context, [rootPath]);
     applyScanResults(result);
+
+    // Also autonomously update Archy architecture model for this workspace
+    runProjectAnalyzer(context, rootPath).catch(() => {});
+
     const count = result.findings ? result.findings.length : 0;
     statusBarItem.text = count === 0
       ? '$(check) OpenLens: Clean'
@@ -291,6 +295,40 @@ function executeScanner(context, paths) {
       } catch (pe) {
         reject(new Error(`Failed parsing AST scanner output: ${pe.message}`));
       }
+    });
+  });
+}
+
+/**
+ * Executes the dynamic project analyzer to derive Archy architecture and Dev models
+ */
+function runProjectAnalyzer(context, rootPath) {
+  return new Promise((resolve) => {
+    let analyzerScript = path.join(context.extensionPath, 'engine', 'project_analyzer.py');
+    if (!fs.existsSync(analyzerScript)) {
+      analyzerScript = path.join(context.extensionPath, '..', 'engine', 'project_analyzer.py');
+    }
+    if (!fs.existsSync(analyzerScript)) return resolve(null);
+
+    const pythonCmd = getPythonCommand();
+    const args = [analyzerScript, rootPath];
+    const options = { cwd: rootPath, maxBuffer: 15 * 1024 * 1024 };
+
+    cp.execFile(pythonCmd, args, options, (err, stdout) => {
+      if (!err && stdout) {
+        try {
+          const modelData = JSON.parse(stdout);
+          // Save openlens_model.json to workspace and extension root
+          const dest1 = path.join(rootPath, 'openlens_model.json');
+          fs.writeFileSync(dest1, JSON.stringify(modelData, null, 2), 'utf-8');
+
+          const dest2 = path.join(context.extensionPath, '..', 'openlens_model.json');
+          try { fs.writeFileSync(dest2, JSON.stringify(modelData, null, 2), 'utf-8'); } catch (_) {}
+          resolve(modelData);
+          return;
+        } catch (_) {}
+      }
+      resolve(null);
     });
   });
 }
