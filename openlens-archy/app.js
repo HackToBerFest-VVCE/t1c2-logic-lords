@@ -177,6 +177,7 @@ class OpenLensArchyApp {
     document.getElementById('export-png-btn')?.addEventListener('click', () => this.exporter.saveAsPNG());
     document.getElementById('export-jpeg-btn')?.addEventListener('click', () => this.exporter.saveAsJPEG());
     document.getElementById('export-svg-btn')?.addEventListener('click', () => this.exporter.saveAsSVG());
+    document.getElementById('export-archy-html-btn')?.addEventListener('click', () => this.exporter.generateArchyHTML());
     document.getElementById('export-standalone-btn')?.addEventListener('click', () => this.exporter.exportStandaloneHTML());
     document.getElementById('export-rules-btn')?.addEventListener('click', () => this.exporter.exportRulesJSON());
     document.getElementById('export-adrs-btn')?.addEventListener('click', () => this.exporter.exportADRsMarkdown());
