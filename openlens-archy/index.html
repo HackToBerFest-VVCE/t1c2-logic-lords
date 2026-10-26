@@ -74,6 +74,9 @@
           <span>📐</span> Save as SVG
         </button>
         <div class="dropdown-divider"></div>
+        <button id="export-standalone-btn" class="dropdown-item" style="color:var(--accent);">
+          <span>🌐</span> Save Standalone HTML (Interactive)
+        </button>
         <button id="export-rules-btn" class="dropdown-item">
           <span>📦</span> Export Rules (JSON)
         </button>
@@ -97,6 +100,13 @@
     <!-- SECTION 1: CENTERED & COMPACT ARCHITECTURE CANVAS -->
     <section id="section-architecture">
       <div id="workspace-viewport">
+        <!-- Floating Interactive Architecture Query & Explainer Bar -->
+        <div class="archy-query-bar">
+          <span class="aq-icon">✨</span>
+          <input id="archy-query-input" type="text" placeholder="Ask OpenLens: 'Trace data flow', 'Show database dependencies', 'Explain architecture'...">
+          <button id="archy-query-btn" class="aq-btn">Explain</button>
+        </div>
+
         <div id="workspace-content">
           <!-- Subsystems & Boundaries Layer -->
           <div id="boundaries-layer"></div>
@@ -118,10 +128,16 @@
             </div>
           </div>
 
-          <!-- Bottom Right: PATH, LENS, Zoom Controls -->
+          <!-- Bottom Right: PATH, LENS, DIFF, SECURITY, Zoom Controls -->
           <div class="controls-panel">
             <button id="path-mode-btn" class="ctrl-btn" title="Toggle Path Flow Tracer Mode">
               <span>⚡</span> PATH
+            </button>
+            <button id="diff-mode-btn" class="ctrl-btn" title="Toggle Architecture Delta / Diff Mode (Compare Revisions)">
+              <span>🔄</span> DIFF
+            </button>
+            <button id="security-mode-btn" class="ctrl-btn" title="Toggle Zero-Trust Security & Boundary View">
+              <span>🛡️</span> SECURITY
             </button>
             <button id="lens-mode-btn" class="ctrl-btn" title="Toggle Lens Node Inspector Drawer">
               <span>◎</span> LENS

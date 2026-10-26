@@ -3,6 +3,7 @@
  * Main Application Logic
  *
  * Implements:
+ * - Autonomous live project scanning via openlens_model.json or /api/project/analyze
  * - Deterministic AST scan simulation with multi-stage progress
  * - Dynamic findings explorer with severity, category, and text filtering
  * - Interactive detail drawer with evidence lists and Cortex pattern retrieval
@@ -10,14 +11,43 @@
  * - Dynamic category and architecture rule rosters
  * - Snowflake connection manager and offline graceful fallback
  * - Dark / Light theme toggle & export functionality
+ *
+ * NOTE: No static data dependency. The app always attempts live model loading first.
+ * data.js is only loaded dynamically if the user explicitly selects a static preset.
  */
 
-import { PRESETS, CATEGORY_META, SEV_ORDER } from './data.js';
+// Inline constants — no static import needed
+const SEV_ORDER = { error: 0, high: 1, medium: 2, low: 3, info: 4 };
+
+const CATEGORY_META = {
+  duplication:        { label: 'Duplication',         icon: '🔁', color: '#f59e0b' },
+  unused_code:        { label: 'Unused Code',          icon: '🗑️', color: '#6366f1' },
+  complexity:         { label: 'Complexity',           icon: '📊', color: '#ef4444' },
+  architecture_drift: { label: 'Architecture Drift',  icon: '🏛️', color: '#10b981' },
+  long_function:      { label: 'Long Function',        icon: '📏', color: '#f97316' },
+  missing_docstring:  { label: 'Missing Docstring',   icon: '📝', color: '#8b5cf6' },
+  security:           { label: 'Security',             icon: '🔐', color: '#dc2626' },
+  performance:        { label: 'Performance',          icon: '⚡', color: '#0ea5e9' },
+};
+
+// PRESETS loaded lazily on demand (only when user picks a static preset)
+let _presetsModule = null;
+async function getPresets() {
+  if (!_presetsModule) {
+    try {
+      _presetsModule = await import('./data.js');
+    } catch (e) {
+      console.warn('OpenLens Dev: data.js not available — live model only mode.', e);
+      _presetsModule = { PRESETS: {} };
+    }
+  }
+  return _presetsModule.PRESETS || {};
+}
 
 class OpenLensDevApp {
   constructor() {
-    this.currentPresetKey = 'openlens_core';
-    this.currentPreset = PRESETS[this.currentPresetKey];
+    this.currentPresetKey = 'live_project';
+    this.currentPreset = { id: 'live_project', name: 'Scanning...', filesScanned: 0, durationMs: 0, rules: [], findings: [] };
     this.findings = [];
     this.activeSeverity = 'all';
     this.activeCategory = 'all';
@@ -32,10 +62,10 @@ class OpenLensDevApp {
     this.cacheDom();
     this.bindEvents();
 
-    // Autonomously load live project model if available
+    // Always attempt live model first; only fall back to static preset if unavailable
     const hasLive = await this.loadLiveModel();
     if (!hasLive) {
-      this.loadPreset(this.currentPresetKey, false);
+      await this.loadPreset('openlens_core', false);
     }
 
     this.renderRules();
@@ -184,8 +214,14 @@ class OpenLensDevApp {
 
     // Preset selection change
     if (this.presetSelect) {
-      this.presetSelect.addEventListener('change', (e) => {
-        this.loadPreset(e.target.value, true);
+      this.presetSelect.addEventListener('change', async (e) => {
+        const val = e.target.value;
+        if (val === 'live_project') {
+          await this.loadLiveModel();
+          this.runScan();
+        } else {
+          await this.loadPreset(val, true);
+        }
       });
     }
 
@@ -290,8 +326,12 @@ class OpenLensDevApp {
     });
   }
 
-  loadPreset(key, triggerScan = false) {
-    if (!PRESETS[key]) return;
+  async loadPreset(key, triggerScan = false) {
+    const PRESETS = await getPresets();
+    if (!PRESETS[key]) {
+      this.showToast(`Preset '${key}' not found — using live model.`);
+      return;
+    }
     this.currentPresetKey = key;
     this.currentPreset = PRESETS[key];
     // Deep clone findings to allow in-memory dismiss / patch state
@@ -886,10 +926,14 @@ class OpenLensDevApp {
     if (!this.categoryFilters) return;
     this.categoryFilters.innerHTML = '';
 
-    const categories = ['duplication', 'unused_code', 'complexity', 'architecture_drift'];
+    // Derive categories dynamically from live findings
+    const liveCats = [...new Set(this.findings.map(f => f.category).filter(Boolean))];
+    const categories = liveCats.length > 0
+      ? liveCats
+      : ['duplication', 'unused_code', 'complexity', 'architecture_drift'];
 
     categories.forEach(cat => {
-      const meta = CATEGORY_META[cat] || { label: cat, color: '#6366f1' };
+      const meta = CATEGORY_META[cat] || { label: cat.replace(/_/g, ' '), color: '#6366f1', icon: '📌' };
       const count = this.findings.filter(f => !f.dismissed && f.category === cat).length;
 
       const item = document.createElement('div');
@@ -899,7 +943,7 @@ class OpenLensDevApp {
       item.innerHTML = `
         <div class="cat-info">
           <div class="cat-dot" style="background: ${meta.color};"></div>
-          <span class="cat-name">${meta.label}</span>
+          <span class="cat-name">${meta.icon || ''} ${meta.label}</span>
         </div>
         <span class="cat-count">${count}</span>
       `;

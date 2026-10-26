@@ -874,6 +874,107 @@ input:checked+.slide-slider:before {
   text-align: center;
 }
 
+/* Floating Interactive Architecture Query Bar */
+.archy-query-bar {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(20px);
+  z-index: 50;
+  width: min(520px, 90%);
+}
+
+.aq-icon {
+  font-size: 0.95rem;
+}
+
+#archy-query-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+}
+
+.aq-btn {
+  padding: 3px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.aq-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* DIFF / DELTA MODE STYLES */
+body.mode-diff .node-card.diff-added {
+  border: 2px solid #10b981 !important;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+body.mode-diff .node-card.diff-added::after {
+  content: '+ NEW';
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  background: #10b981;
+  color: #fff;
+  font-size: 0.55rem;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+body.mode-diff .node-card.diff-modified {
+  border: 2px solid #f59e0b !important;
+}
+body.mode-diff .node-card.diff-modified::after {
+  content: '~ MODIFIED';
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  background: #f59e0b;
+  color: #000;
+  font-size: 0.55rem;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* SECURITY MODE STYLES */
+body.mode-security .boundary-box {
+  border-width: 2.5px !important;
+  background: rgba(239, 68, 68, 0.04) !important;
+}
+
+body.mode-security .node-card[data-layer="1"] {
+  border-left: 4px solid #ef4444;
+}
+body.mode-security .node-card::before {
+  content: '🛡️ Isolated';
+  display: block;
+  font-size: 0.55rem;
+  font-family: var(--font-mono);
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+
 /* ==========================================================================
    PAGE SECTIONS (CENTERED ONE AFTER THE OTHER)
    ========================================================================== */

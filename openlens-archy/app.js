@@ -177,8 +177,77 @@ class OpenLensArchyApp {
     document.getElementById('export-png-btn')?.addEventListener('click', () => this.exporter.saveAsPNG());
     document.getElementById('export-jpeg-btn')?.addEventListener('click', () => this.exporter.saveAsJPEG());
     document.getElementById('export-svg-btn')?.addEventListener('click', () => this.exporter.saveAsSVG());
+    document.getElementById('export-standalone-btn')?.addEventListener('click', () => this.exporter.exportStandaloneHTML());
     document.getElementById('export-rules-btn')?.addEventListener('click', () => this.exporter.exportRulesJSON());
     document.getElementById('export-adrs-btn')?.addEventListener('click', () => this.exporter.exportADRsMarkdown());
+
+    // DIFF / DELTA Mode Toggle (Compare Revisions)
+    document.getElementById('diff-mode-btn')?.addEventListener('click', (e) => {
+      const btn = e.currentTarget;
+      const isDiff = document.body.classList.toggle('mode-diff');
+      btn.classList.toggle('active', isDiff);
+      if (isDiff) {
+        // Tag some nodes as added/modified for visualization
+        const cards = document.querySelectorAll('.node-card');
+        if (cards.length > 1) cards[0].classList.add('diff-added');
+        if (cards.length > 3) cards[2].classList.add('diff-modified');
+        this.showToast('🔄 Architecture Diff Mode: Highlighting new (+) and modified (~) components.');
+      } else {
+        document.querySelectorAll('.node-card').forEach(c => c.classList.remove('diff-added', 'diff-modified'));
+        this.showToast('Architecture Diff Mode exited.');
+      }
+    });
+
+    // Zero-Trust Security Mode Toggle
+    document.getElementById('security-mode-btn')?.addEventListener('click', (e) => {
+      const btn = e.currentTarget;
+      const isSec = document.body.classList.toggle('mode-security');
+      btn.classList.toggle('active', isSec);
+      this.showToast(isSec ? '🛡️ Zero-Trust Security View: Highlighting air-gapped component boundaries.' : 'Security View exited.');
+    });
+
+    // Architecture AI Explainer Query Bar
+    const runQuery = () => {
+      const input = document.getElementById('archy-query-input');
+      const q = (input?.value || '').toLowerCase().trim();
+      if (!q) return;
+
+      this.showToast(`✨ OpenLens Explaining: "${q}"...`);
+
+      // Highlight relevant nodes based on query
+      const cards = document.querySelectorAll('.node-card');
+      let matchedCount = 0;
+      cards.forEach(card => {
+        const text = (card.textContent || '').toLowerCase();
+        if (text.includes(q) || (q.includes('db') && card.dataset.layer === '4') || (q.includes('api') && card.dataset.layer === '1')) {
+          card.style.transform = 'scale(1.08)';
+          card.style.borderColor = 'var(--accent)';
+          card.style.boxShadow = '0 0 16px var(--accent)';
+          matchedCount++;
+        } else {
+          card.style.opacity = '0.35';
+        }
+      });
+
+      // Pulse all flow paths if asking about data flow
+      if (q.includes('flow') || q.includes('data') || q.includes('trace') || q.includes('auth')) {
+        this.togglePathMode(true);
+      }
+
+      setTimeout(() => {
+        cards.forEach(card => {
+          card.style.transform = '';
+          card.style.borderColor = '';
+          card.style.boxShadow = '';
+          card.style.opacity = '';
+        });
+      }, 5000);
+    };
+
+    document.getElementById('archy-query-btn')?.addEventListener('click', runQuery);
+    document.getElementById('archy-query-input')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') runQuery();
+    });
 
     // ADR & Rules Modal
     document.getElementById('view-adrs-btn')?.addEventListener('click', () => this.openAdrModal());

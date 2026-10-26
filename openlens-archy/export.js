@@ -353,4 +353,142 @@ export class DiagramExporter {
     URL.revokeObjectURL(url);
     this.app.showToast('Architecture Decision Records exported.');
   }
+
+  // Export Self-Contained Interactive HTML (offline, portable, zero server needed)
+  exportStandaloneHTML() {
+    const preset = this.app.currentPreset;
+    const jsonStr = JSON.stringify(preset);
+
+    const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${preset.name || 'Architecture Diagram'} — OpenLens Standalone</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #03080f; --surface: #0a1324; --border: rgba(255,255,255,0.1); --accent: #4f8ef7; --text: #f0f4fc; --muted: #7c8faa; }
+    body[data-theme="light"] { --bg: #f8fafc; --surface: #ffffff; --border: rgba(0,0,0,0.1); --accent: #2563eb; --text: #0f172a; --muted: #64748b; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+    header { height: 48px; border-bottom: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 10; }
+    .brand { font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+    .theme-toggle { cursor: pointer; padding: 4px 10px; border-radius: 20px; background: transparent; border: 1px solid var(--border); color: var(--text); font-size: 0.75rem; font-weight: 600; }
+    #viewport { flex: 1; position: relative; overflow: hidden; cursor: grab; background-image: radial-gradient(var(--border) 1px, transparent 1px); background-size: 24px 24px; }
+    #canvas { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+    .boundary { position: absolute; border-radius: 12px; pointer-events: none; border-style: dashed; }
+    .boundary-label { position: absolute; top: 8px; left: 14px; font-size: 0.72rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; padding: 2px 8px; border-radius: 6px; background: var(--surface); }
+    .node-card { position: absolute; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); padding: 10px 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; transition: transform 0.15s, border-color 0.15s; }
+    .node-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+    .node-title { font-weight: 700; font-size: 0.8rem; margin-bottom: 4px; }
+    .node-meta { font-size: 0.68rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    svg { position: absolute; inset: 0; pointer-events: none; }
+    .info-bar { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 6px 16px; font-size: 0.75rem; color: var(--muted); box-shadow: 0 8px 24px rgba(0,0,0,0.3); z-index: 10; display: flex; gap: 14px; align-items: center; }
+  </style>
+</head>
+<body data-theme="dark">
+  <header>
+    <div class="brand"><span>🔍</span> OpenLens Archy — <span style="color:var(--accent);">${preset.name || 'System Architecture'}</span></div>
+    <button class="theme-toggle" id="theme-btn">🌓 Toggle Theme</button>
+  </header>
+  <div id="viewport">
+    <div id="canvas">
+      <svg id="svg-layer" width="4000" height="3000"></svg>
+      <div id="boundaries-layer"></div>
+      <div id="nodes-layer"></div>
+    </div>
+    <div class="info-bar">
+      <span>🖱️ Drag to Pan · Scroll to Zoom</span>
+      <span>|</span>
+      <span>${(preset.nodes || []).length} Components · ${(preset.boundaries || []).length} Boundaries</span>
+      <span style="color:var(--accent);">✓ Self-Contained Architecture Diagram</span>
+    </div>
+  </div>
+  <script>
+    const data = ${jsonStr};
+    let scale = 0.8, panX = 40, panY = 30, isDragging = false, startX = 0, startY = 0;
+    const canvas = document.getElementById('canvas');
+    const viewport = document.getElementById('viewport');
+    const svgLayer = document.getElementById('svg-layer');
+    const bLayer = document.getElementById('boundaries-layer');
+    const nLayer = document.getElementById('nodes-layer');
+
+    function updateTransform() {
+      canvas.style.transform = \`translate(\${panX}px, \${panY}px) scale(\${scale})\`;
+    }
+
+    viewport.addEventListener('mousedown', e => { isDragging = true; startX = e.clientX - panX; startY = e.clientY - panY; viewport.style.cursor = 'grabbing'; });
+    window.addEventListener('mousemove', e => { if (!isDragging) return; panX = e.clientX - startX; panY = e.clientY - startY; updateTransform(); });
+    window.addEventListener('mouseup', () => { isDragging = false; viewport.style.cursor = 'grab'; });
+    viewport.addEventListener('wheel', e => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+      scale = Math.min(2.5, Math.max(0.3, scale * zoomFactor));
+      updateTransform();
+    }, { passive: false });
+
+    document.getElementById('theme-btn').addEventListener('click', () => {
+      const cur = document.body.getAttribute('data-theme');
+      document.body.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    });
+
+    // Render Boundaries
+    (data.boundaries || []).forEach(b => {
+      const el = document.createElement('div');
+      el.className = 'boundary';
+      el.style.left = b.x + 'px'; el.style.top = b.y + 'px';
+      el.style.width = b.width + 'px'; el.style.height = b.height + 'px';
+      el.style.borderColor = b.color || '#4f8ef7'; el.style.borderWidth = '1.5px';
+      el.innerHTML = \`<div class="boundary-label" style="border: 1px solid \${b.color || '#4f8ef7'}; color: \${b.color || '#4f8ef7'};">\${b.label || b.name}</div>\`;
+      bLayer.appendChild(el);
+    });
+
+    // Render Nodes
+    const nodeMap = {};
+    (data.nodes || []).forEach(n => {
+      nodeMap[n.id] = n;
+      const el = document.createElement('div');
+      el.className = 'node-card';
+      el.style.left = n.x + 'px'; el.style.top = n.y + 'px';
+      el.style.width = (n.width || 230) + 'px'; el.style.height = (n.height || 68) + 'px';
+      el.innerHTML = \`<div class="node-title">\${n.label}</div><div class="node-meta">\${n.file || n.subsystem || ''}</div>\`;
+      el.addEventListener('click', () => alert(\`Component: \${n.label}\\nFile: \${n.file || 'N/A'}\\nSubsystem: \${n.subsystem || 'N/A'}\\nLines: \${n.lines || 'N/A'}\`));
+      nLayer.appendChild(el);
+    });
+
+    // Render Connections
+    (data.connections || []).forEach(c => {
+      const fromNode = nodeMap[c.from];
+      const toNode = nodeMap[c.to];
+      if (fromNode && toNode) {
+        const x1 = fromNode.x + (fromNode.width || 230);
+        const y1 = fromNode.y + (fromNode.height || 68) / 2;
+        const x2 = toNode.x;
+        const y2 = toNode.y + (toNode.height || 68) / 2;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const cx1 = x1 + (x2 - x1) * 0.5;
+        const cx2 = x1 + (x2 - x1) * 0.5;
+        path.setAttribute('d', \`M \${x1} \${y1} C \${cx1} \${y1}, \${cx2} \${y2}, \${x2} \${y2}\`);
+        path.setAttribute('stroke', '#4f8ef7');
+        path.setAttribute('stroke-width', '2');
+        path.setAttribute('fill', 'none');
+        path.setAttribute('opacity', '0.6');
+        svgLayer.appendChild(path);
+      }
+    });
+
+    updateTransform();
+  </script>
+</body>
+</html>`;
+
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = `${this.app.currentPreset.id || 'openlens'}-standalone.html`;
+    link.href = url;
+    link.click();
+    URL.revokeObjectURL(url);
+    this.app.showToast('✓ Standalone Interactive HTML exported (offline portable).');
+  }
 }
