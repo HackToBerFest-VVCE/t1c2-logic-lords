@@ -1,19 +1,31 @@
 {
-  "name": "openlens-archy",
-  "version": "1.0.0",
-  "description": "OpenLens Archy - Interactive Architecture & System Flow Visualizer",
-  "main": "openlens-archy/index.html",
+  "name": "openlens",
+  "version": "0.1.0",
+  "description": "OpenLens — AI Companion for Architecture & Code Maintainability. VS Code Dev + Archy Web Workspace + Snowflake Knowledge Store.",
+  "main": "index.html",
   "scripts": {
-    "start": "npx serve openlens-archy -l 3000",
-    "dev": "npx serve openlens-archy -l 3000"
+    "start": "npx serve . -l 3000",
+    "dev": "npx serve . -l 3000",
+    "archy": "npx serve openlens-archy -l 3001",
+    "backend": "uvicorn api.gateway:app --reload --port 8000",
+    "scan": "python engine/ast_scanner.py"
   },
   "keywords": [
     "openlens",
     "architecture",
     "visualization",
     "snowflake",
-    "flow-diagram"
+    "flow-diagram",
+    "ai",
+    "code-maintainability",
+    "ast-analysis",
+    "vscode-extension",
+    "design-patterns"
   ],
   "author": "t1c2-logic-lords",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HackToBerFest-VVCE/t1c2-logic-lords"
+  }
 }
