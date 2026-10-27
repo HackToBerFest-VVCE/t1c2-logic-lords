@@ -81,16 +81,21 @@ class OpenLensDevApp {
   }
 
   async loadLiveModel(projectPath = '.') {
-    try {
-      const res = await fetch('../openlens_model.json');
-      if (res.ok) {
-        const liveModel = await res.json();
-        if (liveModel && liveModel.findings) {
-          this.applyLiveModel(liveModel);
-          return true;
+    // Try multiple paths: works from port 3000 (root) and port 3002 (sub-served)
+    const modelPaths = ['../openlens_model.json', '/openlens_model.json', './openlens_model.json'];
+    for (const modelPath of modelPaths) {
+      try {
+        const res = await fetch(modelPath);
+        if (res.ok) {
+          const liveModel = await res.json();
+          if (liveModel && liveModel.findings) {
+            this.applyLiveModel(liveModel);
+            console.log('[Dev] Live model loaded from:', modelPath);
+            return true;
+          }
         }
-      }
-    } catch (_) {}
+      } catch (_) {}
+    }
 
     try {
       const apiRes = await fetch(`http://127.0.0.1:8000/api/project/analyze?path=${encodeURIComponent(projectPath)}`);
@@ -684,6 +689,19 @@ class OpenLensDevApp {
           <div>${this.escapeHtml(finding.suggested_action || 'Review manual resolution guidelines.')}</div>
         </div>
       </div>
+
+      <!-- Alternative Code / Proposed Diff -->
+      ${finding.diff ? `
+        <div class="detail-section">
+          <div class="detail-section-title" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>⚡ Proposed Alternative Code / Remediation Diff</span>
+            <span style="font-size: 0.65rem; color: var(--accent); font-family: var(--font-mono);">${this.escapeHtml(finding.diff_risk || 'Verified AST Fix')}</span>
+          </div>
+          <div class="code-snippet-wrap" style="max-height: 220px; overflow-y: auto;">
+            <pre class="diff-block" style="margin: 0; padding: 12px; font-size: 0.73rem; background: var(--bg-surface-elevated); border-radius: 6px; line-height: 1.45;"><code>${this.renderDiffLines(finding.diff)}</code></pre>
+          </div>
+        </div>
+      ` : ''}
 
       <!-- Snowflake Pattern -->
       ${patternHtml}

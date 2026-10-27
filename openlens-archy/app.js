@@ -47,16 +47,26 @@ class OpenLensArchyApp {
   }
 
   async loadLiveProjectModel(projectPath = '.') {
-    try {
-      const res = await fetch('../openlens_model.json');
-      if (res.ok) {
-        const liveModel = await res.json();
-        if (liveModel && liveModel.nodes && liveModel.nodes.length > 0) {
-          this.applyLiveModel(liveModel);
-          return true;
+    // Try multiple paths to handle both root-served (port 3000) and sub-served (port 3001) scenarios
+    const modelPaths = [
+      '../openlens_model.json',   // when served from root as /openlens-archy/
+      './openlens_model.json',    // same dir (shouldn't exist, harmless)
+      '/openlens_model.json',     // absolute from server root
+    ];
+
+    for (const modelPath of modelPaths) {
+      try {
+        const res = await fetch(modelPath);
+        if (res.ok) {
+          const liveModel = await res.json();
+          if (liveModel && liveModel.nodes && liveModel.nodes.length > 0) {
+            this.applyLiveModel(liveModel);
+            console.log('[Archy] Live model loaded from:', modelPath);
+            return true;
+          }
         }
-      }
-    } catch (_) {}
+      } catch (_) {}
+    }
 
     try {
       const apiRes = await fetch(`http://127.0.0.1:8000/api/project/analyze?path=${encodeURIComponent(projectPath)}`);
@@ -64,6 +74,7 @@ class OpenLensArchyApp {
         const liveModel = await apiRes.json();
         if (liveModel && liveModel.nodes && liveModel.nodes.length > 0) {
           this.applyLiveModel(liveModel);
+          console.log('[Archy] Live model loaded from backend API');
           return true;
         }
       }
@@ -72,6 +83,7 @@ class OpenLensArchyApp {
   }
 
   applyLiveModel(liveModel) {
+    this.liveProjectModel = liveModel;
     this.currentPreset = liveModel;
     if (this.presetSelect) {
       let liveOpt = this.presetSelect.querySelector('option[value="live_project"]');
@@ -134,7 +146,11 @@ class OpenLensArchyApp {
     if (this.presetSelect) {
       this.presetSelect.addEventListener('change', e => {
         this.currentPresetKey = e.target.value;
-        this.currentPreset = ARCHITECTURE_PRESETS[this.currentPresetKey];
+        if (this.currentPresetKey === 'live_project' && this.liveProjectModel) {
+          this.currentPreset = this.liveProjectModel;
+        } else {
+          this.currentPreset = ARCHITECTURE_PRESETS[this.currentPresetKey] || this.liveProjectModel;
+        }
         this.renderAllSections();
         this.updateLegend();
         this.showToast(`Switched user file project: ${this.currentPreset.name}`);
@@ -367,10 +383,12 @@ class OpenLensArchyApp {
       (sys.slaMetrics || []).forEach(m => {
         const card = document.createElement('div');
         card.className = 'metric-card';
+        // Support both 'label' (static presets) and 'name' (live model)
+        const label = m.label || m.name || 'Metric';
         card.innerHTML = `
-          <div class="metric-label">${m.label}</div>
+          <div class="metric-label">${label}</div>
           <div class="metric-value">${m.value}</div>
-          <div class="metric-status">● ${m.status}</div>
+          <div class="metric-status">● ${m.status || 'Active'}</div>
         `;
         metricsContainer.appendChild(card);
       });
@@ -382,13 +400,15 @@ class OpenLensArchyApp {
       (sys.specifications || []).forEach(spec => {
         const card = document.createElement('div');
         card.className = 'sys-spec-card';
+        // Support both icon (static presets) and missing icon (live model)
+        const icon = spec.icon || '🔧';
         card.innerHTML = `
           <div class="sys-spec-title">
-            <span style="font-size: 1.3rem;">${spec.icon}</span>
-            <span>${spec.title}</span>
+            <span style="font-size: 1.3rem;">${icon}</span>
+            <span>${spec.title || spec.name || ''}</span>
           </div>
-          <p style="font-size: 0.8rem; font-weight: 600; color: var(--accent);">${spec.summary}</p>
-          <p class="sys-spec-details">${spec.details}</p>
+          <p style="font-size: 0.8rem; font-weight: 600; color: var(--accent);">${spec.summary || ''}</p>
+          <p class="sys-spec-details">${spec.details || ''}</p>
         `;
         specsContainer.appendChild(card);
       });
@@ -404,10 +424,13 @@ class OpenLensArchyApp {
     (this.currentPreset.designPatterns || []).forEach(pat => {
       const card = document.createElement('div');
       card.className = 'pattern-card';
+      const icon = pat.icon || '🏛️';
+      const snippet = pat.implementationSnippet || pat.codeSnippet || '';
+      const impact = pat.maintainabilityImpact || pat.recommendation || 'Encapsulates module responsibility cleanly.';
       card.innerHTML = `
         <div class="pattern-header">
           <div class="pattern-title-wrap">
-            <span style="font-size: 1.4rem;">${pat.icon}</span>
+            <span style="font-size: 1.4rem;">${icon}</span>
             <div>
               <div class="pattern-title">${pat.name}</div>
               <div class="pattern-file">File: <code>${pat.file}</code> (${pat.category})</div>
@@ -415,16 +438,16 @@ class OpenLensArchyApp {
           </div>
         </div>
         <div class="pattern-desc">${pat.description}</div>
-        ${pat.implementationSnippet ? `
+        ${snippet ? `
           <div>
             <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase;">
               Implementation in User Code:
             </div>
-            <pre class="pattern-code"><code>${this.escapeHtml(pat.implementationSnippet)}</code></pre>
+            <pre class="pattern-code"><code>${this.escapeHtml(snippet)}</code></pre>
           </div>
         ` : ''}
         <div class="pattern-impact">
-          <strong>Maintainability Impact:</strong> ${pat.maintainabilityImpact}
+          <strong>Maintainability Impact:</strong> ${impact}
         </div>
       `;
       container.appendChild(card);
@@ -443,10 +466,11 @@ class OpenLensArchyApp {
     tbody.innerHTML = '';
     files.forEach(f => {
       const tr = document.createElement('tr');
+      const layerStr = String(f.layer || '1').toUpperCase();
       tr.innerHTML = `
         <td class="file-path-col">📄 ${f.path}</td>
         <td><strong>${f.component}</strong></td>
-        <td><span class="legend-pill" style="display:inline-flex;">${f.layer.toUpperCase()}</span></td>
+        <td><span class="legend-pill" style="display:inline-flex;">${layerStr}</span></td>
         <td style="font-family: var(--font-mono); font-size: 0.75rem;">${f.lines} LOC</td>
         <td style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent);">${f.tech || 'Python'}</td>
         <td style="font-family: var(--font-mono); font-size: 0.72rem; color: #10b981;">${f.pattern || 'Modular'}</td>
@@ -872,7 +896,7 @@ class OpenLensArchyApp {
 
       <div class="drawer-section">
         <h4 style="font-size: 0.8rem; text-transform: uppercase; margin-bottom: 8px; color: var(--text-main);">Layer &amp; Boundary</h4>
-        <span class="legend-pill" style="display: inline-flex;">Layer: ${node.layer.toUpperCase()}</span>
+        <span class="legend-pill" style="display: inline-flex;">Layer: ${typeof node.layer === 'string' ? node.layer.toUpperCase() : `Layer ${node.layer}`}</span>
       </div>
 
       ${matchedFile ? `
@@ -911,17 +935,28 @@ class OpenLensArchyApp {
   }
 
   updateLegend() {
-    const counts = {
-      frontend: 0,
-      backend: 0,
-      database: 0,
-      security: 0,
-      external: 0
-    };
+    // For static presets, layer is a string (frontend/backend/database/security/external).
+    // For live scanned model, layer is a number (1=API, 2=Domain, 3=Engine, 4=Data, 5=Infra).
+    const layerMetadata = [
+      { key: 'frontend', numKeys: [1], label: 'Frontend / API', color: 'var(--layer-frontend)' },
+      { key: 'backend',  numKeys: [2, 3], label: 'Domain / Engine', color: 'var(--layer-backend)' },
+      { key: 'database', numKeys: [4], label: 'Data Layer', color: 'var(--layer-database)' },
+      { key: 'security', numKeys: [],  label: 'Security', color: 'var(--layer-security)' },
+      { key: 'external', numKeys: [5], label: 'Infrastructure', color: 'var(--layer-external)' }
+    ];
+
+    const counts = {};
+    layerMetadata.forEach(l => { counts[l.key] = 0; });
 
     (this.currentPreset.nodes || []).forEach(node => {
-      if (counts[node.layer] !== undefined) {
-        counts[node.layer]++;
+      const layerVal = node.layer;
+      if (typeof layerVal === 'string' && counts[layerVal] !== undefined) {
+        // Static preset: string layer name
+        counts[layerVal]++;
+      } else if (typeof layerVal === 'number') {
+        // Live model: numeric layer
+        const match = layerMetadata.find(l => l.numKeys.includes(layerVal));
+        if (match) counts[match.key]++;
       }
     });
 
@@ -929,14 +964,6 @@ class OpenLensArchyApp {
     if (!legendContainer) return;
 
     legendContainer.innerHTML = '';
-    const layerMetadata = [
-      { key: 'frontend', label: 'Frontend', color: 'var(--layer-frontend)' },
-      { key: 'backend', label: 'Backend', color: 'var(--layer-backend)' },
-      { key: 'database', label: 'Database', color: 'var(--layer-database)' },
-      { key: 'security', label: 'Security', color: 'var(--layer-security)' },
-      { key: 'external', label: 'External', color: 'var(--layer-external)' }
-    ];
-
     layerMetadata.forEach(layer => {
       const count = counts[layer.key] || 0;
       const pill = document.createElement('div');
@@ -953,6 +980,18 @@ class OpenLensArchyApp {
     });
   }
 
+  matchesLayer(nodeLayer, targetKey) {
+    if (String(nodeLayer) === String(targetKey)) return true;
+    const num = Number(nodeLayer);
+    if (!isNaN(num)) {
+      if (targetKey === 'frontend' && num === 1) return true;
+      if (targetKey === 'backend' && (num === 2 || num === 3)) return true;
+      if (targetKey === 'database' && num === 4) return true;
+      if (targetKey === 'external' && num === 5) return true;
+    }
+    return false;
+  }
+
   toggleLayerFilter(layerKey) {
     if (this.activeLayerFilter === layerKey) {
       this.activeLayerFilter = null;
@@ -967,7 +1006,8 @@ class OpenLensArchyApp {
       });
 
       document.querySelectorAll('.node-card').forEach(card => {
-        if (card.getAttribute('data-layer') === layerKey) {
+        const cLayer = card.getAttribute('data-layer');
+        if (this.matchesLayer(cLayer, layerKey)) {
           card.classList.remove('dimmed');
           card.classList.add('highlighted');
         } else {
@@ -979,7 +1019,7 @@ class OpenLensArchyApp {
       document.querySelectorAll('.flow-path').forEach(path => {
         const fromNode = this.currentPreset.nodes.find(n => n.id === path.getAttribute('data-from'));
         const toNode = this.currentPreset.nodes.find(n => n.id === path.getAttribute('data-to'));
-        if (fromNode?.layer === layerKey || toNode?.layer === layerKey) {
+        if (this.matchesLayer(fromNode?.layer, layerKey) || this.matchesLayer(toNode?.layer, layerKey)) {
           path.style.opacity = '1';
         } else {
           path.style.opacity = '0.1';
