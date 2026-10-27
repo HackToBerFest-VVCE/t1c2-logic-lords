@@ -239,44 +239,107 @@
     </div>
   </div>
 
-  <!-- ── SNOWFLAKE CONFIG MODAL ── -->
+  <!-- ── SNOWFLAKE CORE ACTIVATION MODAL ── -->
   <div class="modal-overlay" id="sf-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2 class="modal-title">❄️ Snowflake Connection</h2>
+    <div class="modal-card" style="max-width: 580px;">
+      <div class="modal-header" style="background: linear-gradient(135deg, rgba(79,142,247,0.1), rgba(16,185,129,0.05));">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="font-size:1.8rem; background:rgba(79,142,247,0.15); width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(79,142,247,0.3);">❄️</div>
+          <div>
+            <h2 class="modal-title" style="font-size:1.1rem; font-weight:800; display:flex; align-items:center; gap:8px;">
+              Snowflake Intelligence Core
+              <span style="font-size:0.65rem; padding:2px 8px; border-radius:12px; background:rgba(79,142,247,0.2); color:var(--sky); text-transform:uppercase; font-weight:700;">Required</span>
+            </h2>
+            <div style="font-size:0.75rem; color:var(--text-muted);">Central Architectural Knowledge, ADR Rules & Evaluation Layer</div>
+          </div>
+        </div>
         <button class="modal-close-btn" id="close-sf-btn">✕</button>
       </div>
-      <div class="modal-body">
-        <p class="sf-modal-note">
-          Snowflake is used for curated architectural pattern retrieval and versioned evaluation benchmarks.
-          <strong>No raw source code is ever transmitted.</strong>
-        </p>
-        <div class="sf-form">
-          <label class="sf-label">Account Identifier</label>
-          <input id="sf-account" type="text" class="sf-input" placeholder="e.g. xy12345.us-east-1 or myorg-myaccount">
-          <label class="sf-label">Username</label>
-          <input id="sf-user" type="text" class="sf-input" placeholder="OPENLENS_USER">
-          <label class="sf-label">Password / Auth Secret</label>
-          <input id="sf-password" type="password" class="sf-input" placeholder="Your Snowflake password">
-          <label class="sf-label">Warehouse</label>
-          <input id="sf-warehouse" type="text" class="sf-input" placeholder="OPENLENS_WH" value="OPENLENS_WH">
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            <div>
-              <label class="sf-label">Database</label>
-              <input id="sf-database" type="text" class="sf-input" placeholder="OPENLENS_DB" value="OPENLENS_DB">
+
+      <!-- Segmented Tab Switcher: Sign In vs Create Account -->
+      <div style="display:flex; padding:12px 24px 0 24px; gap:8px; border-bottom:1px solid var(--border-subtle);">
+        <button id="sf-tab-signin" class="sf-tab-btn active" style="flex:1; padding:10px; border-radius:8px 8px 0 0; background:none; border:none; border-bottom:2px solid var(--accent); color:var(--text-main); font-weight:700; font-size:0.85rem; cursor:pointer;">
+          🔑 Sign In to Snowflake
+        </button>
+        <button id="sf-tab-create" class="sf-tab-btn" style="flex:1; padding:10px; border-radius:8px 8px 0 0; background:none; border:none; border-bottom:2px solid transparent; color:var(--text-muted); font-weight:700; font-size:0.85rem; cursor:pointer;">
+          ✨ Create Snowflake Account
+        </button>
+      </div>
+
+      <div class="modal-body" style="padding:20px 24px;">
+        <!-- TAB 1: SIGN IN FORM -->
+        <div id="sf-pane-signin">
+          <p class="sf-modal-note" style="margin-bottom:14px;">
+            OpenLens connects to your Snowflake account as its central repository for curated patterns, ADR validation rules, and F1 evaluation benchmarks.
+            <strong>No raw source code is ever transmitted.</strong>
+          </p>
+
+          <div class="sf-form">
+            <label class="sf-label">Account Identifier</label>
+            <input id="sf-account" type="text" class="sf-input" placeholder="e.g. xy12345.us-east-1 or myorg-myaccount">
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div>
+                <label class="sf-label">Username</label>
+                <input id="sf-user" type="text" class="sf-input" placeholder="OPENLENS_USER">
+              </div>
+              <div>
+                <label class="sf-label">Password / Auth Secret</label>
+                <input id="sf-password" type="password" class="sf-input" placeholder="Your Snowflake password">
+              </div>
             </div>
-            <div>
-              <label class="sf-label">Role</label>
-              <input id="sf-role" type="text" class="sf-input" placeholder="OPENLENS_ROLE" value="OPENLENS_ROLE">
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+              <div>
+                <label class="sf-label">Warehouse</label>
+                <input id="sf-warehouse" type="text" class="sf-input" placeholder="OPENLENS_WH" value="OPENLENS_WH">
+              </div>
+              <div>
+                <label class="sf-label">Database</label>
+                <input id="sf-database" type="text" class="sf-input" placeholder="OPENLENS_DB" value="OPENLENS_DB">
+              </div>
+              <div>
+                <label class="sf-label">Role</label>
+                <input id="sf-role" type="text" class="sf-input" placeholder="OPENLENS_ROLE" value="OPENLENS_ROLE">
+              </div>
             </div>
+
+            <div id="sf-test-result" style="display:none; margin-top:10px; padding:10px 12px; border-radius:6px; font-size:0.75rem; line-height:1.4;"></div>
           </div>
-          <div id="sf-test-result" style="display:none; margin-top:10px; padding:10px 12px; border-radius:6px; font-size:0.75rem; line-height:1.4;"></div>
         </div>
+
+        <!-- TAB 2: CREATE FREE ACCOUNT -->
+        <div id="sf-pane-create" style="display:none;">
+          <div style="background:rgba(79,142,247,0.06); border:1px solid rgba(79,142,247,0.25); border-radius:12px; padding:18px; margin-bottom:16px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+              <span style="font-size:1.4rem;">🎁</span>
+              <div>
+                <h3 style="font-size:0.95rem; font-weight:800; color:var(--text-main);">Snowflake 30-Day Free Trial</h3>
+                <div style="font-size:0.75rem; color:var(--sky);">$400 in Free Cloud Compute Credits</div>
+              </div>
+            </div>
+            <ul style="font-size:0.78rem; color:var(--text-muted); line-height:1.6; margin-left:18px; margin-bottom:14px;">
+              <li>Full access to <strong>Snowflake Cortex AI</strong> & Vector Search.</li>
+              <li>No credit card required for the 30-day trial.</li>
+              <li>Instant deployment of OpenLens architecture schemas & tables.</li>
+            </ul>
+            <a href="https://signup.snowflake.com/" target="_blank" rel="noopener noreferrer" 
+               style="display:flex; align-items:center; justify-content:center; gap:8px; padding:12px 20px; border-radius:8px; background:linear-gradient(135deg, #29b5e8, #11567f); color:#fff; text-decoration:none; font-weight:800; font-size:0.85rem; box-shadow:0 4px 14px rgba(41,181,232,0.35);">
+              <span>🚀 Open Snowflake Sign-Up in New Window</span>
+              <span style="font-size:0.75rem;">↗</span>
+            </a>
+          </div>
+          <div class="sf-note" style="text-align:center;">
+            After completing sign-up, your account locator and credentials will be ready. Switch back to the <strong>Sign In</strong> tab to connect!
+          </div>
+        </div>
+
         <div class="sf-note">Credentials connect via local FastAPI gateway to Snowflake. Stored in .env file.</div>
       </div>
+
       <div class="modal-footer">
         <button class="btn-modal-secondary" id="sf-test-btn">Test Connection</button>
-        <button class="btn-modal-primary" id="sf-save-btn">Save & Connect</button>
+        <button class="btn-modal-primary" id="sf-save-btn">Authenticate & Activate OpenLens</button>
       </div>
     </div>
   </div>

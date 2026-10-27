@@ -39,6 +39,10 @@ class OpenLensArchyApp {
     this.renderAllSections();
     this.updateLegend();
     this.updateZoomDisplay();
+
+    // Check Snowflake Core status & prompt activation if needed
+    this.checkSnowflakeStatus();
+
     this.showToast('OpenLens Archy active. Dynamic architecture model loaded.');
   }
 
@@ -256,6 +260,37 @@ class OpenLensArchyApp {
     this.adrModal?.addEventListener('click', e => {
       if (e.target === this.adrModal) this.closeAdrModal();
     });
+
+    // Snowflake Core Modal & Tabs
+    document.getElementById('archy-sf-btn')?.addEventListener('click', () => this.openSfModal());
+    document.getElementById('close-sf-btn')?.addEventListener('click', () => this.closeSfModal());
+    document.getElementById('sf-test-btn')?.addEventListener('click', () => this.testArchySnowflake());
+    document.getElementById('sf-save-btn')?.addEventListener('click', () => this.saveArchySnowflake());
+
+    const tabSignin = document.getElementById('sf-tab-signin');
+    const tabCreate = document.getElementById('sf-tab-create');
+    const paneSignin = document.getElementById('sf-pane-signin');
+    const paneCreate = document.getElementById('sf-pane-create');
+
+    if (tabSignin && tabCreate) {
+      tabSignin.addEventListener('click', () => {
+        tabSignin.style.borderBottom = '2px solid #3b82f6';
+        tabSignin.style.color = '#fff';
+        tabCreate.style.borderBottom = '2px solid transparent';
+        tabCreate.style.color = '#94a3b8';
+        if (paneSignin) paneSignin.style.display = 'block';
+        if (paneCreate) paneCreate.style.display = 'none';
+      });
+
+      tabCreate.addEventListener('click', () => {
+        tabCreate.style.borderBottom = '2px solid #3b82f6';
+        tabCreate.style.color = '#fff';
+        tabSignin.style.borderBottom = '2px solid transparent';
+        tabSignin.style.color = '#94a3b8';
+        if (paneSignin) paneSignin.style.display = 'none';
+        if (paneCreate) paneCreate.style.display = 'block';
+      });
+    }
   }
 
   // RENDER ALL SECTIONS (ONE AFTER THE OTHER)
@@ -1067,6 +1102,103 @@ class OpenLensArchyApp {
     this.toastTimeout = setTimeout(() => {
       this.toast.classList.remove('show');
     }, 2800);
+  }
+
+  /* ────────────────────────────────────────────────────────
+     SNOWFLAKE CORE ACTIVATION
+  ──────────────────────────────────────────────────────── */
+  openSfModal() {
+    const modal = document.getElementById('sf-modal');
+    if (modal) modal.style.display = 'flex';
+  }
+
+  closeSfModal() {
+    const modal = document.getElementById('sf-modal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  async checkSnowflakeStatus() {
+    try {
+      const res = await fetch('http://127.0.0.1:8000/integrations/snowflake/status');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.connected) {
+          this.setArchySnowflakeConnected(true, data.account);
+          return;
+        }
+      }
+    } catch (_) {}
+
+    // Snowflake is CORE: Automatically prompt user to sign in or create account!
+    this.setArchySnowflakeConnected(false);
+    setTimeout(() => {
+      this.openSfModal();
+    }, 800);
+  }
+
+  setArchySnowflakeConnected(connected, account = '') {
+    const dot = document.getElementById('archy-sf-dot');
+    if (dot) dot.style.background = connected ? '#10b981' : '#f59e0b';
+    if (connected) {
+      this.showToast(`❄️ Snowflake Core Connected: ${account || 'Active'}`);
+    }
+  }
+
+  async testArchySnowflake() {
+    const payload = {
+      account: document.getElementById('sf-account')?.value?.trim(),
+      user: document.getElementById('sf-user')?.value?.trim(),
+      password: document.getElementById('sf-password')?.value,
+      warehouse: document.getElementById('sf-warehouse')?.value?.trim(),
+      database: document.getElementById('sf-database')?.value?.trim(),
+      role: document.getElementById('sf-role')?.value?.trim(),
+    };
+    const resBox = document.getElementById('sf-test-result');
+    if (resBox) {
+      resBox.style.display = 'block';
+      resBox.style.background = 'rgba(79, 142, 247, 0.15)';
+      resBox.style.color = '#60a5fa';
+      resBox.textContent = '⏳ Testing live Snowflake connection...';
+    }
+
+    try {
+      const res = await fetch('http://127.0.0.1:8000/integrations/snowflake/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.connected) {
+          if (resBox) {
+            resBox.style.background = 'rgba(16, 185, 129, 0.15)';
+            resBox.style.color = '#10b981';
+            resBox.textContent = `✓ Connected! Version: ${data.snowflake_version || 'Active'} · Cortex: ${data.cortex_available ? 'Ready' : 'Fallback'}`;
+          }
+          this.setArchySnowflakeConnected(true, data.account);
+          this.showToast('✅ Snowflake connected successfully!');
+          return;
+        } else {
+          if (resBox) {
+            resBox.style.background = 'rgba(239, 68, 68, 0.15)';
+            resBox.style.color = '#ef4444';
+            resBox.textContent = `✕ ${data.message || 'Check credentials'}`;
+          }
+        }
+      }
+    } catch (_) {
+      if (resBox) {
+        resBox.style.background = 'rgba(245, 158, 11, 0.15)';
+        resBox.style.color = '#f59e0b';
+        resBox.textContent = 'ℹ️ Backend gateway is offline at http://127.0.0.1:8000. Start it with: "py openlens.py serve-api".';
+      }
+    }
+  }
+
+  async saveArchySnowflake() {
+    await this.testArchySnowflake();
+    this.closeSfModal();
+    this.showToast('❄️ Snowflake Intelligence Core active!');
   }
 }
 

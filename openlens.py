@@ -306,46 +306,115 @@ def cmd_snowflake_status(args: argparse.Namespace) -> int:
     import asyncio
     from services.snowflake_bridge import get_bridge
 
-    print("\n❄️  OpenLens Snowflake Connection Diagnostics")
-    print("=" * 55)
+    print("\n❄️  OpenLens Snowflake Intelligence Core Diagnostics (REQUIRED)")
+    print("=" * 60)
 
     bridge = get_bridge()
     cfg = bridge.config
 
-    print(f"  • Integration Enabled : {cfg.enabled}")
-    print(f"  • Account Identifier  : {cfg.account or '[Not configured]'}")
-    print(f"  • Username            : {cfg.user or '[Not configured]'}")
+    print(f"  • Central Knowledge Core: Active")
+    print(f"  • Account Identifier    : {cfg.account or '[Not configured]'}")
+    print(f"  • Username              : {cfg.user or '[Not configured]'}")
     auth_desc = "Password" if cfg.password else (f"Key-Pair ({cfg.private_key_path})" if cfg.private_key_path else "[None]")
-    print(f"  • Auth Method         : {auth_desc}")
-    print(f"  • Compute Warehouse   : {cfg.warehouse}")
-    print(f"  • Database            : {cfg.database}")
-    print(f"  • Schema              : {cfg.schema}")
-    print(f"  • Role                : {cfg.role}")
-    print("-" * 55)
+    print(f"  • Auth Method           : {auth_desc}")
+    print(f"  • Compute Warehouse     : {cfg.warehouse}")
+    print(f"  • Database              : {cfg.database}")
+    print(f"  • Schema                : {cfg.schema}")
+    print(f"  • Role                  : {cfg.role}")
+    print("-" * 60)
 
     if not cfg.is_configured():
-        print("ℹ️  Status: OFFLINE (Operating in 100% offline local mode)")
-        print("   To connect your Snowflake account:")
-        print("   1. Copy .env.example to .env")
-        print("   2. Fill in SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER, and SNOWFLAKE_PASSWORD")
-        print("   3. Re-run: python openlens.py snowflake-status")
-        return 0
+        print("⚠️  Status: NOT CONNECTED")
+        print("   Snowflake is the core knowledge and analytics layer for OpenLens.")
+        print("\n   To sign in or create an account in 1 click:")
+        print("   → Run: python openlens.py snowflake-login")
+        print("   (Or open Web Studio at http://localhost:3000 to use the interactive activation window)")
+        return 1
 
-    print("⏳ Testing live connection to Snowflake...")
+    print("⏳ Testing live connection to Snowflake Intelligence Core...")
     diag = asyncio.run(bridge.test_connection())
 
     if diag.get("connected"):
         print("✅ Connection: SUCCESSFUL")
-        print(f"  • Snowflake Version   : {diag.get('snowflake_version', 'Unknown')}")
-        print(f"  • Current Warehouse   : {diag.get('warehouse')}")
-        print(f"  • Current Role        : {diag.get('role')}")
-        print(f"  • Cortex Vector Ready : {'YES' if diag.get('cortex_available') else 'No (falls back to keyword search)'}")
+        print(f"  • Snowflake Version     : {diag.get('snowflake_version', 'Unknown')}")
+        print(f"  • Current Warehouse     : {diag.get('warehouse')}")
+        print(f"  • Current Role          : {diag.get('role')}")
+        print(f"  • Cortex Vector Ready   : {'YES' if diag.get('cortex_available') else 'No (falls back to keyword search)'}")
         print("\n🎉 Snowflake is seamlessly connected! Architectural patterns & analytics are active.")
         return 0
     else:
         print("❌ Connection: FAILED")
-        print(f"  • Error Reason        : {diag.get('message')}")
-        print("  • Fallback Mode       : Local AST analysis remains 100% functional.")
+        print(f"  • Error Reason          : {diag.get('message')}")
+        print("  • Action Needed         : Re-run 'python openlens.py snowflake-login' to update credentials.")
+        return 1
+
+
+def cmd_snowflake_login(args: argparse.Namespace) -> int:
+    """Interactive Snowflake account connection & sign-up onboarding helper."""
+    import getpass
+    import webbrowser
+    import asyncio
+    from services.snowflake_bridge import get_bridge, SnowflakeConfig
+
+    print("\n❄️  OpenLens Snowflake Intelligence Core Activation")
+    print("=" * 60)
+    print("Snowflake is the central architectural knowledge, ADR rules,")
+    print("and evaluation intelligence layer for OpenLens.\n")
+
+    has_acc = input("Do you already have a Snowflake account? [Y/n]: ").strip().lower()
+    if has_acc in ("n", "no"):
+        print("\n🌐 Opening Snowflake 30-Day Free Trial ($400 Free Credits) in your browser...")
+        signup_url = "https://signup.snowflake.com/"
+        try:
+            webbrowser.open(signup_url)
+        except Exception:
+            pass
+        print(f"   Sign-up URL: {signup_url}")
+        print("\nOnce your account is created, re-run 'python openlens.py snowflake-login' to sign in.")
+        return 0
+
+    print("\nPlease enter your Snowflake credentials:")
+    account = input("  • Account Identifier (e.g. xy12345.us-east-1): ").strip()
+    user = input("  • Username: ").strip()
+    password = getpass.getpass("  • Password: ").strip()
+    warehouse = input("  • Warehouse [OPENLENS_WH]: ").strip() or "OPENLENS_WH"
+    database = input("  • Database [OPENLENS_DB]: ").strip() or "OPENLENS_DB"
+    schema = input("  • Schema [KNOWLEDGE]: ").strip() or "KNOWLEDGE"
+    role = input("  • Role [OPENLENS_ROLE]: ").strip() or "OPENLENS_ROLE"
+
+    # Save to .env
+    env_path = ROOT_DIR / ".env"
+    env_content = f"""# OpenLens Snowflake Core Configuration
+OPENLENS_SNOWFLAKE_ENABLED=true
+SNOWFLAKE_ACCOUNT={account}
+SNOWFLAKE_USER={user}
+SNOWFLAKE_PASSWORD={password}
+SNOWFLAKE_WAREHOUSE={warehouse}
+SNOWFLAKE_DATABASE={database}
+SNOWFLAKE_SCHEMA={schema}
+SNOWFLAKE_ROLE={role}
+"""
+    with open(env_path, "w", encoding="utf-8") as f:
+        f.write(env_content)
+    print(f"\n✓ Saved credentials securely to: {env_path}")
+
+    # Test connection
+    print("⏳ Testing live connection to Snowflake...")
+    bridge = get_bridge()
+    asyncio.run(bridge.reconnect(SnowflakeConfig(
+        account=account, user=user, password=password,
+        warehouse=warehouse, database=database, schema=schema, role=role
+    )))
+    diag = asyncio.run(bridge.test_connection())
+
+    if diag.get("connected"):
+        print("\n🎉 SUCCESS: Connected to Snowflake Intelligence Core!")
+        print(f"  • Version: {diag.get('snowflake_version')}")
+        print(f"  • Warehouse: {diag.get('warehouse')}")
+        print(f"  • Cortex Vector Ready: {'YES' if diag.get('cortex_available') else 'Keyword Fallback'}")
+        return 0
+    else:
+        print(f"\n⚠️ Connection test failed: {diag.get('message')}")
         return 1
 
 
@@ -397,6 +466,9 @@ def main() -> int:
     # snowflake-status
     subparsers.add_parser("snowflake-status", help="Test Snowflake connection and display diagnostics")
 
+    # snowflake-login
+    subparsers.add_parser("snowflake-login", help="Sign in or create Snowflake account for OpenLens Core")
+
     args = parser.parse_args()
 
     if args.command == "scan":
@@ -413,6 +485,8 @@ def main() -> int:
         return cmd_serve_api(args)
     elif args.command == "snowflake-status":
         return cmd_snowflake_status(args)
+    elif args.command == "snowflake-login":
+        return cmd_snowflake_login(args)
     else:
         parser.print_help()
         return 0

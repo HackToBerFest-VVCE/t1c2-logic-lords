@@ -88,9 +88,9 @@ flowchart LR
 
 ---
 
-## ❄️ Snowflake Integration
+## ❄️ Snowflake Core Intelligence Layer (Required)
 
-Snowflake plays a **genuine, demonstrable role** — not a branding checkbox:
+Snowflake serves as the **central knowledge repository, machine-checkable ADR rules store, and evaluation intelligence lake** for OpenLens. Every deployment connects to Snowflake to power pattern retrieval and telemetry.
 
 | Schema | Tables | Purpose |
 |:---|:---|:---|
@@ -106,36 +106,33 @@ Snowflake plays a **genuine, demonstrable role** — not a branding checkbox:
 - ✅ Session IDs anonymised
 - ✅ Aggregate metrics only for analytics
 
-### ⚡ Seamless 1-Minute Setup
+### 🚀 Activating Snowflake in OpenLens
 
-1. **Configure credentials:**
-   ```bash
-   # Copy environment template
-   copy .env.example .env     # Windows
-   cp .env.example .env       # macOS / Linux
-   ```
-   Open `.env` and enter your `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USER`, and `SNOWFLAKE_PASSWORD` (or key-pair).
+When you open OpenLens (Dev Studio or Archy Studio), an **interactive Snowflake Activation Window** opens automatically, prompting you to:
+1. **Sign In with an Existing Snowflake Account** (Account locator, user, password / key-pair, warehouse, role)
+2. **Create a Free Snowflake Account** (30-day Free Trial with $400 in cloud credits, opens sign-up in a new window)
 
-2. **Verify connection from CLI:**
-   ```bash
-   py openlens.py snowflake-status
-   ```
-   *If credentials are omitted, OpenLens automatically runs in 100% offline local mode.*
+#### Connecting via Terminal (CLI Onboarding)
+```bash
+# 1. Interactive sign-in or launch sign-up in browser:
+py openlens.py snowflake-login
 
-3. **Deploy Schema (One-time):**
-   ```bash
-   snowsql -f snowflake/schema.sql
-   ```
+# 2. Check connection health:
+py openlens.py snowflake-status
 
-4. **Start Backend Gateway & Web Studio:**
-   ```bash
-   # Launch API Gateway (port 8000)
-   py openlens.py serve-api
+# 3. Deploy schemas & seed tables to your Snowflake account:
+snowsql -f snowflake/schema.sql
+```
 
-   # Launch Web Studios (port 3000)
-   py openlens.py serve
-   ```
-   Open **Dev Studio** (`http://localhost:3000/openlens-dev/`), click the ❄️ Snowflake badge or **Test Connection** in the modal to see live connection status!
+#### Connecting via Web Studios
+```bash
+# Start backend API (port 8000)
+py openlens.py serve-api
+
+# Start Web Studio (port 3000)
+py openlens.py serve
+```
+Open **Dev Studio** (`http://localhost:3000/openlens-dev/`) or **Archy Studio** (`http://localhost:3000/openlens-archy/`). The Snowflake Activation Window prompts you immediately to authenticate or create your trial account. Once connected, your workspace is fully unlocked.
 
 ---
 

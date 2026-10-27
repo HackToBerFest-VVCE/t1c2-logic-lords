@@ -205,6 +205,10 @@ class OpenLensDevApp {
     this.sfDatabase = document.getElementById('sf-database');
     this.sfRole = document.getElementById('sf-role');
     this.sfTestResult = document.getElementById('sf-test-result');
+    this.sfTabSignin = document.getElementById('sf-tab-signin');
+    this.sfTabCreate = document.getElementById('sf-tab-create');
+    this.sfPaneSignin = document.getElementById('sf-pane-signin');
+    this.sfPaneCreate = document.getElementById('sf-pane-create');
 
     // Toast
     this.toast = document.getElementById('toast');
@@ -321,6 +325,27 @@ class OpenLensDevApp {
     }
     if (this.sfSaveBtn) {
       this.sfSaveBtn.addEventListener('click', () => this.saveSfConnection());
+    }
+
+    // Snowflake Tab Switcher (Sign In vs Create Free Account)
+    if (this.sfTabSignin && this.sfTabCreate) {
+      this.sfTabSignin.addEventListener('click', () => {
+        this.sfTabSignin.style.borderBottom = '2px solid var(--accent)';
+        this.sfTabSignin.style.color = 'var(--text-main)';
+        this.sfTabCreate.style.borderBottom = '2px solid transparent';
+        this.sfTabCreate.style.color = 'var(--text-muted)';
+        if (this.sfPaneSignin) this.sfPaneSignin.style.display = 'block';
+        if (this.sfPaneCreate) this.sfPaneCreate.style.display = 'none';
+      });
+
+      this.sfTabCreate.addEventListener('click', () => {
+        this.sfTabCreate.style.borderBottom = '2px solid var(--accent)';
+        this.sfTabCreate.style.color = 'var(--text-main)';
+        this.sfTabSignin.style.borderBottom = '2px solid transparent';
+        this.sfTabSignin.style.color = 'var(--text-muted)';
+        if (this.sfPaneSignin) this.sfPaneSignin.style.display = 'none';
+        if (this.sfPaneCreate) this.sfPaneCreate.style.display = 'block';
+      });
     }
 
     // Escape key closes modals and drawer
@@ -1024,7 +1049,14 @@ class OpenLensDevApp {
         }
       }
     } catch (_) {
-      // Backend gateway offline — runs in local mode
+      // Backend gateway offline
+    }
+
+    // Snowflake is a CORE requirement: automatically open activation window if not yet connected
+    if (!this.snowflakeConnected) {
+      setTimeout(() => {
+        this.openSfModal();
+      }, 700);
     }
   }
 

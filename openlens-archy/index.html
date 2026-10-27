@@ -91,6 +91,14 @@
 
     <div class="island-divider"></div>
 
+    <!-- Snowflake Core Intelligence Button -->
+    <button id="archy-sf-btn" class="btn-dev-pill" style="border-color:rgba(79,142,247,0.3); background:rgba(79,142,247,0.1); color:var(--accent); cursor:pointer;" title="Snowflake Intelligence Core Status">
+      <span id="archy-sf-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#f59e0b; margin-right:4px;"></span>
+      <span>❄️ Snowflake</span>
+    </button>
+
+    <div class="island-divider"></div>
+
     <!-- Dev Mode Link -->
     <a href="../openlens-dev/index.html" class="btn-dev-pill" title="Open Dev Studio">
       <span>🛠️</span> Dev
@@ -287,6 +295,111 @@
           Exportable JSON AST Rules for OpenLens Dev
         </h3>
         <pre id="rules-json-block" class="code-block"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SNOWFLAKE CORE ACTIVATION MODAL ── -->
+  <div class="modal-overlay" id="sf-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center;">
+    <div class="modal-card" style="background:#0a1220; border:1px solid rgba(79,142,247,0.3); border-radius:16px; width:92%; max-width:560px; color:#f0f4ff; box-shadow:0 24px 64px rgba(0,0,0,0.6); overflow:hidden; display:flex; flex-direction:column;">
+      <div style="background:linear-gradient(135deg, rgba(79,142,247,0.15), rgba(16,185,129,0.08)); padding:18px 24px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="font-size:1.8rem; background:rgba(79,142,247,0.2); width:42px; height:42px; border-radius:10px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(79,142,247,0.3);">❄️</div>
+          <div>
+            <h2 style="font-size:1.1rem; font-weight:800; display:flex; align-items:center; gap:8px; margin:0;">
+              Snowflake Intelligence Core
+              <span style="font-size:0.65rem; padding:2px 8px; border-radius:12px; background:rgba(79,142,247,0.25); color:#60a5fa; text-transform:uppercase; font-weight:700;">Required</span>
+            </h2>
+            <div style="font-size:0.75rem; color:#94a3b8;">Central Architecture Knowledge, ADR Rules & Evaluation Layer</div>
+          </div>
+        </div>
+        <button id="close-sf-btn" style="background:none; border:none; color:#94a3b8; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+
+      <!-- Segmented Tab Switcher -->
+      <div style="display:flex; padding:12px 24px 0 24px; gap:8px; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <button id="sf-tab-signin" style="flex:1; padding:10px; border-radius:8px 8px 0 0; background:none; border:none; border-bottom:2px solid #3b82f6; color:#fff; font-weight:700; font-size:0.85rem; cursor:pointer;">
+          🔑 Sign In to Snowflake
+        </button>
+        <button id="sf-tab-create" style="flex:1; padding:10px; border-radius:8px 8px 0 0; background:none; border:none; border-bottom:2px solid transparent; color:#94a3b8; font-weight:700; font-size:0.85rem; cursor:pointer;">
+          ✨ Create Snowflake Account
+        </button>
+      </div>
+
+      <div style="padding:20px 24px;">
+        <!-- TAB 1: SIGN IN -->
+        <div id="sf-pane-signin">
+          <p style="font-size:0.8rem; color:#94a3b8; line-height:1.5; margin-bottom:14px;">
+            OpenLens connects to your Snowflake account as its central repository for curated patterns, ADR validation rules, and F1 evaluation benchmarks.
+            <strong>No raw source code is ever transmitted.</strong>
+          </p>
+
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div>
+              <label style="font-size:0.68rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Account Identifier</label>
+              <input id="sf-account" type="text" placeholder="e.g. xy12345.us-east-1 or myorg-myaccount" style="width:100%; box-sizing:border-box; padding:8px 12px; border-radius:8px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.82rem; margin-top:4px;">
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div>
+                <label style="font-size:0.68rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Username</label>
+                <input id="sf-user" type="text" placeholder="OPENLENS_USER" style="width:100%; box-sizing:border-box; padding:8px 12px; border-radius:8px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.82rem; margin-top:4px;">
+              </div>
+              <div>
+                <label style="font-size:0.68rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Password / Secret</label>
+                <input id="sf-password" type="password" placeholder="Your Snowflake password" style="width:100%; box-sizing:border-box; padding:8px 12px; border-radius:8px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.82rem; margin-top:4px;">
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+              <div>
+                <label style="font-size:0.68rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Warehouse</label>
+                <input id="sf-warehouse" type="text" placeholder="OPENLENS_WH" value="OPENLENS_WH" style="width:100%; box-sizing:border-box; padding:8px 12px; border-radius:8px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.82rem; margin-top:4px;">
+              </div>
+              <div>
+                <label style="font-size:0.68rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Database</label>
+                <input id="sf-database" type="text" placeholder="OPENLENS_DB" value="OPENLENS_DB" style="width:100%; box-sizing:border-box; padding:8px 12px; border-radius:8px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.82rem; margin-top:4px;">
+              </div>
+              <div>
+                <label style="font-size:0.68rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Role</label>
+                <input id="sf-role" type="text" placeholder="OPENLENS_ROLE" value="OPENLENS_ROLE" style="width:100%; box-sizing:border-box; padding:8px 12px; border-radius:8px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.82rem; margin-top:4px;">
+              </div>
+            </div>
+
+            <div id="sf-test-result" style="display:none; margin-top:10px; padding:10px 12px; border-radius:6px; font-size:0.75rem; line-height:1.4;"></div>
+          </div>
+        </div>
+
+        <!-- TAB 2: CREATE ACCOUNT -->
+        <div id="sf-pane-create" style="display:none;">
+          <div style="background:rgba(79,142,247,0.08); border:1px solid rgba(79,142,247,0.25); border-radius:12px; padding:16px; margin-bottom:14px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+              <span style="font-size:1.4rem;">🎁</span>
+              <div>
+                <h3 style="font-size:0.95rem; font-weight:800; color:#fff; margin:0;">Snowflake 30-Day Free Trial</h3>
+                <div style="font-size:0.75rem; color:#60a5fa;">$400 in Free Cloud Compute Credits</div>
+              </div>
+            </div>
+            <ul style="font-size:0.78rem; color:#94a3b8; line-height:1.6; margin-left:18px; margin-bottom:14px;">
+              <li>Full access to <strong>Snowflake Cortex AI</strong> & Vector Search.</li>
+              <li>No credit card required for the 30-day trial.</li>
+              <li>Instant deployment of OpenLens architecture schemas & tables.</li>
+            </ul>
+            <a href="https://signup.snowflake.com/" target="_blank" rel="noopener noreferrer" 
+               style="display:flex; align-items:center; justify-content:center; gap:8px; padding:12px 20px; border-radius:8px; background:linear-gradient(135deg, #29b5e8, #11567f); color:#fff; text-decoration:none; font-weight:800; font-size:0.85rem; box-shadow:0 4px 14px rgba(41,181,232,0.35);">
+              <span>🚀 Open Snowflake Sign-Up in New Window</span>
+              <span style="font-size:0.75rem;">↗</span>
+            </a>
+          </div>
+          <div style="font-size:0.68rem; color:#64748b; text-align:center;">
+            After completing sign-up, your account locator and credentials will be ready. Switch back to the <strong>Sign In</strong> tab to connect!
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px; padding:14px 24px; border-top:1px solid rgba(255,255,255,0.08); background:rgba(0,0,0,0.2);">
+        <button id="sf-test-btn" style="padding:8px 16px; border-radius:8px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#cbd5e1; font-size:0.82rem; font-weight:700; cursor:pointer;">Test Connection</button>
+        <button id="sf-save-btn" style="padding:8px 18px; border-radius:8px; background:#10b981; border:none; color:#fff; font-size:0.82rem; font-weight:800; cursor:pointer;">Authenticate & Activate OpenLens</button>
       </div>
     </div>
   </div>
