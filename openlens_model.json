@@ -4,7 +4,7 @@
   "description": "Dynamic architecture model automatically scanned from C:\\Users\\Hp\\Downloads\\OpenLens_Project",
   "workspace_root": "C:\\Users\\Hp\\Downloads\\OpenLens_Project",
   "files_scanned": 13,
-  "duration_ms": 182,
+  "duration_ms": 250,
   "techStack": [
     {
       "id": "ts_python",
@@ -269,15 +269,18 @@
       "layer": 1,
       "color": "#6366f1",
       "file": "api/gateway.py",
-      "lines": 372,
+      "lines": 507,
       "functions": [],
       "classes": [
+        "SnowflakeTestRequest",
+        "SnowflakeSyncItem",
+        "SnowflakeSyncRequest",
         "ScanRequest",
         "PatternQueryRequest",
         "FeedbackRequest",
         "EvaluationRunRequest"
       ],
-      "summary": "0 function(s), 4 class(es) \u2014 372 LOC",
+      "summary": "0 function(s), 7 class(es) \u2014 507 LOC",
       "x": 55,
       "y": 148,
       "width": 240,
@@ -408,7 +411,7 @@
       "layer": 1,
       "color": "#6366f1",
       "file": "openlens.py",
-      "lines": 352,
+      "lines": 496,
       "functions": [
         "cmd_scan",
         "cmd_analyze",
@@ -416,10 +419,13 @@
         "cmd_watch",
         "cmd_install_extension",
         "cmd_serve",
+        "cmd_snowflake_status",
+        "cmd_snowflake_login",
+        "cmd_serve_api",
         "main"
       ],
       "classes": [],
-      "summary": "7 function(s), 0 class(es) \u2014 352 LOC",
+      "summary": "10 function(s), 0 class(es) \u2014 496 LOC",
       "x": 685,
       "y": 148,
       "width": 240,
@@ -474,13 +480,13 @@
       "layer": 2,
       "color": "#06b6d4",
       "file": "services/retrieval.py",
-      "lines": 106,
+      "lines": 107,
       "functions": [],
       "classes": [
         "RetrievalResult",
         "RetrievalService"
       ],
-      "summary": "0 function(s), 2 class(es) \u2014 106 LOC",
+      "summary": "0 function(s), 2 class(es) \u2014 107 LOC",
       "x": 1000,
       "y": 228,
       "width": 240,
@@ -493,7 +499,7 @@
       "layer": 2,
       "color": "#06b6d4",
       "file": "services/snowflake_bridge.py",
-      "lines": 426,
+      "lines": 628,
       "functions": [
         "get_bridge"
       ],
@@ -505,7 +511,7 @@
         "EvaluationRunPayload",
         "SnowflakeBridge"
       ],
-      "summary": "1 function(s), 6 class(es) \u2014 426 LOC",
+      "summary": "1 function(s), 6 class(es) \u2014 628 LOC",
       "x": 1000,
       "y": 308,
       "width": 240,
@@ -592,6 +598,16 @@
       "flowType": "sync",
       "label": "invokes / imports",
       "animated": true
+    },
+    {
+      "id": "conn_openlens_services_snowflake_bridge",
+      "from": "openlens",
+      "to": "services_snowflake_bridge",
+      "from_file": "openlens.py",
+      "to_file": "services/snowflake_bridge.py",
+      "flowType": "sync",
+      "label": "invokes / imports",
+      "animated": true
     }
   ],
   "patterns": [
@@ -647,7 +663,7 @@
       "id": "pat_snowflakebridge",
       "name": "Adapter / Bridge Pattern (SnowflakeBridge)",
       "category": "Structural",
-      "file": "services/snowflake_bridge.py:L100",
+      "file": "services/snowflake_bridge.py:L127",
       "description": "Class 'SnowflakeBridge' wraps external services or remote APIs, isolating the rest of the application from third-party churn.",
       "codeSnippet": "class SnowflakeBridge:\n    # Adapts external interface to internal domain models\n    pass",
       "recommendation": "Retain this boundary to ensure external service failures degrade gracefully.",
@@ -709,7 +725,7 @@
       "id": "pat_snowflakebridge",
       "name": "Adapter / Bridge Pattern (SnowflakeBridge)",
       "category": "Structural",
-      "file": "services/snowflake_bridge.py:L100",
+      "file": "services/snowflake_bridge.py:L127",
       "description": "Class 'SnowflakeBridge' wraps external services or remote APIs, isolating the rest of the application from third-party churn.",
       "codeSnippet": "class SnowflakeBridge:\n    # Adapts external interface to internal domain models\n    pass",
       "recommendation": "Retain this boundary to ensure external service failures degrade gracefully.",
@@ -731,7 +747,7 @@
       "path": "api/gateway.py",
       "component": "gateway.py",
       "layer": "Layer 1",
-      "lines": 372,
+      "lines": 507,
       "tech": "Python",
       "pattern": "Modular"
     },
@@ -787,7 +803,7 @@
       "path": "openlens.py",
       "component": "openlens.py",
       "layer": "Layer 1",
-      "lines": 352,
+      "lines": 496,
       "tech": "Python",
       "pattern": "Modular"
     },
@@ -811,7 +827,7 @@
       "path": "services/retrieval.py",
       "component": "retrieval.py",
       "layer": "Layer 2",
-      "lines": 106,
+      "lines": 107,
       "tech": "Python",
       "pattern": "Modular"
     },
@@ -819,7 +835,7 @@
       "path": "services/snowflake_bridge.py",
       "component": "snowflake_bridge.py",
       "layer": "Layer 2",
-      "lines": 426,
+      "lines": 628,
       "tech": "Python",
       "pattern": "Modular"
     }
@@ -828,7 +844,7 @@
     "slaMetrics": [
       {
         "name": "Deterministic Scan Latency",
-        "value": "182ms",
+        "value": "250ms",
         "target": "< 200ms",
         "status": "Pass"
       },
@@ -840,7 +856,7 @@
       },
       {
         "name": "Maintainability Findings",
-        "value": "59",
+        "value": "77",
         "target": "Tracked",
         "status": "Tracked"
       },
@@ -934,7 +950,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_0aa9baed",
@@ -963,7 +979,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_34e1473d",
@@ -992,7 +1008,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_e235b5e6",
@@ -1021,7 +1037,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_a58bac9f",
@@ -1050,7 +1066,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_1d160461",
@@ -1079,7 +1095,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_af98e354",
@@ -1108,7 +1124,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_cf8ea4e3",
@@ -1137,7 +1153,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_1ede09c8",
@@ -1166,7 +1182,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_72781b63",
@@ -1195,7 +1211,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_788d9fb1",
@@ -1224,7 +1240,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_434712e1",
@@ -1253,7 +1269,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_18e8b6a9",
@@ -1282,7 +1298,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_0d13bdea",
@@ -1311,7 +1327,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_b0f06041",
@@ -1340,7 +1356,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_a03f5623",
@@ -1369,7 +1385,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_8bab329a",
@@ -1398,7 +1414,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_c8eb9d64",
@@ -1427,7 +1443,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_fa6a4491",
@@ -1456,7 +1472,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "dup_7c844090",
@@ -1485,7 +1501,7 @@
       "suggested_action": "Extract the shared logic into a single well-named function and replace all duplicates with calls to it.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_a7c175c8",
@@ -1507,7 +1523,7 @@
       "suggested_action": "Remove the 'import annotations' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_4c0a1c94",
@@ -1529,29 +1545,7 @@
       "suggested_action": "Remove the 'import SnowflakeBridge' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "unused_e7ebf473",
-      "category": "unused_code",
-      "severity": "low",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py:L31",
-      "summary": "Unused import: 'SnowflakeConfig'.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py",
-          "excerpt_or_summary": "import 'SnowflakeConfig' at line 31 is never referenced.",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "Unused imports increase cognitive overhead and may indicate a dependency that can be removed, reducing install size.",
-      "suggested_action": "Remove the 'import SnowflakeConfig' statement.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_1a842d3d",
@@ -1573,7 +1567,7 @@
       "suggested_action": "Remove the 'import RetrievalService' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_6ec90df9",
@@ -1595,7 +1589,7 @@
       "suggested_action": "Remove the 'import ModelGateway' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_d1e8f5f6",
@@ -1617,7 +1611,7 @@
       "suggested_action": "Remove the 'import ModelGatewayConfig' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_8a63d5a2",
@@ -1639,7 +1633,7 @@
       "suggested_action": "Remove the 'import annotations' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_b07cf53c",
@@ -1661,7 +1655,7 @@
       "suggested_action": "Remove the 'import ComplexityVisitor' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_1e363e86",
@@ -1683,7 +1677,7 @@
       "suggested_action": "Remove the 'import annotations' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_d5f73957",
@@ -1705,7 +1699,7 @@
       "suggested_action": "Remove the 'import Optional' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_4dc8b947",
@@ -1727,7 +1721,7 @@
       "suggested_action": "Remove the 'import annotations' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_0fa5d6eb",
@@ -1749,7 +1743,7 @@
       "suggested_action": "Remove the 'import ComplexityVisitor' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_d4076087",
@@ -1771,7 +1765,7 @@
       "suggested_action": "Remove the 'import annotations' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_3c2f889f",
@@ -1793,7 +1787,7 @@
       "suggested_action": "Remove the 'import Optional' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_dd54bae2",
@@ -1815,7 +1809,7 @@
       "suggested_action": "Remove the 'import annotations' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_ddff9223",
@@ -1837,7 +1831,7 @@
       "suggested_action": "Remove the 'import os' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:16Z"
     },
     {
       "id": "unused_4cdafba7",
@@ -1859,7 +1853,7 @@
       "suggested_action": "Remove the 'import annotations' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:17Z"
     },
     {
       "id": "unused_b285e942",
@@ -1881,7 +1875,7 @@
       "suggested_action": "Remove the 'import annotations' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:17Z"
     },
     {
       "id": "unused_e0006799",
@@ -1903,7 +1897,7 @@
       "suggested_action": "Remove the 'import Optional' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:17Z"
     },
     {
       "id": "unused_724528f1",
@@ -1925,7 +1919,7 @@
       "suggested_action": "Remove the 'import annotations' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:17Z"
     },
     {
       "id": "unused_5be4e0df",
@@ -1947,151 +1941,19 @@
       "suggested_action": "Remove the 'import datetime' statement.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:17Z"
     },
     {
-      "id": "cc_e0f9a1cc",
+      "id": "cc_8d692852",
       "category": "complexity",
-      "severity": "medium",
+      "severity": "high",
       "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py:L190",
-      "summary": "Function 'scan_files' has cyclomatic complexity 9.",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py:L213",
+      "summary": "Function 'test_snowflake_connection' has cyclomatic complexity 12.",
       "evidence": [
         {
           "source_type": "static_tool",
           "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 9 (threshold: 7).",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
-      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "cc_12c9e8ef",
-      "category": "complexity",
-      "severity": "medium",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L64",
-      "summary": "Function 'detect' has cyclomatic complexity 8.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 8 (threshold: 7).",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
-      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "cc_2ba549fa",
-      "category": "complexity",
-      "severity": "high",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L149",
-      "summary": "Function '_check_file' has cyclomatic complexity 13.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 13 (threshold: 7).",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
-      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "cc_93460938",
-      "category": "complexity",
-      "severity": "medium",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L240",
-      "summary": "Function '_detect_with_ast' has cyclomatic complexity 7.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 7 (threshold: 7).",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
-      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "cc_12c9e8ef",
-      "category": "complexity",
-      "severity": "high",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L296",
-      "summary": "Function 'detect' has cyclomatic complexity 10.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 10 (threshold: 7).",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
-      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "cc_f6c1b9b7",
-      "category": "complexity",
-      "severity": "high",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L194",
-      "summary": "Function '_detect_tech_stack' has cyclomatic complexity 25.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 25 (threshold: 7).",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
-      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "cc_145c857c",
-      "category": "complexity",
-      "severity": "high",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L289",
-      "summary": "Function '_extract_nodes_and_boundaries' has cyclomatic complexity 12.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
           "excerpt_or_summary": "Cyclomatic complexity = 12 (threshold: 7).",
           "observed_or_inferred": "observed",
           "limitations": ""
@@ -2101,64 +1963,20 @@
       "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:17Z"
     },
     {
-      "id": "cc_bc56803d",
-      "category": "complexity",
-      "severity": "high",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L386",
-      "summary": "Function '_extract_connections' has cyclomatic complexity 11.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
-      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "cc_575721d5",
-      "category": "complexity",
-      "severity": "high",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L430",
-      "summary": "Function '_detect_design_patterns' has cyclomatic complexity 11.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
-      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "cc_460a27ee",
+      "id": "cc_deee4aea",
       "category": "complexity",
       "severity": "medium",
       "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L64",
-      "summary": "Function 'detect' has cyclomatic complexity 8.",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py:L237",
+      "summary": "Function 'sync_snowflake_knowledge' has cyclomatic complexity 7.",
       "evidence": [
         {
           "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 8 (threshold: 7).",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 7 (threshold: 7).",
           "observed_or_inferred": "observed",
           "limitations": ""
         }
@@ -2167,19 +1985,19 @@
       "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:17Z"
     },
     {
-      "id": "cc_3e2fb2ff",
+      "id": "cc_e0f9a1cc",
       "category": "complexity",
       "severity": "high",
       "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L149",
-      "summary": "Function '_check_file' has cyclomatic complexity 13.",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py:L325",
+      "summary": "Function 'scan_files' has cyclomatic complexity 13.",
       "evidence": [
         {
           "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\api\\gateway.py",
           "excerpt_or_summary": "Cyclomatic complexity = 13 (threshold: 7).",
           "observed_or_inferred": "observed",
           "limitations": ""
@@ -2189,7 +2007,359 @@
       "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_12c9e8ef",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L64",
+      "summary": "Function 'detect' has cyclomatic complexity 9.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 9 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_b7e6d6f4",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L132",
+      "summary": "Function 'UnusedImportDetector' has cyclomatic complexity 11.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_2ba549fa",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L149",
+      "summary": "Function '_check_file' has cyclomatic complexity 16.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 16 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_93460938",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L240",
+      "summary": "Function '_detect_with_ast' has cyclomatic complexity 9.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 9 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_52fd758c",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L287",
+      "summary": "Function 'ArchitectureDriftDetector' has cyclomatic complexity 7.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 7 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_12c9e8ef",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L296",
+      "summary": "Function 'detect' has cyclomatic complexity 13.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 13 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_2d7c0df1",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L371",
+      "summary": "Function 'ASTScanner' has cyclomatic complexity 9.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 9 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_378a9e64",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py:L398",
+      "summary": "Function 'scan' has cyclomatic complexity 9.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 9 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_05259306",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L93",
+      "summary": "Function 'ProjectAnalyzer' has cyclomatic complexity 11.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_f6c1b9b7",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L194",
+      "summary": "Function '_detect_tech_stack' has cyclomatic complexity 30.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 30 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_145c857c",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L289",
+      "summary": "Function '_extract_nodes_and_boundaries' has cyclomatic complexity 16.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 16 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_bc56803d",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L386",
+      "summary": "Function '_extract_connections' has cyclomatic complexity 15.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 15 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_575721d5",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py:L430",
+      "summary": "Function '_detect_design_patterns' has cyclomatic complexity 20.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 20 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_460a27ee",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L64",
+      "summary": "Function 'detect' has cyclomatic complexity 9.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 9 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_0cf869b8",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L132",
+      "summary": "Function 'UnusedImportDetector' has cyclomatic complexity 11.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_3e2fb2ff",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L149",
+      "summary": "Function '_check_file' has cyclomatic complexity 16.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 16 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
     },
     {
       "id": "cc_aa7f399a",
@@ -2197,7 +2367,29 @@
       "severity": "medium",
       "confidence": "high",
       "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L240",
-      "summary": "Function '_detect_with_ast' has cyclomatic complexity 7.",
+      "summary": "Function '_detect_with_ast' has cyclomatic complexity 9.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 9 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_fef3b3ab",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L287",
+      "summary": "Function 'ArchitectureDriftDetector' has cyclomatic complexity 7.",
       "evidence": [
         {
           "source_type": "static_tool",
@@ -2211,7 +2403,7 @@
       "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:17Z"
     },
     {
       "id": "cc_460a27ee",
@@ -2219,121 +2411,11 @@
       "severity": "high",
       "confidence": "high",
       "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L296",
-      "summary": "Function 'detect' has cyclomatic complexity 10.",
+      "summary": "Function 'detect' has cyclomatic complexity 13.",
       "evidence": [
         {
           "source_type": "static_tool",
           "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 10 (threshold: 7).",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
-      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "cc_296e57f9",
-      "category": "complexity",
-      "severity": "high",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L155",
-      "summary": "Function '_detect_tech_stack' has cyclomatic complexity 25.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 25 (threshold: 7).",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
-      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "cc_aca8c3eb",
-      "category": "complexity",
-      "severity": "high",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L250",
-      "summary": "Function '_extract_nodes_and_boundaries' has cyclomatic complexity 11.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
-      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "cc_5e481c01",
-      "category": "complexity",
-      "severity": "high",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L323",
-      "summary": "Function '_extract_connections' has cyclomatic complexity 11.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
-      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "cc_4beeb9ec",
-      "category": "complexity",
-      "severity": "high",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L367",
-      "summary": "Function '_detect_design_patterns' has cyclomatic complexity 11.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
-          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
-          "observed_or_inferred": "observed",
-          "limitations": ""
-        }
-      ],
-      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
-      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
-      "validation_status": "not_validated",
-      "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
-    },
-    {
-      "id": "cc_8bf512f2",
-      "category": "complexity",
-      "severity": "high",
-      "confidence": "high",
-      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py:L230",
-      "summary": "Function 'cmd_watch' has cyclomatic complexity 13.",
-      "evidence": [
-        {
-          "source_type": "static_tool",
-          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py",
           "excerpt_or_summary": "Cyclomatic complexity = 13 (threshold: 7).",
           "observed_or_inferred": "observed",
           "limitations": ""
@@ -2343,7 +2425,337 @@
       "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
       "validation_status": "not_validated",
       "rule_id": null,
-      "created_at": "2026-10-26T19:12:12Z"
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_ccb36b65",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L371",
+      "summary": "Function 'ASTScanner' has cyclomatic complexity 9.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 9 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_1a9dcd9f",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py:L398",
+      "summary": "Function 'scan' has cyclomatic complexity 9.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\ast_scanner.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 9 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_501eb82a",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L93",
+      "summary": "Function 'ProjectAnalyzer' has cyclomatic complexity 11.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_296e57f9",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L155",
+      "summary": "Function '_detect_tech_stack' has cyclomatic complexity 30.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 30 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_aca8c3eb",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L250",
+      "summary": "Function '_extract_nodes_and_boundaries' has cyclomatic complexity 15.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 15 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_5e481c01",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L323",
+      "summary": "Function '_extract_connections' has cyclomatic complexity 15.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 15 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_4beeb9ec",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py:L367",
+      "summary": "Function '_detect_design_patterns' has cyclomatic complexity 20.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens-vscode\\engine\\project_analyzer.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 20 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_8bf512f2",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py:L230",
+      "summary": "Function 'cmd_watch' has cyclomatic complexity 11.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 11 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_3d551be4",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py:L304",
+      "summary": "Function 'cmd_snowflake_status' has cyclomatic complexity 8.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 8 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_015436ba",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py:L352",
+      "summary": "Function 'cmd_snowflake_login' has cyclomatic complexity 9.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 9 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_dbed9581",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py:L432",
+      "summary": "Function 'main' has cyclomatic complexity 9.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\openlens.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 9 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_e8523ceb",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\retrieval.py:L69",
+      "summary": "Function 'retrieve_refactoring_cases' has cyclomatic complexity 7.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\retrieval.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 7 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_8f164563",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\snowflake_bridge.py:L165",
+      "summary": "Function 'connect' has cyclomatic complexity 9.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\snowflake_bridge.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 9 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_1796660a",
+      "category": "complexity",
+      "severity": "high",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\snowflake_bridge.py:L223",
+      "summary": "Function 'test_connection' has cyclomatic complexity 15.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\snowflake_bridge.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 15 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
+    },
+    {
+      "id": "cc_33439760",
+      "category": "complexity",
+      "severity": "medium",
+      "confidence": "high",
+      "location": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\snowflake_bridge.py:L458",
+      "summary": "Function 'sync_document_chunks' has cyclomatic complexity 7.",
+      "evidence": [
+        {
+          "source_type": "static_tool",
+          "source_reference": "C:\\Users\\Hp\\Downloads\\OpenLens_Project\\services\\snowflake_bridge.py",
+          "excerpt_or_summary": "Cyclomatic complexity = 7 (threshold: 7).",
+          "observed_or_inferred": "observed",
+          "limitations": ""
+        }
+      ],
+      "rationale": "High cyclomatic complexity correlates with increased defect rates and makes functions harder to test and understand.",
+      "suggested_action": "Decompose the function into smaller, single-responsibility functions and consider extracting conditional branches into named helpers.",
+      "validation_status": "not_validated",
+      "rule_id": null,
+      "created_at": "2026-10-27T07:04:17Z"
     }
   ]
 }
