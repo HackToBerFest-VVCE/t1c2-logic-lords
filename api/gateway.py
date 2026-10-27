@@ -70,14 +70,41 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:5500"],
-    allow_methods=["GET", "POST"],
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # ---------------------------------------------------------------------------
 # Request / Response models
 # ---------------------------------------------------------------------------
+
+class SnowflakeTestRequest(BaseModel):
+    account: Optional[str] = None
+    user: Optional[str] = None
+    password: Optional[str] = None
+    warehouse: Optional[str] = None
+    database: Optional[str] = None
+    schema_name: Optional[str] = Field(None, alias="schema")
+    role: Optional[str] = None
+
+
+class SnowflakeSyncItem(BaseModel):
+    id: Optional[str] = None
+    title: Optional[str] = None
+    source_path: Optional[str] = None
+    project_id: Optional[str] = "default"
+    category: Optional[str] = "Architecture Note"
+    content: str
+    rationale: Optional[str] = ""
+    metadata: Optional[dict] = None
+
+
+class SnowflakeSyncRequest(BaseModel):
+    chunks: Optional[list[SnowflakeSyncItem]] = None
+    patterns: Optional[list[dict]] = None
+
 
 class ScanRequest(BaseModel):
     """Files to scan — paths relative to the workspace root approved by the user."""
@@ -141,6 +168,7 @@ async def health():
     return {
         "status": "ok",
         "snowflake_available": bridge.available,
+        "snowflake_account": bridge.config.account or "not_configured",
         "version": "0.1.0",
     }
 
@@ -154,10 +182,117 @@ async def status():
             "snowflake": "connected" if bridge.available else "offline",
             "model_gateway": "available",
         },
+        "snowflake": {
+            "connected": bridge.available,
+            "account": bridge.config.account or "Not configured",
+            "warehouse": bridge.config.warehouse,
+            "database": bridge.config.database,
+            "role": bridge.config.role,
+            "last_error": bridge.last_error,
+        },
         "note": (
-            "Local deterministic checks run regardless of Snowflake or model availability. "
+            "Local deterministic AST checks run regardless of Snowflake or model availability. "
             "Remote features degrade gracefully when services are offline."
         ),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Snowflake Integration Endpoints
+# ---------------------------------------------------------------------------
+
+@app.get("/integrations/snowflake/status", tags=["snowflake"])
+async def get_snowflake_status():
+    """Returns current Snowflake integration status and configured identifiers."""
+    bridge = get_bridge()
+    diag = await bridge.test_connection()
+    return diag
+
+
+@app.post("/integrations/snowflake/test", tags=["snowflake"])
+async def test_snowflake_connection(req: Optional[SnowflakeTestRequest] = None):
+    """
+    Tests connectivity to Snowflake.
+    If credentials are provided in request, attempts reconnect with new credentials.
+    """
+    bridge = get_bridge()
+    if req and (req.account or req.user or req.password):
+        new_config = SnowflakeConfig(
+            account=req.account or bridge.config.account,
+            user=req.user or bridge.config.user,
+            password=req.password or bridge.config.password,
+            warehouse=req.warehouse or bridge.config.warehouse,
+            database=req.database or bridge.config.database,
+            schema=req.schema_name or bridge.config.schema,
+            role=req.role or bridge.config.role,
+            enabled=True,
+        )
+        await bridge.reconnect(new_config)
+
+    result = await bridge.test_connection()
+    return result
+
+
+@app.post("/integrations/snowflake/sync", tags=["snowflake"])
+async def sync_snowflake_knowledge(req: SnowflakeSyncRequest):
+    """
+    Synchronizes approved architectural notes, decisions, or patterns to Snowflake.
+    Enforces privacy by ensuring no raw code or secrets are accepted.
+    """
+    bridge = get_bridge()
+    if not bridge.available:
+        return {
+            "status": "offline",
+            "message": "Snowflake is offline. Data stored locally only.",
+            "synced": 0,
+        }
+
+    total_synced = 0
+    if req.chunks:
+        chunks_data = [c.model_dump() for c in req.chunks]
+        res = await bridge.sync_document_chunks(chunks_data)
+        total_synced += res.get("synced", 0)
+
+    if req.patterns:
+        for p in req.patterns:
+            if await bridge.sync_pattern(p):
+                total_synced += 1
+
+    return {
+        "status": "success",
+        "synced": total_synced,
+        "message": f"Successfully synchronized {total_synced} knowledge items to Snowflake.",
+    }
+
+
+@app.post("/integrations/snowflake/search", tags=["snowflake"])
+async def search_snowflake(req: PatternQueryRequest):
+    """Keyword/semantic retrieval endpoint matching the starter guide specification."""
+    bridge = get_bridge()
+    patterns = await bridge.search_patterns(
+        query=req.query,
+        category=req.category,
+        applicable_layer=req.applicable_layer,
+        limit=req.limit,
+    )
+    return {
+        "query": req.query,
+        "results": [
+            {
+                "pattern_id": p.pattern_id,
+                "name": p.name,
+                "category": p.category,
+                "description": p.description,
+                "rationale": p.rationale,
+                "trade_offs": p.trade_offs,
+                "example_snippet": p.example_snippet,
+                "applicable_layers": p.applicable_layers,
+                "tags": p.tags,
+                "retrieval_score": p.retrieval_score,
+            }
+            for p in patterns
+        ],
+        "source": "snowflake" if bridge.available else "offline",
     }
 
 

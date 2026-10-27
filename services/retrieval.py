@@ -78,10 +78,11 @@ class RetrievalService:
             return []
 
         try:
-            sql = """
+            tbl = self._bridge._tbl("KNOWLEDGE", "REFACTORING_CASES") if hasattr(self._bridge, "_tbl") else "OPENLENS_DB.KNOWLEDGE.REFACTORING_CASES"
+            sql = f"""
                 SELECT case_id, finding_category, before_snippet, after_snippet,
                        explanation, test_outcome, user_rating
-                FROM OPENLENS_DB.KNOWLEDGE.REFACTORING_CASES
+                FROM {tbl}
                 WHERE finding_category = :cat
                   AND consent_given = TRUE
                   AND (retention_until IS NULL OR retention_until > CURRENT_DATE())

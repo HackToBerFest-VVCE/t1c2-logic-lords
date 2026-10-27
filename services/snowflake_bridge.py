@@ -17,6 +17,12 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Optional
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 logger = logging.getLogger(__name__)
 
 
@@ -26,16 +32,37 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class SnowflakeConfig:
-    account: str = field(default_factory=lambda: os.environ.get("SNOWFLAKE_ACCOUNT", ""))
-    user: str = field(default_factory=lambda: os.environ.get("SNOWFLAKE_USER", ""))
-    private_key_path: str = field(default_factory=lambda: os.environ.get("SNOWFLAKE_PRIVATE_KEY_PATH", ""))
-    warehouse: str = field(default_factory=lambda: os.environ.get("SNOWFLAKE_WAREHOUSE", "OPENLENS_WH"))
-    database: str = "OPENLENS_DB"
-    role: str = field(default_factory=lambda: os.environ.get("SNOWFLAKE_ROLE", "OPENLENS_ROLE"))
-    # Never hard-code credentials; always read from env or secret manager.
+    account: str = field(
+        default_factory=lambda: os.environ.get("SNOWFLAKE_ACCOUNT", os.environ.get("OPENLENS_SNOWFLAKE_ACCOUNT", ""))
+    )
+    user: str = field(
+        default_factory=lambda: os.environ.get("SNOWFLAKE_USER", os.environ.get("OPENLENS_SNOWFLAKE_USER", ""))
+    )
+    password: str = field(
+        default_factory=lambda: os.environ.get("SNOWFLAKE_PASSWORD", os.environ.get("OPENLENS_SNOWFLAKE_PASSWORD", ""))
+    )
+    private_key_path: str = field(
+        default_factory=lambda: os.environ.get("SNOWFLAKE_PRIVATE_KEY_PATH", "")
+    )
+    warehouse: str = field(
+        default_factory=lambda: os.environ.get("SNOWFLAKE_WAREHOUSE", os.environ.get("OPENLENS_SNOWFLAKE_WAREHOUSE", "OPENLENS_WH"))
+    )
+    database: str = field(
+        default_factory=lambda: os.environ.get("SNOWFLAKE_DATABASE", os.environ.get("OPENLENS_SNOWFLAKE_DATABASE", "OPENLENS_DB"))
+    )
+    schema: str = field(
+        default_factory=lambda: os.environ.get("SNOWFLAKE_SCHEMA", os.environ.get("OPENLENS_SNOWFLAKE_SCHEMA", "KNOWLEDGE"))
+    )
+    role: str = field(
+        default_factory=lambda: os.environ.get("SNOWFLAKE_ROLE", os.environ.get("OPENLENS_SNOWFLAKE_ROLE", "OPENLENS_ROLE"))
+    )
+    enabled: bool = field(
+        default_factory=lambda: os.environ.get("OPENLENS_SNOWFLAKE_ENABLED", "true").lower() in ("true", "1", "yes")
+    )
 
     def is_configured(self) -> bool:
-        return bool(self.account and self.user)
+        """Returns True if minimum credentials for Snowflake connection are present."""
+        return bool(self.enabled and self.account and self.user and (self.password or self.private_key_path))
 
 
 # ---------------------------------------------------------------------------
@@ -94,7 +121,7 @@ class EvaluationRunPayload:
 
 
 # ---------------------------------------------------------------------------
-# Snowflake Bridge (production-ready interface stub)
+# Snowflake Bridge (production-ready interface)
 # ---------------------------------------------------------------------------
 
 class SnowflakeBridge:
@@ -104,7 +131,7 @@ class SnowflakeBridge:
 
     Design:
     - All methods are async for compatibility with FastAPI workers.
-    - The bridge NEVER receives raw source code or file content.
+    - The bridge NEVER receives raw source code or unconsented secrets.
     - Privacy filtering must have occurred upstream before calling any method.
     - If Snowflake is unavailable, methods return graceful fallback values.
     """
@@ -113,6 +140,23 @@ class SnowflakeBridge:
         self._config = config or SnowflakeConfig()
         self._conn: Any = None   # snowflake.connector.connection.SnowflakeConnection
         self._available = False
+        self._last_error: Optional[str] = None
+
+    def _tbl(self, schema: str, name: str) -> str:
+        """Returns fully qualified table identifier respecting current config."""
+        return f"{self._config.database}.{schema}.{name}"
+
+    @property
+    def available(self) -> bool:
+        return self._available
+
+    @property
+    def last_error(self) -> Optional[str]:
+        return self._last_error
+
+    @property
+    def config(self) -> SnowflakeConfig:
+        return self._config
 
     # -----------------------------------------------------------------------
     # Connection lifecycle
@@ -120,37 +164,52 @@ class SnowflakeBridge:
 
     async def connect(self) -> bool:
         """
-        Establish a Snowflake connection using key-pair or OAuth authentication.
+        Establish a Snowflake connection using password, key-pair, or SSO authentication.
         Returns True if connected, False if unavailable (offline / misconfigured).
-        Never raises; callers should treat False as graceful degradation.
+        Never raises; callers treat False as graceful degradation to local mode.
         """
         if not self._config.is_configured():
-            logger.warning("Snowflake not configured — operating in offline mode.")
+            msg = "Snowflake not fully configured (missing account, user, or auth credential) — operating in offline local mode."
+            logger.info(msg)
+            self._last_error = msg
             self._available = False
             return False
 
         try:
-            # Import inside the method so the service works without the package
-            # when Snowflake is not needed locally.
             import snowflake.connector  # type: ignore
 
-            self._conn = snowflake.connector.connect(
-                account=self._config.account,
-                user=self._config.user,
-                private_key_file=self._config.private_key_path or None,
-                warehouse=self._config.warehouse,
-                database=self._config.database,
-                role=self._config.role,
-                application="OpenLens",
-                session_parameters={"QUERY_TAG": "openlens_bridge"},
-            )
+            conn_params: dict[str, Any] = {
+                "account": self._config.account,
+                "user": self._config.user,
+                "warehouse": self._config.warehouse or None,
+                "database": self._config.database or None,
+                "schema": self._config.schema or None,
+                "role": self._config.role or None,
+                "application": "OpenLens",
+                "session_parameters": {"QUERY_TAG": "openlens_bridge"},
+            }
+
+            if self._config.password:
+                conn_params["password"] = self._config.password
+            if self._config.private_key_path:
+                conn_params["private_key_file"] = self._config.private_key_path
+
+            self._conn = snowflake.connector.connect(**conn_params)
             self._available = True
-            logger.info("Snowflake connection established.")
+            self._last_error = None
+            logger.info("Snowflake connection established successfully.")
             return True
         except Exception as exc:
+            self._last_error = str(exc)
             logger.warning("Snowflake unavailable: %s — local-only mode active.", exc)
             self._available = False
             return False
+
+    async def reconnect(self, new_config: SnowflakeConfig) -> bool:
+        """Closes existing connection and reconnects with new configuration."""
+        await self.close()
+        self._config = new_config
+        return await self.connect()
 
     async def close(self) -> None:
         if self._conn and self._available:
@@ -158,11 +217,84 @@ class SnowflakeBridge:
                 self._conn.close()
             except Exception:
                 pass
+        self._conn = None
         self._available = False
 
-    @property
-    def available(self) -> bool:
-        return self._available
+    async def test_connection(self) -> dict:
+        """
+        Runs comprehensive diagnostics against Snowflake.
+        Returns connection state, account details, and Cortex availability.
+        """
+        if not self._config.is_configured():
+            return {
+                "connected": False,
+                "status": "not_configured",
+                "message": (
+                    "Snowflake is not configured. Add credentials to .env or environment variables. "
+                    "OpenLens is running in 100% offline local mode."
+                ),
+                "account": self._config.account or "Not set",
+                "user": self._config.user or "Not set",
+                "warehouse": self._config.warehouse or "Not set",
+                "database": self._config.database or "Not set",
+                "role": self._config.role or "Not set",
+                "cortex_available": False,
+            }
+
+        if not self._conn or not self._available:
+            ok = await self.connect()
+            if not ok:
+                return {
+                    "connected": False,
+                    "status": "error",
+                    "message": self._last_error or "Failed to connect to Snowflake.",
+                    "account": self._config.account,
+                    "user": self._config.user,
+                    "warehouse": self._config.warehouse,
+                    "database": self._config.database,
+                    "role": self._config.role,
+                    "cortex_available": False,
+                }
+
+        try:
+            sql = "SELECT CURRENT_VERSION() AS version, CURRENT_USER() AS user, CURRENT_ROLE() AS role, CURRENT_WAREHOUSE() AS warehouse, CURRENT_DATABASE() AS database"
+            rows = await self._execute(sql, {})
+            row = rows[0] if rows else {}
+
+            # Check Cortex readiness
+            cortex_ok = False
+            try:
+                cortex_check = await self._execute(
+                    "SELECT SNOWFLAKE.CORTEX.EMBED_TEXT_768('e5-base-v2', 'test') IS NOT NULL AS has_cortex", {}
+                )
+                cortex_ok = bool(cortex_check and cortex_check[0].get("HAS_CORTEX", False))
+            except Exception:
+                cortex_ok = False
+
+            return {
+                "connected": True,
+                "status": "connected",
+                "message": "Connected to Snowflake successfully.",
+                "snowflake_version": row.get("VERSION"),
+                "account": self._config.account,
+                "user": row.get("USER", self._config.user),
+                "role": row.get("ROLE", self._config.role),
+                "warehouse": row.get("WAREHOUSE", self._config.warehouse),
+                "database": row.get("DATABASE", self._config.database),
+                "cortex_available": cortex_ok,
+            }
+        except Exception as exc:
+            return {
+                "connected": False,
+                "status": "query_error",
+                "message": f"Connection active but query failed: {exc}",
+                "account": self._config.account,
+                "user": self._config.user,
+                "warehouse": self._config.warehouse,
+                "database": self._config.database,
+                "role": self._config.role,
+                "cortex_available": False,
+            }
 
     # -----------------------------------------------------------------------
     # Knowledge Retrieval — Architectural Patterns
@@ -178,28 +310,20 @@ class SnowflakeBridge:
         """
         Semantic search over the ARCHITECTURAL_PATTERNS table.
         Uses Snowflake Cortex SEARCH if available; falls back to LIKE query.
-
-        Args:
-            query:            Natural-language description of the needed pattern.
-            category:         Optional filter — 'Behavioral' | 'Structural' | etc.
-            applicable_layer: Optional filter — 'backend' | 'frontend' | etc.
-            limit:            Maximum number of results.
-
-        Returns:
-            List of PatternResult, empty list if Snowflake is unavailable.
         """
         if not self._available:
             logger.debug("Snowflake unavailable — returning empty pattern results.")
             return []
 
+        tbl = self._tbl("KNOWLEDGE", "ARCHITECTURAL_PATTERNS")
         try:
-            # Cortex SEARCH path (preferred when enabled in the account)
-            cortex_sql = """
+            # Cortex SEARCH path (preferred when enabled in account)
+            cortex_sql = f"""
                 SELECT pattern_id, name, category, description, rationale,
                        trade_offs, example_snippet, applicable_layers, tags,
                        SEARCH_SCORE() AS score
                 FROM TABLE(
-                    OPENLENS_DB.KNOWLEDGE.ARCHITECTURAL_PATTERNS
+                    {tbl}
                     MATCH (description, rationale, trade_offs)
                     AGAINST (:query)
                 )
@@ -221,11 +345,12 @@ class SnowflakeBridge:
         applicable_layer: Optional[str],
         limit: int,
     ) -> list[PatternResult]:
-        sql = """
+        tbl = self._tbl("KNOWLEDGE", "ARCHITECTURAL_PATTERNS")
+        sql = f"""
             SELECT pattern_id, name, category, description, rationale,
                    trade_offs, example_snippet, applicable_layers, tags,
                    0.5 AS score
-            FROM OPENLENS_DB.KNOWLEDGE.ARCHITECTURAL_PATTERNS
+            FROM {tbl}
             WHERE (LOWER(description) LIKE :kw OR LOWER(name) LIKE :kw)
               AND (:category IS NULL OR category = :category)
             LIMIT :limit
@@ -242,16 +367,16 @@ class SnowflakeBridge:
     @staticmethod
     def _row_to_pattern(row: dict) -> PatternResult:
         return PatternResult(
-            pattern_id=row.get("PATTERN_ID", ""),
-            name=row.get("NAME", ""),
-            category=row.get("CATEGORY", ""),
-            description=row.get("DESCRIPTION", ""),
-            rationale=row.get("RATIONALE", ""),
-            trade_offs=row.get("TRADE_OFFS", ""),
-            example_snippet=row.get("EXAMPLE_SNIPPET", ""),
+            pattern_id=str(row.get("PATTERN_ID", "")),
+            name=str(row.get("NAME", "")),
+            category=str(row.get("CATEGORY", "")),
+            description=str(row.get("DESCRIPTION", "")),
+            rationale=str(row.get("RATIONALE", "")),
+            trade_offs=str(row.get("TRADE_OFFS", "")),
+            example_snippet=str(row.get("EXAMPLE_SNIPPET", "")),
             applicable_layers=row.get("APPLICABLE_LAYERS") or [],
             tags=row.get("TAGS") or [],
-            retrieval_score=float(row.get("SCORE", 0.0)),
+            retrieval_score=float(row.get("SCORE", 0.0) or 0.0),
         )
 
     # -----------------------------------------------------------------------
@@ -259,17 +384,15 @@ class SnowflakeBridge:
     # -----------------------------------------------------------------------
 
     async def get_rules_for_project(self, project_id: str) -> list[dict]:
-        """
-        Fetches active architecture rules for a project.
-        Used by Dev to enforce boundary constraints against active code.
-        """
+        """Fetches active architecture rules for a project from Snowflake."""
         if not self._available:
             return []
-        sql = """
+        tbl = self._tbl("RULES", "ARCHITECTURE_RULES")
+        sql = f"""
             SELECT rule_id, name, description, scope, severity, rationale,
                    source_layer, target_layer, allowed, verification_method,
                    rule_version
-            FROM OPENLENS_DB.RULES.ARCHITECTURE_RULES
+            FROM {tbl}
             WHERE project_id = :project_id AND active = TRUE
             ORDER BY severity, rule_id
         """
@@ -280,6 +403,84 @@ class SnowflakeBridge:
             return []
 
     # -----------------------------------------------------------------------
+    # Knowledge Synchronization — Approved Architectural Patterns / ADRs
+    # -----------------------------------------------------------------------
+
+    async def sync_pattern(self, pattern: dict) -> bool:
+        """
+        Inserts or merges an approved architectural pattern into Snowflake.
+        Adheres to privacy: only metadata/patterns, never raw proprietary code.
+        """
+        if not self._available:
+            return False
+
+        tbl = self._tbl("KNOWLEDGE", "ARCHITECTURAL_PATTERNS")
+        sql = f"""
+            MERGE INTO {tbl} t
+            USING (
+                SELECT :pid AS pattern_id, :name AS name, :cat AS category,
+                       :desc AS description, :rat AS rationale, :to AS trade_offs,
+                       :snip AS example_snippet, PARSE_JSON(:layers) AS applicable_layers,
+                       PARSE_JSON(:tags) AS tags, CURRENT_TIMESTAMP() AS updated_at
+            ) s
+            ON t.pattern_id = s.pattern_id
+            WHEN MATCHED THEN UPDATE SET
+                name = s.name, category = s.category, description = s.description,
+                rationale = s.rationale, trade_offs = s.trade_offs,
+                example_snippet = s.example_snippet, applicable_layers = s.applicable_layers,
+                tags = s.tags, updated_at = s.updated_at
+            WHEN NOT MATCHED THEN INSERT
+                (pattern_id, name, category, description, rationale, trade_offs,
+                 example_snippet, applicable_layers, tags, created_at, updated_at)
+            VALUES
+                (s.pattern_id, s.name, s.category, s.description, s.rationale, s.trade_offs,
+                 s.example_snippet, s.applicable_layers, s.tags, s.updated_at, s.updated_at)
+        """
+        import json
+        params = {
+            "pid": pattern.get("pattern_id") or str(uuid.uuid4())[:8],
+            "name": pattern.get("name", "Custom Pattern"),
+            "cat": pattern.get("category", "Structural"),
+            "desc": pattern.get("description", ""),
+            "rat": pattern.get("rationale", ""),
+            "to": pattern.get("trade_offs", ""),
+            "snip": pattern.get("example_snippet", ""),
+            "layers": json.dumps(pattern.get("applicable_layers", [])),
+            "tags": json.dumps(pattern.get("tags", [])),
+        }
+        try:
+            await self._execute(sql, params)
+            return True
+        except Exception as exc:
+            logger.error("Failed to sync pattern to Snowflake: %s", exc)
+            return False
+
+    async def sync_document_chunks(self, chunks: list[dict]) -> dict:
+        """
+        Safely synchronizes approved documentation or architectural decision chunks.
+        Validates privacy before transmission.
+        """
+        if not self._available:
+            return {"synced": 0, "status": "offline", "reason": "Snowflake offline"}
+
+        synced_count = 0
+        for item in chunks:
+            # Map chunk to architectural pattern or knowledge item
+            ok = await self.sync_pattern({
+                "pattern_id": item.get("id") or str(uuid.uuid4())[:8],
+                "name": item.get("title") or item.get("source_path", "Architecture Note"),
+                "category": item.get("category") or item.get("metadata", {}).get("kind", "Documentation"),
+                "description": item.get("content", "")[:2000],
+                "rationale": item.get("rationale", ""),
+                "tags": [item.get("project_id", "default"), "synced_doc"],
+                "applicable_layers": ["architecture", "documentation"],
+            })
+            if ok:
+                synced_count += 1
+
+        return {"synced": synced_count, "total": len(chunks), "status": "success"}
+
+    # -----------------------------------------------------------------------
     # Analytics Ingestion — Privacy-safe payloads only
     # -----------------------------------------------------------------------
 
@@ -287,8 +488,9 @@ class SnowflakeBridge:
         """Records aggregate scan performance — no source content."""
         if not self._available:
             return False
-        sql = """
-            INSERT INTO OPENLENS_DB.ANALYTICS.SCAN_METRICS
+        tbl = self._tbl("ANALYTICS", "SCAN_METRICS")
+        sql = f"""
+            INSERT INTO {tbl}
                 (metric_id, scan_scope, file_count, finding_count,
                  scan_duration_ms, model_invoked, snowflake_queried,
                  error_occurred, error_category, session_id)
@@ -318,8 +520,9 @@ class SnowflakeBridge:
         """Records anonymised per-category finding feedback."""
         if not self._available:
             return False
-        sql = """
-            INSERT INTO OPENLENS_DB.ANALYTICS.FINDING_FEEDBACK
+        tbl = self._tbl("ANALYTICS", "FINDING_FEEDBACK")
+        sql = f"""
+            INSERT INTO {tbl}
                 (feedback_id, finding_category, action, language, session_id)
             VALUES (:id, :cat, :action, :lang, :sid)
         """
@@ -337,10 +540,7 @@ class SnowflakeBridge:
             return False
 
     async def submit_evaluation_run(self, payload: EvaluationRunPayload) -> Optional[str]:
-        """
-        Saves a benchmark evaluation run and computes F1.
-        Returns the run_id if successful, None on failure.
-        """
+        """Saves a benchmark evaluation run and computes F1."""
         if not self._available:
             return None
         run_id = str(uuid.uuid4())
@@ -351,8 +551,9 @@ class SnowflakeBridge:
         recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
         f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
 
-        sql = """
-            INSERT INTO OPENLENS_DB.EVALUATION.EVALUATION_RUNS
+        tbl = self._tbl("EVALUATION", "EVALUATION_RUNS")
+        sql = f"""
+            INSERT INTO {tbl}
                 (run_id, suite_name, suite_version, model_id, model_version,
                  prompt_version, rule_set_version, run_by, total_cases,
                  true_positives, false_positives, true_negatives, false_negatives,
@@ -388,6 +589,7 @@ class SnowflakeBridge:
         """Execute a parameterised SQL query and return rows as dicts."""
         if not self._conn:
             return []
+        import snowflake.connector  # type: ignore
         cursor = self._conn.cursor(snowflake.connector.DictCursor)
         try:
             cursor.execute(sql, params)

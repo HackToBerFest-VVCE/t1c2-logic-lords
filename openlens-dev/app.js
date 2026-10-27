@@ -71,6 +71,9 @@ class OpenLensDevApp {
     this.renderRules();
     this.renderCategoryFilters();
 
+    // Check live Snowflake connection from gateway
+    this.checkLiveSnowflakeStatus();
+
     // Run initial scan
     setTimeout(() => {
       this.runScan();
@@ -197,7 +200,11 @@ class OpenLensDevApp {
     this.sfSaveBtn = document.getElementById('sf-save-btn');
     this.sfAccount = document.getElementById('sf-account');
     this.sfUser = document.getElementById('sf-user');
+    this.sfPassword = document.getElementById('sf-password');
     this.sfWarehouse = document.getElementById('sf-warehouse');
+    this.sfDatabase = document.getElementById('sf-database');
+    this.sfRole = document.getElementById('sf-role');
+    this.sfTestResult = document.getElementById('sf-test-result');
 
     // Toast
     this.toast = document.getElementById('toast');
@@ -991,32 +998,115 @@ class OpenLensDevApp {
      SNOWFLAKE MODAL & CONNECTION
   ──────────────────────────────────────────────────────── */
   openSfModal() {
-    if (this.sfModal) this.sfModal.classList.add('show');
+    if (this.sfModal) {
+      this.sfModal.classList.add('show');
+      if (this.sfTestResult) this.sfTestResult.style.display = 'none';
+    }
   }
 
   closeSfModal() {
     if (this.sfModal) this.sfModal.classList.remove('show');
   }
 
-  testSfConnection() {
-    this.showToast('Connecting to Snowflake Cortex Vector Search…');
-    setTimeout(() => {
-      this.showToast('✓ Cortex connection test successful! Table: OPENLENS_PATTERNS');
-    }, 700);
+  async checkLiveSnowflakeStatus() {
+    try {
+      const res = await fetch('http://127.0.0.1:8000/integrations/snowflake/status');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.connected) {
+          this.setSnowflakeConnectedState(true, data.account, data.warehouse);
+        } else if (data && data.account && data.account !== 'Not set') {
+          if (this.sfAccount && data.account) this.sfAccount.value = data.account;
+          if (this.sfUser && data.user) this.sfUser.value = data.user;
+          if (this.sfWarehouse && data.warehouse) this.sfWarehouse.value = data.warehouse;
+          if (this.sfDatabase && data.database) this.sfDatabase.value = data.database;
+          if (this.sfRole && data.role) this.sfRole.value = data.role;
+        }
+      }
+    } catch (_) {
+      // Backend gateway offline — runs in local mode
+    }
   }
 
-  saveSfConnection() {
-    this.snowflakeConnected = true;
+  setSnowflakeConnectedState(connected, account = '', warehouse = '') {
+    this.snowflakeConnected = connected;
     if (this.sfIndicator) {
-      this.sfIndicator.className = 'sf-indicator online';
+      this.sfIndicator.className = connected ? 'sf-indicator online' : 'sf-indicator';
     }
     if (this.sfStatusText) {
-      this.sfStatusText.textContent = 'Connected (Cortex Vector Search)';
+      this.sfStatusText.textContent = connected
+        ? `Connected (Cortex Vector Search${warehouse ? ' · ' + warehouse : ''})`
+        : 'Connect Snowflake (Curated Patterns)';
     }
     if (this.metaSf) {
-      this.metaSf.textContent = 'Online (Cortex)';
-      this.metaSf.className = 'meta-v tag-cloud';
+      this.metaSf.textContent = connected ? 'Online (Cortex)' : 'Offline (Local)';
+      this.metaSf.className = connected ? 'meta-v tag-cloud' : 'meta-v';
     }
+  }
+
+  async testSfConnection() {
+    const payload = {
+      account: this.sfAccount?.value?.trim() || undefined,
+      user: this.sfUser?.value?.trim() || undefined,
+      password: this.sfPassword?.value || undefined,
+      warehouse: this.sfWarehouse?.value?.trim() || undefined,
+      database: this.sfDatabase?.value?.trim() || undefined,
+      role: this.sfRole?.value?.trim() || undefined,
+    };
+
+    if (this.sfTestResult) {
+      this.sfTestResult.style.display = 'block';
+      this.sfTestResult.style.background = 'rgba(79, 142, 247, 0.1)';
+      this.sfTestResult.style.border = '1px solid rgba(79, 142, 247, 0.3)';
+      this.sfTestResult.style.color = '#4f8ef7';
+      this.sfTestResult.textContent = '⏳ Testing live connection to Snowflake via local gateway...';
+    }
+
+    try {
+      const res = await fetch('http://127.0.0.1:8000/integrations/snowflake/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.connected) {
+          if (this.sfTestResult) {
+            this.sfTestResult.style.background = 'rgba(16, 185, 129, 0.15)';
+            this.sfTestResult.style.border = '1px solid rgba(16, 185, 129, 0.4)';
+            this.sfTestResult.style.color = '#10b981';
+            this.sfTestResult.textContent = `✓ Snowflake Connected! Version: ${data.snowflake_version || 'Active'} · Warehouse: ${data.warehouse} · Cortex Ready: ${data.cortex_available ? 'Yes' : 'Keyword Fallback'}`;
+          }
+          this.showToast('✅ Snowflake connection test successful!');
+          return;
+        } else {
+          if (this.sfTestResult) {
+            this.sfTestResult.style.background = 'rgba(239, 68, 68, 0.15)';
+            this.sfTestResult.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+            this.sfTestResult.style.color = '#ef4444';
+            this.sfTestResult.textContent = `✕ Connection Failed: ${data.message || 'Check credentials'}`;
+          }
+          this.showToast('✕ Snowflake connection test failed');
+          return;
+        }
+      }
+    } catch (_) {
+      // Backend not running
+    }
+
+    if (this.sfTestResult) {
+      this.sfTestResult.style.background = 'rgba(245, 158, 11, 0.15)';
+      this.sfTestResult.style.border = '1px solid rgba(245, 158, 11, 0.4)';
+      this.sfTestResult.style.color = '#f59e0b';
+      this.sfTestResult.textContent = 'ℹ️ Backend gateway is offline at http://127.0.0.1:8000. Start it with: "py openlens.py serve-api". Operating in simulated offline mode.';
+    }
+    this.showToast('ℹ️ Backend gateway offline — running in offline mode');
+  }
+
+  async saveSfConnection() {
+    await this.testSfConnection();
+    this.setSnowflakeConnectedState(true, this.sfAccount?.value, this.sfWarehouse?.value);
     this.closeSfModal();
     this.showToast('❄️ Snowflake connected. Semantic architectural patterns active.');
   }

@@ -301,6 +301,65 @@ def cmd_serve(args: argparse.Namespace) -> int:
     return subprocess.run(cmd, shell=True).returncode
 
 
+def cmd_snowflake_status(args: argparse.Namespace) -> int:
+    """Check Snowflake configuration and test live connection."""
+    import asyncio
+    from services.snowflake_bridge import get_bridge
+
+    print("\n❄️  OpenLens Snowflake Connection Diagnostics")
+    print("=" * 55)
+
+    bridge = get_bridge()
+    cfg = bridge.config
+
+    print(f"  • Integration Enabled : {cfg.enabled}")
+    print(f"  • Account Identifier  : {cfg.account or '[Not configured]'}")
+    print(f"  • Username            : {cfg.user or '[Not configured]'}")
+    auth_desc = "Password" if cfg.password else (f"Key-Pair ({cfg.private_key_path})" if cfg.private_key_path else "[None]")
+    print(f"  • Auth Method         : {auth_desc}")
+    print(f"  • Compute Warehouse   : {cfg.warehouse}")
+    print(f"  • Database            : {cfg.database}")
+    print(f"  • Schema              : {cfg.schema}")
+    print(f"  • Role                : {cfg.role}")
+    print("-" * 55)
+
+    if not cfg.is_configured():
+        print("ℹ️  Status: OFFLINE (Operating in 100% offline local mode)")
+        print("   To connect your Snowflake account:")
+        print("   1. Copy .env.example to .env")
+        print("   2. Fill in SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER, and SNOWFLAKE_PASSWORD")
+        print("   3. Re-run: python openlens.py snowflake-status")
+        return 0
+
+    print("⏳ Testing live connection to Snowflake...")
+    diag = asyncio.run(bridge.test_connection())
+
+    if diag.get("connected"):
+        print("✅ Connection: SUCCESSFUL")
+        print(f"  • Snowflake Version   : {diag.get('snowflake_version', 'Unknown')}")
+        print(f"  • Current Warehouse   : {diag.get('warehouse')}")
+        print(f"  • Current Role        : {diag.get('role')}")
+        print(f"  • Cortex Vector Ready : {'YES' if diag.get('cortex_available') else 'No (falls back to keyword search)'}")
+        print("\n🎉 Snowflake is seamlessly connected! Architectural patterns & analytics are active.")
+        return 0
+    else:
+        print("❌ Connection: FAILED")
+        print(f"  • Error Reason        : {diag.get('message')}")
+        print("  • Fallback Mode       : Local AST analysis remains 100% functional.")
+        return 1
+
+
+def cmd_serve_api(args: argparse.Namespace) -> int:
+    """Launch the FastAPI backend gateway service."""
+    port = getattr(args, "port", 8000)
+    print(f"\n🚀 Starting OpenLens Backend Gateway on http://127.0.0.1:{port}")
+    print(f"  • API Docs & Swagger UI : http://127.0.0.1:{port}/docs")
+    print(f"  • Snowflake Diagnostics : http://127.0.0.1:{port}/integrations/snowflake/status")
+    print(f"  • Health Endpoint       : http://127.0.0.1:{port}/health\n")
+    cmd = [sys.executable, "-m", "uvicorn", "api.gateway:app", "--host", "0.0.0.0", "--port", str(port), "--reload"]
+    return subprocess.run(cmd).returncode
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="OpenLens — AI-Powered Architecture & Code Maintainability Companion"
@@ -331,6 +390,13 @@ def main() -> int:
     serve_p = subparsers.add_parser("serve", help="Launch local OpenLens web services")
     serve_p.add_argument("--port", type=int, default=3000, help="Port to listen on (default: 3000)")
 
+    # serve-api
+    serve_api_p = subparsers.add_parser("serve-api", help="Launch FastAPI backend gateway (port 8000)")
+    serve_api_p.add_argument("--port", type=int, default=8000, help="Port to listen on (default: 8000)")
+
+    # snowflake-status
+    subparsers.add_parser("snowflake-status", help="Test Snowflake connection and display diagnostics")
+
     args = parser.parse_args()
 
     if args.command == "scan":
@@ -343,6 +409,10 @@ def main() -> int:
         return cmd_install_extension(args)
     elif args.command == "serve":
         return cmd_serve(args)
+    elif args.command == "serve-api":
+        return cmd_serve_api(args)
+    elif args.command == "snowflake-status":
+        return cmd_snowflake_status(args)
     else:
         parser.print_help()
         return 0

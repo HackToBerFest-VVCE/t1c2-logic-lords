@@ -106,10 +106,36 @@ Snowflake plays a **genuine, demonstrable role** — not a branding checkbox:
 - ✅ Session IDs anonymised
 - ✅ Aggregate metrics only for analytics
 
-```bash
-# Run the schema in your Snowflake account
-snowsql -f snowflake/schema.sql
-```
+### ⚡ Seamless 1-Minute Setup
+
+1. **Configure credentials:**
+   ```bash
+   # Copy environment template
+   copy .env.example .env     # Windows
+   cp .env.example .env       # macOS / Linux
+   ```
+   Open `.env` and enter your `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USER`, and `SNOWFLAKE_PASSWORD` (or key-pair).
+
+2. **Verify connection from CLI:**
+   ```bash
+   py openlens.py snowflake-status
+   ```
+   *If credentials are omitted, OpenLens automatically runs in 100% offline local mode.*
+
+3. **Deploy Schema (One-time):**
+   ```bash
+   snowsql -f snowflake/schema.sql
+   ```
+
+4. **Start Backend Gateway & Web Studio:**
+   ```bash
+   # Launch API Gateway (port 8000)
+   py openlens.py serve-api
+
+   # Launch Web Studios (port 3000)
+   py openlens.py serve
+   ```
+   Open **Dev Studio** (`http://localhost:3000/openlens-dev/`), click the ❄️ Snowflake badge or **Test Connection** in the modal to see live connection status!
 
 ---
 

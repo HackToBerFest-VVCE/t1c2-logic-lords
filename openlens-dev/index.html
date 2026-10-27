@@ -253,18 +253,26 @@
         </p>
         <div class="sf-form">
           <label class="sf-label">Account Identifier</label>
-          <input id="sf-account" type="text" class="sf-input" placeholder="myorg-myaccount">
+          <input id="sf-account" type="text" class="sf-input" placeholder="e.g. xy12345.us-east-1 or myorg-myaccount">
           <label class="sf-label">Username</label>
           <input id="sf-user" type="text" class="sf-input" placeholder="OPENLENS_USER">
+          <label class="sf-label">Password / Auth Secret</label>
+          <input id="sf-password" type="password" class="sf-input" placeholder="Your Snowflake password">
           <label class="sf-label">Warehouse</label>
           <input id="sf-warehouse" type="text" class="sf-input" placeholder="OPENLENS_WH" value="OPENLENS_WH">
-          <label class="sf-label">Authentication</label>
-          <select class="sf-input sf-select" id="sf-auth-type">
-            <option value="key_pair">Key-Pair (recommended)</option>
-            <option value="browser_sso">Browser SSO</option>
-          </select>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div>
+              <label class="sf-label">Database</label>
+              <input id="sf-database" type="text" class="sf-input" placeholder="OPENLENS_DB" value="OPENLENS_DB">
+            </div>
+            <div>
+              <label class="sf-label">Role</label>
+              <input id="sf-role" type="text" class="sf-input" placeholder="OPENLENS_ROLE" value="OPENLENS_ROLE">
+            </div>
+          </div>
+          <div id="sf-test-result" style="display:none; margin-top:10px; padding:10px 12px; border-radius:6px; font-size:0.75rem; line-height:1.4;"></div>
         </div>
-        <div class="sf-note">Credentials are stored locally only. Use environment variables in production.</div>
+        <div class="sf-note">Credentials connect via local FastAPI gateway to Snowflake. Stored in .env file.</div>
       </div>
       <div class="modal-footer">
         <button class="btn-modal-secondary" id="sf-test-btn">Test Connection</button>
